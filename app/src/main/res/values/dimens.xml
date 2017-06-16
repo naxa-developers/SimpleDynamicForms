@@ -1,0 +1,28 @@
+<resources>
+
+
+    <dimen name="material_text_button">14sp</dimen>
+    <dimen name="material_text_title">22sp</dimen>
+    <dimen name="material_text_headline">20sp</dimen>
+    <dimen name="material_text_subhead">16sp</dimen>
+    <dimen name="material_text_body1">18sp</dimen>
+    <dimen name="material_text_body2">16sp</dimen>
+    <dimen name="material_text_menu">14sp</dimen>
+    <dimen name="material_text_caption">12sp</dimen>
+    <dimen name="material_text_display1">34sp</dimen>
+    <dimen name="material_text_display2">45sp</dimen>
+    <dimen name="material_text_display3">56sp</dimen>
+    <dimen name="material_text_display4">112sp</dimen>
+
+
+    <dimen name="spacing_xsmall">2dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_xlarge">32dp</dimen>
+    <dimen name="spacing_small">4dp</dimen>
+
+    <dimen name="elevation_low">9dp</dimen>
+    <dimen name="elevation_high">12dp</dimen>
+
+
+</resources>

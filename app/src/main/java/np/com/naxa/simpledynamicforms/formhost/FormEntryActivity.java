@@ -12,18 +12,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.buildchange.R;
-import com.motherOfForms.fragments.EditTextFragment;
-import com.motherOfForms.fragments.FormEndFragment;
-import com.motherOfForms.fragments.FormStartFragment;
-import com.motherOfForms.fragments.onAnswerSelectedListener;
-import com.motherOfForms.fragments.onFormFinishedListener;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import np.com.naxa.simpledynamicforms.R;
+import np.com.naxa.simpledynamicforms.form.components.EditTextFragment;
+import np.com.naxa.simpledynamicforms.form.components.FormEndFragment;
+import np.com.naxa.simpledynamicforms.form.components.FormStartFragment;
+import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
+import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
 
 public class FormEntryActivity extends AppCompatActivity implements onAnswerSelectedListener, onFormFinishedListener {
 

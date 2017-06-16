@@ -14,6 +14,7 @@ import android.widget.TextView;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.formhost.FormEntryActivity;
+import timber.log.Timber;
 
 
 public class EditTextFragment extends Fragment implements FormEntryActivity.fragmentStateListener {

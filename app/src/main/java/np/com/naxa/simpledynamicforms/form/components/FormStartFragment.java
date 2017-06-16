@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.formhost.FormEntryActivity;
-
+import timber.log.Timber;
 
 
 public class FormStartFragment extends Fragment implements FormEntryActivity.onFragmentVisibleListener, FormEntryActivity.fragmentStateListener {
