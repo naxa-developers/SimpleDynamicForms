@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.guna.libmultispinner.MultiSelectionSpinner;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import np.com.naxa.simpledynamicforms.demo.JSONFormatter;
 import np.com.naxa.simpledynamicforms.form.components.EditTextFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormEndFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormStartFragment;
+import np.com.naxa.simpledynamicforms.form.components.MultiSelectSpinnerFragment;
 import np.com.naxa.simpledynamicforms.form.components.SpinnerFragment;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
@@ -107,6 +110,17 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         SpinnerFragment spinnerFragment = new SpinnerFragment();
         spinnerFragment.prepareQuestionAndAnswer("Do you like dancing?", options, 3);
         adapter.addFragment(spinnerFragment,generateFragmentName());
+
+
+        ArrayList<String> songs = new ArrayList<>();
+        songs.add("Yellow - Coldplay");
+        songs.add("Pani Paryo - Rohit");
+        songs.add("Jhilimili - Rohit");
+        songs.add("Muskuraye - Astha Tamang Maskey");
+
+        MultiSelectSpinnerFragment multiSelectionSpinner = new MultiSelectSpinnerFragment();
+        multiSelectionSpinner.prepareQuestionAndAnswer("Select at least two songs?", songs, 4);
+        adapter.addFragment(multiSelectionSpinner,generateFragmentName());
 
         adapter.addFragment(new FormEndFragment(), "");
         viewPager.setAdapter(adapter);

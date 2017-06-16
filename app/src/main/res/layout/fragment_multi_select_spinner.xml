@@ -12,8 +12,8 @@
         android:textSize="@dimen/material_text_title" />
 
 
-    <Spinner
-        android:id="@+id/spinner_answer_options"
+    <com.guna.libmultispinner.MultiSelectionSpinner
+        android:id="@+id/multi_select_spinner_answer_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_large"
