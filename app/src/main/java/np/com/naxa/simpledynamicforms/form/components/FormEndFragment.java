@@ -8,13 +8,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
+import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
-import np.com.naxa.simpledynamicforms.formhost.FormEntryActivity;
 
 
-public class FormEndFragment extends Fragment implements FormEntryActivity.fragmentStateListener {
+public class FormEndFragment extends Fragment implements fragmentStateListener {
 
     private onFormFinishedListener listener;
 
@@ -24,9 +27,11 @@ public class FormEndFragment extends Fragment implements FormEntryActivity.fragm
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_form_end, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_form_end, container, false);
+        ButterKnife.bind(this, rootView);
 
-        return rootview;
+
+        return rootView;
 
     }
 

@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import np.com.naxa.simpledynamicforms.R;
-import np.com.naxa.simpledynamicforms.formhost.FormEntryActivity;
+import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import timber.log.Timber;
 
 
-public class FormStartFragment extends Fragment implements FormEntryActivity.onFragmentVisibleListener, FormEntryActivity.fragmentStateListener {
+public class FormStartFragment extends Fragment implements fragmentStateListener {
 
 
     public FormStartFragment() {
@@ -20,14 +20,8 @@ public class FormStartFragment extends Fragment implements FormEntryActivity.onF
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_start, container, false);
 
-        return rootview;
-
-    }
-
-    @Override
-    public void fragmentBecameVisible(int position) {
+        return inflater.inflate(R.layout.fragment_start, container, false);
 
     }
 

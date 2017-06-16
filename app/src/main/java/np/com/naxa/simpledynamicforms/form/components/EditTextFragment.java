@@ -4,28 +4,35 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
+import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
-import np.com.naxa.simpledynamicforms.formhost.FormEntryActivity;
 import timber.log.Timber;
 
 
-public class EditTextFragment extends Fragment implements FormEntryActivity.fragmentStateListener {
+public class EditTextFragment extends Fragment implements fragmentStateListener {
+
+
+    @BindView(R.id.tv_question_edit_text)
+    TextView tvQuestion;
+
+    @BindView(R.id.wrapper_answer_edit_text)
+    TextInputLayout textInputLayout;
 
     private String userSelectedAnswer = "";
-    private EditText etAnswer;
-    private onAnswerSelectedListener listener;
     private String question;
-    private TextView tvQuestion;
     private String hint;
     private int position;
+    private onAnswerSelectedListener listener;
 
 
     public EditTextFragment() {
@@ -35,16 +42,10 @@ public class EditTextFragment extends Fragment implements FormEntryActivity.frag
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_edittext, container, false);
-        initUI(rootview);
-        return rootview;
-
-    }
-
-    private void initUI(View rootview) {
-        tvQuestion = (TextView) rootview.findViewById(R.id.tv_question_edit_text);
-        etAnswer = (EditText) rootview.findViewById(R.id.tv_answer_edit_text);
+        View rootView = inflater.inflate(R.layout.fragment_edittext, container, false);
+        ButterKnife.bind(this, rootView);
         setQuestionAndAnswers();
+        return rootView;
     }
 
     public void prepareQuestionAndAnswer(String question, String hint, int position) {
@@ -57,15 +58,15 @@ public class EditTextFragment extends Fragment implements FormEntryActivity.frag
 
     public void setQuestionAndAnswers() {
         tvQuestion.setText(question);
-        etAnswer.setHint(hint);
+        textInputLayout.getEditText().setHint(hint);
     }
 
-    private void getUserAnswer(final int pos) {
-        userSelectedAnswer = etAnswer.getText().toString();
-        sendAnswerToActvitiy(pos);
+    private void getAnswer(final int pos) {
+        userSelectedAnswer = textInputLayout.getEditText().getText().toString();
+        sendAnswerToActivity(pos);
     }
 
-    private void sendAnswerToActvitiy(int pos) {
+    private void sendAnswerToActivity(int pos) {
         String questionName = "q" + pos;
         try {
             listener.onAnswerSelected(questionName, userSelectedAnswer);
@@ -109,7 +110,13 @@ public class EditTextFragment extends Fragment implements FormEntryActivity.frag
         Timber.d(" %s and %s are the same ? %s \n question: %s", fragmentPositionInViewPager, position, doFragmentIdMatch.toString(), question);
 
         if (fragmentPositionInViewPager == position) {
-            getUserAnswer(position);
+            getAnswer(position);
         }
+    }
+
+    private void setErrorMessage(String message) {
+        textInputLayout.setErrorEnabled(true);
+        textInputLayout.setError(message);
+        textInputLayout.requestFocus();
     }
 }

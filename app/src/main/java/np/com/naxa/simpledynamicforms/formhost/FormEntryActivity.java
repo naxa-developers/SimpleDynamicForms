@@ -1,27 +1,27 @@
 package np.com.naxa.simpledynamicforms.formhost;
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
-import np.com.naxa.simpledynamicforms.form.DataRepo;
-import np.com.naxa.simpledynamicforms.form.JSONAnswerBuilder;
-import np.com.naxa.simpledynamicforms.form.ViewPagerAdapter;
+import np.com.naxa.simpledynamicforms.demo.JSONFormatter;
 import np.com.naxa.simpledynamicforms.form.components.EditTextFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormEndFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormStartFragment;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
+import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
+import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
 
 public class FormEntryActivity extends AppCompatActivity implements onAnswerSelectedListener, onFormFinishedListener, ViewPager.OnPageChangeListener {
 
@@ -33,6 +33,8 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
+    @BindView(R.id.root_layout_activity_form_entry)
+    CoordinatorLayout rootlayout;
 
     private ViewPagerAdapter adapter;
     public String jsonToSend;
@@ -40,7 +42,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     private int fragmentCount = 1;
     private int fragmentPositionInViewPager;
     private JSONAnswerBuilder jsonAnswerBuilder;
-
+    private SnackBarUtils snackBarUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +50,19 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         setContentView(R.layout.activity_form_entry);
         ButterKnife.bind(this);
         initUI();
+        initVar();
+    }
 
+    private void initVar() {
         jsonAnswerBuilder = new JSONAnswerBuilder();
+        snackBarUtils = new SnackBarUtils(rootlayout);
+        viewPager.addOnPageChangeListener(this);
     }
 
     private void initUI() {
         setupToolbar();
         setupTabLayout();
-        setupViewPager(viewPager);
+        setupForm();
     }
 
     private void setupTabLayout() {
@@ -66,6 +73,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 tabLayout.setupWithViewPager(viewPager);
             }
         });
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
     }
 
     private void setupToolbar() {
@@ -76,21 +84,17 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+    private void setupForm() {
+
         adapter.addFragment(new FormStartFragment(), " ");
 
         EditTextFragment etfragOwnerName = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("घरधनीको पूरा नाम ", " ", 1);
+        etfragOwnerName.prepareQuestionAndAnswer("Name ", "Enter your name ", 1);
         adapter.addFragment(etfragOwnerName, generateFragmentName());
 
         EditTextFragment etfragContactNumber = new EditTextFragment();
-        etfragContactNumber.prepareQuestionAndAnswer("जिल्ला ", " ", 2);
+        etfragContactNumber.prepareQuestionAndAnswer("Age ", "Enter your age ", 2);
         adapter.addFragment(etfragContactNumber, generateFragmentName());
-
-        EditTextFragment etFragVDCorMun = new EditTextFragment();
-        etFragVDCorMun.prepareQuestionAndAnswer("नगरपालिका / गाउँपालिका  ", " ", 3);
-        adapter.addFragment(etFragVDCorMun, generateFragmentName());
 
 
         adapter.addFragment(new FormEndFragment(), "");
@@ -104,6 +108,14 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         return fragmentName;
     }
 
+    public void nextFragment(View view) {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+    }
+
+    public void prevFragment(View view) {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+    }
+
     @Override
     public void onAnswerSelected(String question, String answer) {
         jsonAnswerBuilder.addAnswerToJSON(question, answer);
@@ -111,9 +123,9 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     @Override
     public void uploadForm() {
-
         jsonToSend = jsonAnswerBuilder.finalizeAnswers();
-        Toast.makeText(this, jsonToSend, Toast.LENGTH_LONG).show();
+        String formatedJSON = JSONFormatter.formatString(jsonToSend);
+        DialogFactory.createMessageDialog(this,"Answers formatted in JSON", formatedJSON).show();
     }
 
     @Override
@@ -133,6 +145,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
         notifyScrollOngoingToFrag(state, fragmentPositionInViewPager);
     }
 
@@ -150,11 +163,4 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     }
 
 
-    public void nextFragment(View view) {
-        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-    }
-
-    public void prevFragment(View view) {
-        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-    }
 }

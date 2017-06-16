@@ -1,4 +1,4 @@
-package np.com.naxa.simpledynamicforms.form;
+package np.com.naxa.simpledynamicforms.formhost;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,12 +39,6 @@ public class JSONAnswerBuilder {
     }
 
     public String finalizeAnswers() {
-        try {
-            header.put("token", "534545sDfkjHuy589io8gj983jtdfkjj&ihs@->89<-ioj389OiJijor9834%67");
-        } catch (JSONException e) {
-            Timber.e("Error - While Adding Answer to JSON \n %s", e);
-            e.printStackTrace();
-        }
 
         return header.toString();
 

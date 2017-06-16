@@ -14,6 +14,7 @@
 
         <activity
             android:exported="true"
+            android:windowSoftInputMode="adjustResize"
             android:name=".formhost.FormEntryActivity"
             android:screenOrientation="portrait">
 
