@@ -10,6 +10,8 @@ import android.view.View;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
@@ -17,6 +19,7 @@ import np.com.naxa.simpledynamicforms.demo.JSONFormatter;
 import np.com.naxa.simpledynamicforms.form.components.EditTextFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormEndFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormStartFragment;
+import np.com.naxa.simpledynamicforms.form.components.SpinnerFragment;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
@@ -97,6 +100,14 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(etfragContactNumber, generateFragmentName());
 
 
+        ArrayList<String> options = new ArrayList<>();
+        options.add("Yes");
+        options.add("No");
+
+        SpinnerFragment spinnerFragment = new SpinnerFragment();
+        spinnerFragment.prepareQuestionAndAnswer("Do you like dancing?", options, 3);
+        adapter.addFragment(spinnerFragment,generateFragmentName());
+
         adapter.addFragment(new FormEndFragment(), "");
         viewPager.setAdapter(adapter);
 
@@ -125,7 +136,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     public void uploadForm() {
         jsonToSend = jsonAnswerBuilder.finalizeAnswers();
         String formatedJSON = JSONFormatter.formatString(jsonToSend);
-        DialogFactory.createMessageDialog(this,"Answers formatted in JSON", formatedJSON).show();
+        DialogFactory.createMessageDialog(this, "Answers formatted in JSON", formatedJSON).show();
     }
 
     @Override

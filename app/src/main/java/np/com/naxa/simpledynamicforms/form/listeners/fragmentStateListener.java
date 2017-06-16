@@ -7,5 +7,5 @@ package np.com.naxa.simpledynamicforms.form.listeners;
  */
 
 public interface fragmentStateListener {
-    void fragmentStateChange(int state, int pos);
+    void fragmentStateChange(int state, int fragmentPositionInViewPager);
 }
