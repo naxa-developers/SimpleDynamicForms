@@ -61,6 +61,7 @@ public class SpinnerFragment extends Fragment implements fragmentStateListener {
 
     public void setQuestionAndAnswers() {
         tvQuestion.setText(question);
+        optionsSpinner.setPrompt(question);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, options);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         optionsSpinner.setAdapter(dataAdapter);

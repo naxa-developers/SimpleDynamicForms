@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
+import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
 
@@ -68,6 +69,13 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
         multiSelectionSpinner.setItems(options);
         multiSelectionSpinner.setSelection(new int[]{0, 2});
         multiSelectionSpinner.setListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ToastUtils.showLongSafe("multiSelectionSpinner is being destroyed");
+        multiSelectionSpinner.setListener(null);
     }
 
     private void getAnswer(final int pos) {

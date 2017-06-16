@@ -1,5 +1,6 @@
 package com.guna.libmultispinner;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,15 +14,20 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MultiSelectionSpinner extends android.support.v7.widget.AppCompatSpinner implements
+@SuppressLint("AppCompatCustomView")
+public class MultiSelectionSpinner extends Spinner implements
         OnMultiChoiceClickListener {
 
     private String title;
 
-    public interface OnMultipleItemsSelectedListener{
+    public interface OnMultipleItemsSelectedListener {
         void selectedIndices(List<Integer> indices);
+
         void selectedStrings(List<String> strings);
     }
+
+
+
     private OnMultipleItemsSelectedListener listener;
 
     String[] _items = null;
@@ -39,6 +45,9 @@ public class MultiSelectionSpinner extends android.support.v7.widget.AppCompatSp
         super.setAdapter(simple_adapter);
     }
 
+
+
+
     public MultiSelectionSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -47,7 +56,7 @@ public class MultiSelectionSpinner extends android.support.v7.widget.AppCompatSp
         super.setAdapter(simple_adapter);
     }
 
-    public void setListener(OnMultipleItemsSelectedListener listener){
+    public void setListener(OnMultipleItemsSelectedListener listener) {
         this.listener = listener;
     }
 
@@ -62,7 +71,7 @@ public class MultiSelectionSpinner extends android.support.v7.widget.AppCompatSp
         }
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -92,6 +101,8 @@ public class MultiSelectionSpinner extends android.support.v7.widget.AppCompatSp
         return true;
     }
 
+
+
     @Override
     public void setAdapter(SpinnerAdapter adapter) {
         throw new RuntimeException(
@@ -112,7 +123,7 @@ public class MultiSelectionSpinner extends android.support.v7.widget.AppCompatSp
     public void setItems(List<String> items) {
         _items = items.toArray(new String[items.size()]);
         mSelection = new boolean[_items.length];
-        mSelectionAtStart  = new boolean[_items.length];
+        mSelectionAtStart = new boolean[_items.length];
         simple_adapter.clear();
         simple_adapter.add(_items[0]);
         Arrays.fill(mSelection, false);
@@ -121,8 +132,8 @@ public class MultiSelectionSpinner extends android.support.v7.widget.AppCompatSp
 
     public void setSelection(String[] selection) {
         for (int i = 0; i < mSelection.length; i++) {
-                mSelection[i] = false;
-                mSelectionAtStart[i] = false;
+            mSelection[i] = false;
+            mSelectionAtStart[i] = false;
         }
         for (String cell : selection) {
             for (int j = 0; j < _items.length; ++j) {
