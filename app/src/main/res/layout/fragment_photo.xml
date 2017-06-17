@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_large">
+
+    <TextView
+        android:id="@+id/tv_question_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:textSize="@dimen/material_text_title" />
+
+
+    <Button
+        android:id="@+id/fragment_photo_btn_open_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_camera_alt_black_24dp"
+        android:drawableStart="@drawable/ic_camera_alt_black_24dp"
+        android:padding="@dimen/spacing_large"
+        android:text="@string/fragment_photo_btn_open_camera"
+        android:textSize="@dimen/material_text_button" />
+
+    <Button
+        android:id="@+id/fragment_photo_btn_open_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_gallery_black_24dp"
+        android:drawableStart="@drawable/ic_gallery_black_24dp"
+        android:padding="@dimen/spacing_large"
+        android:text="@string/fragment_photo_btn_open_gallery"
+        android:textSize="@dimen/material_text_button" />
+
+    <ImageView
+        android:id="@+id/fragment_photo_iv_image_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_xlarge"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_launcher"
+        android:visibility="gone"
+        tools:ignore="ContentDescription" />
+
+</LinearLayout>
+
+
+
