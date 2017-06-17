@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.guna.libmultispinner.MultiSelectionSpinner;
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -22,6 +20,7 @@ import np.com.naxa.simpledynamicforms.form.components.EditTextFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormEndFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormStartFragment;
 import np.com.naxa.simpledynamicforms.form.components.MultiSelectSpinnerFragment;
+import np.com.naxa.simpledynamicforms.form.components.PhotoFragment;
 import np.com.naxa.simpledynamicforms.form.components.SpinnerFragment;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
@@ -49,6 +48,8 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     private int fragmentPositionInViewPager;
     private JSONAnswerBuilder jsonAnswerBuilder;
     private SnackBarUtils snackBarUtils;
+
+    float mLastPositionOffset = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
         SpinnerFragment spinnerFragment = new SpinnerFragment();
         spinnerFragment.prepareQuestionAndAnswer("Do you like dancing?", options, 3);
-        adapter.addFragment(spinnerFragment,generateFragmentName());
+        adapter.addFragment(spinnerFragment, generateFragmentName());
 
 
         ArrayList<String> songs = new ArrayList<>();
@@ -120,7 +121,12 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
         MultiSelectSpinnerFragment multiSelectionSpinner = new MultiSelectSpinnerFragment();
         multiSelectionSpinner.prepareQuestionAndAnswer("Select at least two songs?", songs, 4);
-        adapter.addFragment(multiSelectionSpinner,generateFragmentName());
+        adapter.addFragment(multiSelectionSpinner, generateFragmentName());
+
+
+        PhotoFragment photoFragment = new PhotoFragment();
+        photoFragment.prepareQuestionAndAnswer("Take a photo", 5);
+        adapter.addFragment(photoFragment, generateFragmentName());
 
         adapter.addFragment(new FormEndFragment(), "");
         viewPager.setAdapter(adapter);
@@ -160,7 +166,17 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        //we do nothing important here.
+        //makeViewPagerSnappy(position, positionOffset, positionOffsetPixels);
+    }
+
+    private void makeViewPagerSnappy(int position, float positionOffset, int positionOffsetPixels) {
+
+        if (positionOffset < mLastPositionOffset && positionOffset < 0.9) {
+            viewPager.setCurrentItem(position);
+        } else if (positionOffset > mLastPositionOffset && positionOffset > 0.1) {
+            viewPager.setCurrentItem(position + 1);
+        }
+        mLastPositionOffset = positionOffset;
     }
 
     @Override
