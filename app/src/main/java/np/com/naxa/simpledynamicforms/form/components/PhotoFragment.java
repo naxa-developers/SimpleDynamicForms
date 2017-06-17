@@ -1,6 +1,8 @@
 package np.com.naxa.simpledynamicforms.form.components;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -58,7 +60,6 @@ public class PhotoFragment extends Fragment implements fragmentStateListener {
     ImageView ivImagePreview;
 
 
-    private String userSelectedAnswer = "";
     private String question;
     private String hint;
     private int position;
@@ -96,17 +97,38 @@ public class PhotoFragment extends Fragment implements fragmentStateListener {
         sendAnswerToActivity(pos);
     }
 
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof onAnswerSelectedListener) {
+            listener = (onAnswerSelectedListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement onAnswerSelectedListener");
+        }
+    }
+
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) return;
+        if (activity instanceof onAnswerSelectedListener) {
+            listener = (onAnswerSelectedListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString()
+                    + " must implement onAnswerSelectedListener");
+        }
+    }
+
     private void sendAnswerToActivity(int pos) {
         String questionName = "q" + pos;
         try {
-            listener.onAnswerSelected(questionName, userSelectedAnswer);
+            listener.onAnswerSelected(questionName, mCurrentPhotoPath);
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());
 
         }
 
-        Timber.i("Question: %s Answer: %s", question, userSelectedAnswer);
+        Timber.i("Question: %s Answer: %s", question, mCurrentPhotoPath);
     }
 
     @OnClick(R.id.fragment_photo_btn_open_gallery)
@@ -196,6 +218,11 @@ public class PhotoFragment extends Fragment implements fragmentStateListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
+        Boolean b = data != null;
+
+        Timber.e("Request Code %s ,ResultCode %s, Data %s", requestCode, resultCode, b.toString());
+
         if (requestCode == REQUEST_IMAGE_FROM_GALLERY && resultCode == RESULT_OK && null != data) {
             try {
                 Uri selectedImage = data.getData();
@@ -204,26 +231,23 @@ public class PhotoFragment extends Fragment implements fragmentStateListener {
                         filePathColumn, null, null, null);
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String imgDecodableString = cursor.getString(columnIndex);
+                mCurrentPhotoPath = cursor.getString(columnIndex);
                 cursor.close();
                 //todo fix cursor leak
+                ivImagePreview.setImageBitmap(BitmapFactory.decodeFile(mCurrentPhotoPath));
 
-                ivImagePreview.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString));
             } catch (Exception e) {
                 DialogFactory.createGenericErrorDialog(getActivity(), e.toString());
             }
-        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
-            setPic();
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            try {
+                setPic();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Timber.e(e.toString());
+
+            }
         }
-    }
-
-    private void setImagePreview(Intent data) {
-
-        Bundle extras = data.getExtras();
-        Bitmap imageBitmap = (Bitmap) extras.get("data");
-        ivImagePreview.setVisibility(View.VISIBLE);
-        ivImagePreview.setImageBitmap(imageBitmap);
-
     }
 
 
@@ -241,7 +265,8 @@ public class PhotoFragment extends Fragment implements fragmentStateListener {
         return image;
     }
 
-    private void setPic() {
+    private void setPic() throws Exception {
+
         // Get the dimensions of the View
         int targetW = ivImagePreview.getWidth();
         int targetH = ivImagePreview.getHeight();
@@ -263,8 +288,7 @@ public class PhotoFragment extends Fragment implements fragmentStateListener {
 
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
 
-        ivImagePreview.setVisibility(View.VISIBLE
-        );
+
         ivImagePreview.setImageBitmap(bitmap);
     }
 

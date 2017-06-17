@@ -14,6 +14,7 @@
 
 
     <Button
+        android:layout_marginTop="@dimen/spacing_medium"
         android:id="@+id/fragment_photo_btn_open_camera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,10 +38,10 @@
         android:id="@+id/fragment_photo_iv_image_preview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_xlarge"
+        android:layout_margin="@dimen/spacing_large"
         android:scaleType="centerInside"
         android:src="@mipmap/ic_launcher"
-        android:visibility="gone"
+
         tools:ignore="ContentDescription" />
 
 </LinearLayout>

@@ -9,7 +9,7 @@
     <color name="white_text">#FFFFFF</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
-    <color name="app_background">@color/white_background</color>
+    <color name="app_background">#f9fcef</color>
     <color name="white_background">#FFFFFF</color>
 
 
