@@ -93,7 +93,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     private void setupForm() {
 
-        adapter.addFragment(new FormStartFragment(), " ");
+        adapter.addFragment(new FormStartFragment(), "Start");
 
         EditTextFragment etfragOwnerName = new EditTextFragment();
         etfragOwnerName.prepareQuestionAndAnswer("Name ", "Enter your name ", 1);
@@ -128,13 +128,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         photoFragment.prepareQuestionAndAnswer("Take a photo", 5);
         adapter.addFragment(photoFragment, generateFragmentName());
 
-        adapter.addFragment(new FormEndFragment(), "");
+        adapter.addFragment(new FormEndFragment(), "End of Form");
         viewPager.setAdapter(adapter);
 
     }
 
     private String generateFragmentName() {
-        String fragmentName = "प्रशन नम्बर " + fragmentCount;
+        String fragmentName = "Q.no." + fragmentCount;
         fragmentCount = fragmentCount + 1;
         return fragmentName;
     }

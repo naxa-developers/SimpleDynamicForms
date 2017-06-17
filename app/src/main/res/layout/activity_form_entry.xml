@@ -23,11 +23,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/toolbar"
-            android:background="@color/primary_dark"
-            app:tabGravity="fill"
-            app:tabIndicatorHeight="3dp"
+            app:tabGravity="center"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/white_text"
+            app:tabSelectedTextColor="@color/primary_dark"
 
             />
 
@@ -37,15 +35,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tabs"
-            android:elevation="@dimen/elevation_high"
+            android:background="@color/white_background"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+
         <LinearLayout
-            android:id="@+id/LinearLayout02"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_margin="16dp">
+            android:layout_margin="@dimen/spacing_medium">
 
             <Button
                 style="@style/Widget.AppCompat.Button.Colored"
@@ -53,15 +52,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="prevFragment"
+                android:stateListAnimator="@null"
                 android:text="Previous"
                 android:textColor="@color/white_text" />
 
             <Button
+
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="nextFragment"
+                android:stateListAnimator="@null"
                 android:text="Next"
                 android:textColor="@color/white_text" />
         </LinearLayout>
