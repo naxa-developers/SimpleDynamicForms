@@ -23,6 +23,7 @@ import np.com.naxa.simpledynamicforms.form.components.FormStartFragment;
 import np.com.naxa.simpledynamicforms.form.components.MultiSelectSpinnerFragment;
 import np.com.naxa.simpledynamicforms.form.components.PhotoFragment;
 import np.com.naxa.simpledynamicforms.form.components.SpinnerFragment;
+import np.com.naxa.simpledynamicforms.form.components.SpinnerWithOtherFragment;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
@@ -133,6 +134,11 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         DateTimeFragment dateTimeFragment  = new DateTimeFragment();
         dateTimeFragment.prepareQuestionAndAnswer("Record Date and Time",6);
         adapter.addFragment(dateTimeFragment,generateFragmentName());
+
+
+        SpinnerWithOtherFragment spinnerWithOtherFragment  = new SpinnerWithOtherFragment();
+        spinnerWithOtherFragment.prepareQuestionAndAnswer("Record Date and Time",options,7);
+        adapter.addFragment(spinnerWithOtherFragment,generateFragmentName());
 
         adapter.addFragment(new FormEndFragment(), "End of Form");
         viewPager.setAdapter(adapter);

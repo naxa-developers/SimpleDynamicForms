@@ -19,6 +19,19 @@
         android:layout_marginTop="@dimen/spacing_large"
         android:spinnerMode="dialog" />
 
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/wrapper_spinner_answer_other"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.design.widget.TextInputLayout>
+
 </LinearLayout>
 
 
