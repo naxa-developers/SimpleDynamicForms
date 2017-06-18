@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.demo.JSONFormatter;
+import np.com.naxa.simpledynamicforms.form.components.DateTimeFragment;
 import np.com.naxa.simpledynamicforms.form.components.EditTextFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormEndFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormStartFragment;
@@ -127,6 +128,11 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         PhotoFragment photoFragment = new PhotoFragment();
         photoFragment.prepareQuestionAndAnswer("Take a photo", 5);
         adapter.addFragment(photoFragment, generateFragmentName());
+
+
+        DateTimeFragment dateTimeFragment  = new DateTimeFragment();
+        dateTimeFragment.prepareQuestionAndAnswer("Record Date and Time",6);
+        adapter.addFragment(dateTimeFragment,generateFragmentName());
 
         adapter.addFragment(new FormEndFragment(), "End of Form");
         viewPager.setAdapter(adapter);
