@@ -19,7 +19,7 @@ import java.lang.reflect.Field;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import timber.log.Timber;
 
-public class NonSwipeableViewPager extends ViewPager implements onAnswerSelectedListener {
+public class NonSwipeableViewPager extends ViewPager implements FormEntryActivity.shoudStopSwipe {
 
     private boolean shouldAllowSwipe = true;
 
@@ -66,16 +66,11 @@ public class NonSwipeableViewPager extends ViewPager implements onAnswerSelected
         }
     }
 
-    @Override
-    public void onAnswerSelected(String question, String answer) {
-        Timber.d("Non swipe asnwer");
-    }
+
 
     @Override
-    public void shoudStopSwipe(boolean shouldAllowSwipe) {
+    public void stopSwipe() {
 
-        Timber.d("Non swipe");
-        //  this.shouldStopSwipe = shouldStopSwipe;
     }
 
     public class MyScroller extends Scroller {

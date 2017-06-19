@@ -52,6 +52,8 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     private JSONAnswerBuilder jsonAnswerBuilder;
     private SnackBarUtils snackBarUtils;
 
+    private shoudStopSwipe shoudStopSwipeListener;
+
     float mLastPositionOffset = 0f;
 
     @Override
@@ -144,7 +146,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormEndFragment(), "End of Form");
         viewPager.setAdapter(adapter);
 
-
     }
 
     private String generateFragmentName() {
@@ -169,15 +170,16 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     @Override
     public void shoudStopSwipe(boolean shoudStopSwipe) {
 
-        Timber.i(" Should Stop Swipe %s",shoudStopSwipe);
+        Timber.i(" Should Stop Swipe %s", shoudStopSwipe);
 
-        if (shoudStopSwipe) {
-            viewPager.beginFakeDrag();
-        } else {
-            viewPager.beginFakeDrag();
-            viewPager.endFakeDrag();
+        if (shoudStopSwipe){
+            shoudStopSwipeListener.stopSwipe();
         }
+    }
 
+
+    public interface shoudStopSwipe {
+        void stopSwipe();
     }
 
     @Override
