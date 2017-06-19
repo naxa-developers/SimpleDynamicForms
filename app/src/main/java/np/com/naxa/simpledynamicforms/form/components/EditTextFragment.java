@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,9 +61,10 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
         return rootView;
     }
 
-    public void prepareQuestionAndAnswer(String question, String hint, int position) {
+    public void prepareQuestionAndAnswer(String question, String hint, int inputType, int position) {
         this.question = question;
         this.hint = hint;
+        this.position = position;
         this.position = position;
         Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
     }
@@ -93,7 +93,7 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
     public void setQuestionAndAnswers() {
         tvQuestion.setText(question);
         textInputLayout.getEditText().setHint(hint);
-        textInputLayout.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
+        textInputLayout.getEditText().setInputType(inputType);
     }
 
     private void getAnswer(final int pos) {

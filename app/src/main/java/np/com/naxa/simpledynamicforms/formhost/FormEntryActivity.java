@@ -102,7 +102,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormStartFragment(), "Start");
 
         EditTextFragment etfragOwnerName = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Name", "Enter your name", 1);
+        etfragOwnerName.prepareQuestionAndAnswer("Name", "Enter your name", InputType.TYPE_CLASS_TEXT, 1);
         adapter.addFragment(etfragOwnerName, generateFragmentName());
 
         EditTextFragment etfragContactNumber = new EditTextFragment();
@@ -171,8 +171,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         Timber.i(" Should Stop Swipe %s", shoudStopSwipe);
         if (shoudStopSwipe) {
             viewPager.shoudStopSwipe(true);
-        }
-        else {
+        } else {
             viewPager.shoudStopSwipe(false);
         }
 
@@ -213,6 +212,8 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
+        Timber.d("onPageScrollStateChanged %s", state);
 
         notifyScrollOngoingToFrag(state, fragmentPositionInViewPager);
     }

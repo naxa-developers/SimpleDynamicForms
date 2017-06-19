@@ -70,14 +70,17 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
         tvQuestion.setText(question);
         multiSelectionSpinner.setTitle(question);
         multiSelectionSpinner.setItems(options);
-        multiSelectionSpinner.setSelection(new int[]{0, 2});
         multiSelectionSpinner.setListener(this);
     }
+
+    public void selectOptions(int[] options){
+        multiSelectionSpinner.setSelection(options);
+    }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ToastUtils.showLongSafe("multiSelectionSpinner is being destroyed");
         multiSelectionSpinner.setListener(null);
     }
 
