@@ -29,6 +29,7 @@ import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
+import timber.log.Timber;
 
 public class FormEntryActivity extends AppCompatActivity implements onAnswerSelectedListener, onFormFinishedListener, ViewPager.OnPageChangeListener {
 
@@ -66,6 +67,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         jsonAnswerBuilder = new JSONAnswerBuilder();
         snackBarUtils = new SnackBarUtils(rootlayout);
         viewPager.addOnPageChangeListener(this);
+
     }
 
     private void initUI() {
@@ -114,7 +116,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         spinnerFragment.prepareQuestionAndAnswer("Do you like dancing?", options, 3);
         adapter.addFragment(spinnerFragment, generateFragmentName());
 
-
         ArrayList<String> songs = new ArrayList<>();
         songs.add("Yellow - Coldplay");
         songs.add("Pani Paryo - Rohit");
@@ -131,17 +132,18 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(photoFragment, generateFragmentName());
 
 
-        DateTimeFragment dateTimeFragment  = new DateTimeFragment();
-        dateTimeFragment.prepareQuestionAndAnswer("Record Date and Time",6);
-        adapter.addFragment(dateTimeFragment,generateFragmentName());
+        DateTimeFragment dateTimeFragment = new DateTimeFragment();
+        dateTimeFragment.prepareQuestionAndAnswer("Record Date and Time", 6);
+        adapter.addFragment(dateTimeFragment, generateFragmentName());
 
 
-        SpinnerWithOtherFragment spinnerWithOtherFragment  = new SpinnerWithOtherFragment();
-        spinnerWithOtherFragment.prepareQuestionAndAnswer("Record Date and Time",options,7);
-        adapter.addFragment(spinnerWithOtherFragment,generateFragmentName());
+        SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
+        spinnerWithOtherFragment.prepareQuestionAndAnswer("Record Date and Time", options, 7);
+        adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
 
         adapter.addFragment(new FormEndFragment(), "End of Form");
         viewPager.setAdapter(adapter);
+
 
     }
 
@@ -162,6 +164,20 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     @Override
     public void onAnswerSelected(String question, String answer) {
         jsonAnswerBuilder.addAnswerToJSON(question, answer);
+    }
+
+    @Override
+    public void shoudStopSwipe(boolean shoudStopSwipe) {
+
+        Timber.i(" Should Stop Swipe %s",shoudStopSwipe);
+
+        if (shoudStopSwipe) {
+            viewPager.beginFakeDrag();
+        } else {
+            viewPager.beginFakeDrag();
+            viewPager.endFakeDrag();
+        }
+
     }
 
     @Override

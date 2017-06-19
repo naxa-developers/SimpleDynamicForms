@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,7 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
     private String userSelectedAnswer = "";
     private String question;
     private String hint;
+    private int inputType;
     private int position;
     private onAnswerSelectedListener listener;
 
@@ -52,13 +55,33 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
         this.question = question;
         this.hint = hint;
         this.position = position;
-
         Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
     }
+
+    public void prepareQuestionAndAnswer(String question, String hint, int inputType, int position) {
+        this.question = question;
+        this.hint = hint;
+        this.position = position;
+        this.inputType = inputType;
+        Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
+    }
+
+    public void setMaxCounter(@NonNull int counterMaxLength) {
+        textInputLayout.setCounterEnabled(true);
+        textInputLayout.setCounterMaxLength(counterMaxLength);
+    }
+
+
+    public boolean shouldStopSwipe() {
+
+        return true;
+    }
+
 
     public void setQuestionAndAnswers() {
         tvQuestion.setText(question);
         textInputLayout.getEditText().setHint(hint);
+        textInputLayout.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
     }
 
     private void getAnswer(final int pos) {
@@ -70,6 +93,7 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
         String questionName = "q" + pos;
         try {
             listener.onAnswerSelected(questionName, userSelectedAnswer);
+            listener.shoudStopSwipe(shouldStopSwipe());
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());
