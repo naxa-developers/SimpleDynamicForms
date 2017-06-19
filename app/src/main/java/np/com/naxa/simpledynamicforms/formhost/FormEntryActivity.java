@@ -152,11 +152,20 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     }
 
     public void nextFragment(View view) {
+        fakeScroll();
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
     }
 
     public void prevFragment(View view) {
+        fakeScroll();
         viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+    }
+
+    private void fakeScroll(){
+        fragmentStateListener fragStateListener = (fragmentStateListener) adapter.instantiateItem(viewPager, fragmentPositionInViewPager);
+        if (fragStateListener != null) {
+            fragStateListener.fragmentStateChange(DataRepo.VIEW_PAGER_SCROLL_EVENT_START, fragmentPositionInViewPager);
+        }
     }
 
     @Override
@@ -222,9 +231,9 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         switch (state) {
             case DataRepo.VIEW_PAGER_SCROLL_EVENT_START:
 
-                fragmentStateListener fragmentStateListener = (fragmentStateListener) adapter.instantiateItem(viewPager, fragmentPositionInViewPager);
-                if (fragmentStateListener != null) {
-                    fragmentStateListener.fragmentStateChange(state, fragmentPositionInViewPager);
+                fragmentStateListener fragStateListener = (fragmentStateListener) adapter.instantiateItem(viewPager, fragmentPositionInViewPager);
+                if (fragStateListener != null) {
+                    fragStateListener.fragmentStateChange(state, fragmentPositionInViewPager);
                 }
 
                 break;
