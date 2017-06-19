@@ -15,9 +15,10 @@ import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
+import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 
 
-public class FormEndFragment extends Fragment implements fragmentStateListener {
+public class FormEndFragment extends Fragment implements fragmentStateListener,onPageVisibleListener {
 
     private onFormFinishedListener listener;
 
@@ -70,5 +71,10 @@ public class FormEndFragment extends Fragment implements fragmentStateListener {
     @Override
     public void fragmentStateChange(int state, int pos) {
         notifyFormHasEnded(pos);
+    }
+
+    @Override
+    public void fragmentIsVisible() {
+
     }
 }

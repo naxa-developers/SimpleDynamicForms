@@ -22,12 +22,14 @@ import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
+import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
+import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
 
-public class MultiSelectSpinnerFragment extends Fragment implements fragmentStateListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener {
+public class MultiSelectSpinnerFragment extends Fragment implements fragmentStateListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener,onPageVisibleListener {
 
 
     @BindView(R.id.tv_question_edit_text)
@@ -42,6 +44,7 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
     private ArrayList<String> options;
     private int position;
     private onAnswerSelectedListener listener;
+    private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
 
 
     public MultiSelectSpinnerFragment() {
@@ -105,7 +108,6 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
 
 
 
-
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof onAnswerSelectedListener) {
@@ -113,6 +115,13 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement onAnswerSelectedListener");
+        }
+
+        if (context instanceof shouldAllowViewPagerSwipeListener) {
+            allowViewPagerSwipeListener = (shouldAllowViewPagerSwipeListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement shouldAllowViewPagerSwipeListener");
         }
     }
 
@@ -125,9 +134,15 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
             throw new RuntimeException(activity.toString()
                     + " must implement onAnswerSelectedListener");
         }
-    }
 
-    @Override
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) return;
+        if (activity instanceof shouldAllowViewPagerSwipeListener) {
+            allowViewPagerSwipeListener = (shouldAllowViewPagerSwipeListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString()
+                    + " must implement shouldAllowViewPagerSwipeListener");
+        }
+    }    @Override
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
 
         Timber.d("Asking Fragment At Postion %s for answer for the question ", fragmentPositionInViewPager);
@@ -149,5 +164,11 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
     @Override
     public void selectedStrings(List<String> strings) {
         userSelectedAnswer = new JSONArray(strings).toString();
+    }
+
+
+    @Override
+    public void fragmentIsVisible() {
+        allowViewPagerSwipeListener.stopViewpagerScroll(false);
     }
 }

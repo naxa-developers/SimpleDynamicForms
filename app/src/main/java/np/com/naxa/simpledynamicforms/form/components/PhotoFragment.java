@@ -34,6 +34,8 @@ import butterknife.OnClick;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
+import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
+import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import timber.log.Timber;
@@ -42,7 +44,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 
-public class PhotoFragment extends Fragment implements fragmentStateListener {
+public class PhotoFragment extends Fragment implements fragmentStateListener,onPageVisibleListener {
 
 
     private static final int REQUEST_IMAGE_FROM_GALLERY = 101;
@@ -66,6 +68,7 @@ public class PhotoFragment extends Fragment implements fragmentStateListener {
     private int position;
     private onAnswerSelectedListener listener;
     private String mCurrentPhotoPath;
+    private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
 
 
     public PhotoFragment() {
@@ -106,6 +109,13 @@ public class PhotoFragment extends Fragment implements fragmentStateListener {
             throw new RuntimeException(context.toString()
                     + " must implement onAnswerSelectedListener");
         }
+
+        if (context instanceof shouldAllowViewPagerSwipeListener) {
+            allowViewPagerSwipeListener = (shouldAllowViewPagerSwipeListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement shouldAllowViewPagerSwipeListener");
+        }
     }
 
     public void onAttach(Activity activity) {
@@ -116,6 +126,14 @@ public class PhotoFragment extends Fragment implements fragmentStateListener {
         } else {
             throw new RuntimeException(activity.toString()
                     + " must implement onAnswerSelectedListener");
+        }
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) return;
+        if (activity instanceof shouldAllowViewPagerSwipeListener) {
+            allowViewPagerSwipeListener = (shouldAllowViewPagerSwipeListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString()
+                    + " must implement shouldAllowViewPagerSwipeListener");
         }
     }
 
@@ -314,5 +332,11 @@ public class PhotoFragment extends Fragment implements fragmentStateListener {
                 }
 
         }
+    }
+
+
+    @Override
+    public void fragmentIsVisible() {
+        allowViewPagerSwipeListener.stopViewpagerScroll(false);
     }
 }

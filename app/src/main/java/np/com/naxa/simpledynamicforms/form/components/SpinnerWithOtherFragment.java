@@ -21,11 +21,13 @@ import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
+import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
+import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import timber.log.Timber;
 
 
-public class SpinnerWithOtherFragment extends Fragment implements fragmentStateListener, AdapterView.OnItemSelectedListener {
+public class SpinnerWithOtherFragment extends Fragment implements fragmentStateListener, AdapterView.OnItemSelectedListener, onPageVisibleListener {
 
 
     @BindView(R.id.tv_question_edit_text)
@@ -43,6 +45,7 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     private int position;
     private onAnswerSelectedListener listener;
     private boolean shouldGetValueFromOther;
+    private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
 
 
     public SpinnerWithOtherFragment() {
@@ -119,6 +122,13 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
             throw new RuntimeException(context.toString()
                     + " must implement onAnswerSelectedListener");
         }
+
+        if (context instanceof shouldAllowViewPagerSwipeListener) {
+            allowViewPagerSwipeListener = (shouldAllowViewPagerSwipeListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement shouldAllowViewPagerSwipeListener");
+        }
     }
 
     public void onAttach(Activity activity) {
@@ -129,6 +139,14 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
         } else {
             throw new RuntimeException(activity.toString()
                     + " must implement onAnswerSelectedListener");
+        }
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) return;
+        if (activity instanceof shouldAllowViewPagerSwipeListener) {
+            allowViewPagerSwipeListener = (shouldAllowViewPagerSwipeListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString()
+                    + " must implement shouldAllowViewPagerSwipeListener");
         }
     }
 
@@ -172,5 +190,11 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+
+    @Override
+    public void fragmentIsVisible() {
+        allowViewPagerSwipeListener.stopViewpagerScroll(false);
     }
 }

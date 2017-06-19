@@ -28,11 +28,14 @@ import np.com.naxa.simpledynamicforms.form.components.SpinnerWithOtherFragment;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
+import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
+import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
+import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
-public class FormEntryActivity extends AppCompatActivity implements onAnswerSelectedListener, onFormFinishedListener, ViewPager.OnPageChangeListener {
+public class FormEntryActivity extends AppCompatActivity implements onAnswerSelectedListener, onFormFinishedListener, ViewPager.OnPageChangeListener, shouldAllowViewPagerSwipeListener {
 
 
     @BindView(R.id.toolbar)
@@ -55,6 +58,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
 
     float mLastPositionOffset = 0f;
+    private boolean shouldStopViewPagerSwipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,15 +157,22 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     public void nextFragment(View view) {
         fakeScroll();
+        if (shouldStopViewPagerSwipe){
+            return;
+        }
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
     }
 
     public void prevFragment(View view) {
         fakeScroll();
+        if (shouldStopViewPagerSwipe){
+            return;
+        }
+
         viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
     }
 
-    private void fakeScroll(){
+    private void fakeScroll() {
         fragmentStateListener fragStateListener = (fragmentStateListener) adapter.instantiateItem(viewPager, fragmentPositionInViewPager);
         if (fragStateListener != null) {
             fragStateListener.fragmentStateChange(DataRepo.VIEW_PAGER_SCROLL_EVENT_START, fragmentPositionInViewPager);
@@ -179,8 +190,10 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
         Timber.i(" Should Stop Swipe %s", shoudStopSwipe);
         if (shoudStopSwipe) {
+            shouldStopViewPagerSwipe = true;
             viewPager.shoudStopSwipe(true);
         } else {
+            shouldStopViewPagerSwipe = false;
             viewPager.shoudStopSwipe(false);
         }
 
@@ -217,6 +230,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     @Override
     public void onPageSelected(int fragmentPositionInViewPager) {
         this.fragmentPositionInViewPager = fragmentPositionInViewPager;
+
+        onPageVisibleListener pageVisibleListener = (onPageVisibleListener) adapter.instantiateItem(viewPager, fragmentPositionInViewPager);
+        if (pageVisibleListener != null) {
+            pageVisibleListener.fragmentIsVisible();
+        }
+
+
     }
 
     @Override
@@ -241,4 +261,11 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     }
 
 
+    @Override
+    public void stopViewpagerScroll(boolean stop) {
+
+
+
+        this.shouldStopViewPagerSwipe = stop;
+    }
 }

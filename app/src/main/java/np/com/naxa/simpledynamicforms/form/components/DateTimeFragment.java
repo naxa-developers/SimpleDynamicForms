@@ -20,11 +20,13 @@ import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
+import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
+import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import timber.log.Timber;
 
 
-public class DateTimeFragment extends Fragment implements fragmentStateListener, SingleDateAndTimePicker.Listener {
+public class DateTimeFragment extends Fragment implements fragmentStateListener, SingleDateAndTimePicker.Listener, onPageVisibleListener {
 
 
     @BindView(R.id.tv_question_edit_text)
@@ -38,6 +40,7 @@ public class DateTimeFragment extends Fragment implements fragmentStateListener,
     private ArrayList<String> options;
     private int position;
     private onAnswerSelectedListener listener;
+    private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
 
 
     public DateTimeFragment() {
@@ -93,6 +96,13 @@ public class DateTimeFragment extends Fragment implements fragmentStateListener,
             throw new RuntimeException(context.toString()
                     + " must implement onAnswerSelectedListener");
         }
+
+        if (context instanceof shouldAllowViewPagerSwipeListener) {
+            allowViewPagerSwipeListener = (shouldAllowViewPagerSwipeListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement shouldAllowViewPagerSwipeListener");
+        }
     }
 
     public void onAttach(Activity activity) {
@@ -103,6 +113,14 @@ public class DateTimeFragment extends Fragment implements fragmentStateListener,
         } else {
             throw new RuntimeException(activity.toString()
                     + " must implement onAnswerSelectedListener");
+        }
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) return;
+        if (activity instanceof shouldAllowViewPagerSwipeListener) {
+            allowViewPagerSwipeListener = (shouldAllowViewPagerSwipeListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString()
+                    + " must implement shouldAllowViewPagerSwipeListener");
         }
     }
 
@@ -124,5 +142,11 @@ public class DateTimeFragment extends Fragment implements fragmentStateListener,
     @Override
     public void onDateChanged(String displayed, Date date) {
         userSelectedAnswer = displayed;
+    }
+
+
+    @Override
+    public void fragmentIsVisible() {
+        allowViewPagerSwipeListener.stopViewpagerScroll(false);
     }
 }

@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
+import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import timber.log.Timber;
 
 
-public class FormStartFragment extends Fragment implements fragmentStateListener {
+public class FormStartFragment extends Fragment implements fragmentStateListener,onPageVisibleListener {
 
 
     public FormStartFragment() {
@@ -29,5 +30,10 @@ public class FormStartFragment extends Fragment implements fragmentStateListener
     @Override
     public void fragmentStateChange(int state, int pos) {
         Timber.i(" State %s pos %s", state, pos);
+    }
+
+    @Override
+    public void fragmentIsVisible() {
+        
     }
 }

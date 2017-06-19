@@ -19,11 +19,14 @@ import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
+import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
+import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
+import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
 
-public class EditTextFragment extends Fragment implements fragmentStateListener {
+public class EditTextFragment extends Fragment implements fragmentStateListener, onPageVisibleListener {
 
 
     @BindView(R.id.tv_question_edit_text)
@@ -38,6 +41,7 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
     private int inputType;
     private int position;
     private onAnswerSelectedListener listener;
+    private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
     private boolean shouldStopWipe = false;
     private boolean validationRequired;
 
@@ -123,6 +127,13 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
             throw new RuntimeException(context.toString()
                     + " must implement onAnswerSelectedListener");
         }
+
+        if (context instanceof shouldAllowViewPagerSwipeListener) {
+            allowViewPagerSwipeListener = (shouldAllowViewPagerSwipeListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement shouldAllowViewPagerSwipeListener");
+        }
     }
 
     public void onAttach(Activity activity) {
@@ -133,6 +144,14 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
         } else {
             throw new RuntimeException(activity.toString()
                     + " must implement onAnswerSelectedListener");
+        }
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) return;
+        if (activity instanceof shouldAllowViewPagerSwipeListener) {
+            allowViewPagerSwipeListener = (shouldAllowViewPagerSwipeListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString()
+                    + " must implement shouldAllowViewPagerSwipeListener");
         }
     }
 
@@ -191,5 +210,11 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
 
         shouldStopWipe = false;
         listener.shoudStopSwipe(shouldStopWipe);
+    }
+
+    @Override
+    public void fragmentIsVisible() {
+        ToastUtils.showLongSafe("Hello I am visible");
+        allowViewPagerSwipeListener.stopViewpagerScroll(shouldStopWipe);
     }
 }
