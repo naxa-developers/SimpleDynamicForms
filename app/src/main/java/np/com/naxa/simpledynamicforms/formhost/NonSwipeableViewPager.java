@@ -73,7 +73,10 @@ public class NonSwipeableViewPager extends ViewPager implements onAnswerSelected
     public void shoudStopSwipe(boolean shouldStopSwipe) {
         this.shouldStopSwipe = shouldStopSwipe;
 
-        ToastUtils.showLongSafe("This question is mandatory.");
+        if (shouldStopSwipe){
+            ToastUtils.showLongSafe("This question is mandatory.");
+        }
+
     }
 
     public class MyScroller extends Scroller {

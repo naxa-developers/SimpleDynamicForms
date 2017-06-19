@@ -187,7 +187,8 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
     }
 
     private void shouldAllowSwipe() {
-       getAnswer(position);
+
         shouldStopWipe = false;
+        listener.shoudStopSwipe(shouldStopWipe);
     }
 }
