@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,8 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
     private int inputType;
     private int position;
     private onAnswerSelectedListener listener;
+    private boolean shouldStopWipe = false;
+    private boolean validationRequired;
 
 
     public EditTextFragment() {
@@ -48,6 +52,12 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
         View rootView = inflater.inflate(R.layout.fragment_edittext, container, false);
         ButterKnife.bind(this, rootView);
         setQuestionAndAnswers();
+
+        if (validationRequired) {
+            shouldStopSwipe();
+            setValidation();
+        }
+
         return rootView;
     }
 
@@ -58,12 +68,14 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
         Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
     }
 
-    public void prepareQuestionAndAnswer(String question, String hint, int inputType, int position) {
+    public void prepareQuestionAndAnswer(String question, String hint, int inputType, boolean validationRequired, int position) {
         this.question = question;
         this.hint = hint;
         this.position = position;
         this.inputType = inputType;
+        this.validationRequired = validationRequired;
         Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
+
     }
 
     public void setMaxCounter(@NonNull int counterMaxLength) {
@@ -72,9 +84,8 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
     }
 
 
-    public boolean shouldStopSwipe() {
-
-        return true;
+    public void shouldStopSwipe() {
+        shouldStopWipe = true;
     }
 
 
@@ -93,7 +104,7 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
         String questionName = "q" + pos;
         try {
             listener.onAnswerSelected(questionName, userSelectedAnswer);
-            listener.shoudStopSwipe(shouldStopSwipe());
+            listener.shoudStopSwipe(shouldStopWipe);
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());
@@ -142,5 +153,41 @@ public class EditTextFragment extends Fragment implements fragmentStateListener 
         textInputLayout.setErrorEnabled(true);
         textInputLayout.setError(message);
         textInputLayout.requestFocus();
+    }
+
+
+    private void setValidation() {
+
+
+        textInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (textInputLayout.getEditText().getText().toString().trim().length() == 0) {
+                    shouldStopSwipe();
+                    setErrorMessage("This Field Cannot be empty");
+                } else {
+
+
+                    shouldAllowSwipe();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+    }
+
+    private void shouldAllowSwipe() {
+       getAnswer(position);
+        shouldStopWipe = false;
     }
 }

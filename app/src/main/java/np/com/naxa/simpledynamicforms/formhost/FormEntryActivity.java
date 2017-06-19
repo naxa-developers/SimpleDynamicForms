@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
 
 import org.json.JSONObject;
@@ -52,7 +53,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     private JSONAnswerBuilder jsonAnswerBuilder;
     private SnackBarUtils snackBarUtils;
 
-    private shoudStopSwipe shoudStopSwipeListener;
 
     float mLastPositionOffset = 0f;
 
@@ -106,7 +106,8 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(etfragOwnerName, generateFragmentName());
 
         EditTextFragment etfragContactNumber = new EditTextFragment();
-        etfragContactNumber.prepareQuestionAndAnswer("Age ", "Enter your age ", 2);
+        etfragContactNumber.prepareQuestionAndAnswer("Age ", "Enter your age ", InputType.TYPE_CLASS_NUMBER, true, 2);
+        etfragContactNumber.shouldStopSwipe();
         adapter.addFragment(etfragContactNumber, generateFragmentName());
 
 
@@ -172,16 +173,15 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     public void shoudStopSwipe(boolean shoudStopSwipe) {
 
         Timber.i(" Should Stop Swipe %s", shoudStopSwipe);
-        if (shoudStopSwipe){
-            viewPager.shoudStopSwipe(shoudStopSwipe);
+        if (shoudStopSwipe) {
+            viewPager.shoudStopSwipe(true);
+        }
+        else {
+            viewPager.shoudStopSwipe(false);
         }
 
     }
 
-
-    public interface shoudStopSwipe {
-        void stopSwipe();
-    }
 
     @Override
     public void uploadForm() {
