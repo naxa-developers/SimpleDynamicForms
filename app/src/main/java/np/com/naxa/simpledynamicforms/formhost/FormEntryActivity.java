@@ -1,5 +1,7 @@
 package np.com.naxa.simpledynamicforms.formhost;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
@@ -34,8 +36,10 @@ import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.model.Form;
+import np.com.naxa.simpledynamicforms.savedform.SavedFormActivity;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
+import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
 public class FormEntryActivity extends AppCompatActivity implements onAnswerSelectedListener, onFormFinishedListener, ViewPager.OnPageChangeListener, shouldAllowViewPagerSwipeListener {
@@ -113,7 +117,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormStartFragment(), "Start");
 
         EditTextFragment etfragOwnerName = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Name", "Enter your name", InputType.TYPE_CLASS_TEXT, 1);
+        etfragOwnerName.prepareQuestionAndAnswer("Name", "Enter your name", InputType.TYPE_CLASS_TEXT,false, 1);
         adapter.addFragment(etfragOwnerName, generateFragmentName());
 
         EditTextFragment etfragContactNumber = new EditTextFragment();
@@ -211,13 +215,27 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     public void uploadForm() {
         jsonToSend = jsonAnswerBuilder.finalizeAnswers();
         String formatedJSON = JSONFormatter.formatString(jsonToSend);
-        DialogFactory.createMessageDialog(this, "Answers formatted in JSON", formatedJSON).show();
+        DialogFactory.createMessageDialog(this, "Answers formatted in JSON", formatedJSON);
     }
 
     @Override
     public void saveForm(Form form) {
+        jsonToSend = jsonAnswerBuilder.finalizeAnswers();
         form.setFormJson(jsonToSend);
         SugarRecord.save(form);
+        DialogFactory.createActionDialog(this, "Save Successful", "Your form has been save successfully").setPositiveButton("New Form", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(getApplicationContext(),FormEntryActivity.class));
+            }
+        }).setNegativeButton("View Saved Form", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(FormEntryActivity.this, SavedFormActivity.class));
+
+            }
+        }).create().show();
+
     }
 
     @Override

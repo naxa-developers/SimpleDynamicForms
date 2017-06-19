@@ -214,7 +214,7 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
 
     @Override
     public void fragmentIsVisible() {
-        ToastUtils.showLongSafe("Hello I am visible");
+
         allowViewPagerSwipeListener.stopViewpagerScroll(shouldStopWipe);
     }
 }

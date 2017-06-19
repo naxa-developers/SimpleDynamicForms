@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Simple Dynamic Forms</string>
     <string name="dialog_action_ok">Okay</string>
+    <string name="dialog_action_dismiss">Dismiss</string>
     <string name="dialog_error_title">Error</string>
     <string name="fragment_photo_btn_open_camera">Open Camera</string>
     <string name="fragment_photo_btn_open_gallery">Open Gallery</string>
