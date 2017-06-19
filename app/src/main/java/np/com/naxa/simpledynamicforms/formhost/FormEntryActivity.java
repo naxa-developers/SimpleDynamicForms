@@ -39,7 +39,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     @BindView(R.id.tabs)
     TabLayout tabLayout;
     @BindView(R.id.viewpager)
-    ViewPager viewPager;
+    NonSwipeableViewPager viewPager;
 
     @BindView(R.id.root_layout_activity_form_entry)
     CoordinatorLayout rootlayout;
@@ -140,7 +140,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
 
         SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
-        spinnerWithOtherFragment.prepareQuestionAndAnswer("Record Date and Time", options, 7);
+        spinnerWithOtherFragment.prepareQuestionAndAnswer("Choose other from drop down", options, 7);
         adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
 
         adapter.addFragment(new FormEndFragment(), "End of Form");
@@ -165,16 +165,17 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     @Override
     public void onAnswerSelected(String question, String answer) {
         jsonAnswerBuilder.addAnswerToJSON(question, answer);
+
     }
 
     @Override
     public void shoudStopSwipe(boolean shoudStopSwipe) {
 
         Timber.i(" Should Stop Swipe %s", shoudStopSwipe);
-
         if (shoudStopSwipe){
-            shoudStopSwipeListener.stopSwipe();
+            viewPager.shoudStopSwipe(shoudStopSwipe);
         }
+
     }
 
 

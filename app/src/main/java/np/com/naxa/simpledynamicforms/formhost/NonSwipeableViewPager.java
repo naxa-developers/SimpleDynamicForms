@@ -10,18 +10,17 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
 import java.lang.reflect.Field;
 
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
-import timber.log.Timber;
+import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 
-public class NonSwipeableViewPager extends ViewPager implements FormEntryActivity.shoudStopSwipe {
+public class NonSwipeableViewPager extends ViewPager implements onAnswerSelectedListener {
 
-    private boolean shouldAllowSwipe = true;
+    private boolean shouldStopSwipe = false;
 
     public NonSwipeableViewPager(Context context) {
         super(context);
@@ -34,11 +33,9 @@ public class NonSwipeableViewPager extends ViewPager implements FormEntryActivit
     }
 
 
-
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!shouldAllowSwipe) {
+        if (shouldStopSwipe) {
             return false;
         }
         return super.onTouchEvent(event);
@@ -46,7 +43,7 @@ public class NonSwipeableViewPager extends ViewPager implements FormEntryActivit
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if (!shouldAllowSwipe) {
+        if (shouldStopSwipe) {
             return false;
         }
 
@@ -67,10 +64,16 @@ public class NonSwipeableViewPager extends ViewPager implements FormEntryActivit
     }
 
 
+    @Override
+    public void onAnswerSelected(String question, String answer) {
+
+    }
 
     @Override
-    public void stopSwipe() {
+    public void shoudStopSwipe(boolean shouldStopSwipe) {
+        this.shouldStopSwipe = shouldStopSwipe;
 
+        ToastUtils.showLongSafe("This question is mandatory.");
     }
 
     public class MyScroller extends Scroller {
