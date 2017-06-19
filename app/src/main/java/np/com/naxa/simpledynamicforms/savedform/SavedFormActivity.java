@@ -1,10 +1,14 @@
 package np.com.naxa.simpledynamicforms.savedform;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.common.collect.Lists;
 
@@ -39,11 +43,25 @@ public class SavedFormActivity extends AppCompatActivity {
 
         forms = Form.findWithQuery(Form.class, "SELECT * FROM Form ORDER BY ID DESC", null);
 
+        forms.addAll(Form.createFormlist(20));
+
+
 
         FormsAdapter adapter = new FormsAdapter(this, forms);
         rvforms.setAdapter(adapter);
         rvforms.setLayoutManager(new LinearLayoutManager(this));
 
+
+
+        adapter.setOnItemClickListener(new FormsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                String name = forms.get(position).getFormName();
+//                Intent intent = new Intent(SavedFormActivity.this, EditF.class);
+//                intent.putExtra(DetailsActivity.ID, Contact.CONTACTS[position].getId());
+//                startActivity(intent);
+            }
+        });
 
     }
 }

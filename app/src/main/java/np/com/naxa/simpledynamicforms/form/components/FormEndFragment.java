@@ -20,6 +20,7 @@ import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.model.Form;
+import np.com.naxa.simpledynamicforms.uitils.TimeUtils;
 
 
 public class FormEndFragment extends Fragment implements fragmentStateListener, onPageVisibleListener {
@@ -87,6 +88,9 @@ public class FormEndFragment extends Fragment implements fragmentStateListener, 
         }
 
         Form form = new Form();
+        String currentDateTime = TimeUtils.getNowString();
+
+        form.setFilledDateTime(currentDateTime);
         form.setFormName(formName);
 
         try {
@@ -96,7 +100,7 @@ public class FormEndFragment extends Fragment implements fragmentStateListener, 
         }
     }
 
-    private void setTextInputLayoutListener(){
+    private void setTextInputLayoutListener() {
         textInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

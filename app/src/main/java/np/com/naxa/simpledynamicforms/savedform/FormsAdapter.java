@@ -1,6 +1,8 @@
 package np.com.naxa.simpledynamicforms.savedform;
 
 import android.content.Context;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,12 +31,25 @@ public class FormsAdapter extends
         public TextView nameTextView;
         public Button btnEditForm, btnReviewForm;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
 
             nameTextView = (TextView) itemView.findViewById(R.id.form_name);
             btnEditForm = (Button) itemView.findViewById(R.id.edit_button);
             btnReviewForm = (Button) itemView.findViewById(R.id.review_form);
+            // Setup the click listener
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(itemView, position);
+                        }
+                    }
+                }
+            });
 
         }
     }
@@ -80,7 +95,6 @@ public class FormsAdapter extends
             @Override
             public void onClick(View v) {
 
-
             }
         });
 
@@ -97,6 +111,19 @@ public class FormsAdapter extends
     @Override
     public int getItemCount() {
         return forms.size();
+    }
+
+
+
+    // Define listener member variable
+    private OnItemClickListener listener;
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position);
+    }
+    // Define the method that allows the parent activity or fragment to define the listener
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
 }
