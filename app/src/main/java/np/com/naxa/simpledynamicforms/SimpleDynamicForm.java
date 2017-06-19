@@ -2,6 +2,8 @@ package np.com.naxa.simpledynamicforms;
 
 import android.app.Application;
 
+import com.orm.SugarApp;
+
 import timber.log.Timber;
 
 /**
@@ -10,7 +12,7 @@ import timber.log.Timber;
  * @email nishon.tan@gmail.com
  */
 
-public class SimpleDynamicForm extends Application {
+public class SimpleDynamicForm extends SugarApp {
 
 
     private static SimpleDynamicForm simpleDynamicForm;

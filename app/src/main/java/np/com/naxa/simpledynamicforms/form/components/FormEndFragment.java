@@ -19,6 +19,7 @@ import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
+import np.com.naxa.simpledynamicforms.model.Form;
 
 
 public class FormEndFragment extends Fragment implements fragmentStateListener, onPageVisibleListener {
@@ -85,7 +86,14 @@ public class FormEndFragment extends Fragment implements fragmentStateListener, 
             return;
         }
 
-        notifyFormHasEnded();
+        Form form = new Form();
+        form.setFormName(formName);
+
+        try {
+            listener.saveForm(form);
+        } catch (ClassCastException cce) {
+
+        }
     }
 
     private void setTextInputLayoutListener(){

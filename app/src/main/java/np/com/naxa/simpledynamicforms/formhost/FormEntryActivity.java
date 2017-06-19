@@ -10,6 +10,8 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.orm.SugarRecord;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
+import np.com.naxa.simpledynamicforms.model.Form;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
 import timber.log.Timber;
@@ -212,8 +215,9 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     }
 
     @Override
-    public void saveForm() {
-
+    public void saveForm(Form form) {
+        form.setFormJson(jsonToSend);
+        SugarRecord.save(form);
     }
 
     @Override

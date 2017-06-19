@@ -1,5 +1,7 @@
 package np.com.naxa.simpledynamicforms.form.listeners;
 
+import np.com.naxa.simpledynamicforms.model.Form;
+
 /**
  * Created by nishon.tan on 4/21/2017.
  */
@@ -7,5 +9,5 @@ package np.com.naxa.simpledynamicforms.form.listeners;
 public interface onFormFinishedListener {
     void uploadForm();
 
-    void saveForm();
+    void saveForm(Form form);
 }
