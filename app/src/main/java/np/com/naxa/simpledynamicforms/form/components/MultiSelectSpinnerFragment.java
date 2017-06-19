@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.guna.libmultispinner.MultiSelectionSpinner;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
+import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
@@ -84,9 +87,10 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
     }
 
     private void sendAnswerToActivity(int pos) {
-        String questionName = "q" + pos;
+
+
         try {
-            listener.onAnswerSelected(questionName, userSelectedAnswer);
+            listener.onAnswerSelected(StringFormatter.replaceStringWithUnderScore(question), userSelectedAnswer);
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());
@@ -95,6 +99,9 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
 
         Timber.i("Question: %s Answer: %s", question, userSelectedAnswer);
     }
+
+
+
 
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -138,6 +145,6 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
 
     @Override
     public void selectedStrings(List<String> strings) {
-        userSelectedAnswer = strings.toString();
+        userSelectedAnswer = new JSONArray(strings).toString();
     }
 }

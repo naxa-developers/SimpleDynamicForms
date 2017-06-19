@@ -34,6 +34,7 @@ import butterknife.OnClick;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
+import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import timber.log.Timber;
 
@@ -119,9 +120,9 @@ public class PhotoFragment extends Fragment implements fragmentStateListener {
     }
 
     private void sendAnswerToActivity(int pos) {
-        String questionName = "q" + pos;
+
         try {
-            listener.onAnswerSelected(questionName, mCurrentPhotoPath);
+            listener.onAnswerSelected(StringFormatter.replaceStringWithUnderScore(question), mCurrentPhotoPath);
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());

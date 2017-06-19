@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
+import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import timber.log.Timber;
 
 
@@ -73,9 +74,9 @@ public class SpinnerFragment extends Fragment implements fragmentStateListener {
     }
 
     private void sendAnswerToActivity(int pos) {
-        String questionName = "q" + pos;
+
         try {
-            listener.onAnswerSelected(questionName, userSelectedAnswer);
+            listener.onAnswerSelected(StringFormatter.replaceStringWithUnderScore(question), userSelectedAnswer);
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());

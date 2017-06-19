@@ -102,14 +102,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormStartFragment(), "Start");
 
         EditTextFragment etfragOwnerName = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Name ", "Enter your name ", 1);
+        etfragOwnerName.prepareQuestionAndAnswer("Name", "Enter your name", 1);
         adapter.addFragment(etfragOwnerName, generateFragmentName());
 
         EditTextFragment etfragContactNumber = new EditTextFragment();
-        etfragContactNumber.prepareQuestionAndAnswer("Age ", "Enter your age ", InputType.TYPE_CLASS_NUMBER, true, 2);
+        etfragContactNumber.prepareQuestionAndAnswer("Age", "Enter your age ", InputType.TYPE_CLASS_NUMBER, true, 2);
         etfragContactNumber.shouldStopSwipe();
         adapter.addFragment(etfragContactNumber, generateFragmentName());
-
 
         ArrayList<String> options = new ArrayList<>();
         options.add("Yes");
@@ -129,16 +128,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         multiSelectionSpinner.prepareQuestionAndAnswer("Select at least two songs?", songs, 4);
         adapter.addFragment(multiSelectionSpinner, generateFragmentName());
 
-
         PhotoFragment photoFragment = new PhotoFragment();
         photoFragment.prepareQuestionAndAnswer("Take a photo", 5);
         adapter.addFragment(photoFragment, generateFragmentName());
 
-
         DateTimeFragment dateTimeFragment = new DateTimeFragment();
         dateTimeFragment.prepareQuestionAndAnswer("Record Date and Time", 6);
         adapter.addFragment(dateTimeFragment, generateFragmentName());
-
 
         SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
         spinnerWithOtherFragment.prepareQuestionAndAnswer("Choose other from drop down", options, 7);
