@@ -4,23 +4,30 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 
 
-public class FormEndFragment extends Fragment implements fragmentStateListener,onPageVisibleListener {
+public class FormEndFragment extends Fragment implements fragmentStateListener, onPageVisibleListener {
 
     private onFormFinishedListener listener;
+
+    @BindView(R.id.fragment_form_end_wrapper_form_name)
+    TextInputLayout textInputLayout;
+
 
     public FormEndFragment() {
     }
@@ -30,8 +37,7 @@ public class FormEndFragment extends Fragment implements fragmentStateListener,o
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_form_end, container, false);
         ButterKnife.bind(this, rootView);
-
-
+        setTextInputLayoutListener();
         return rootView;
 
     }
@@ -59,7 +65,7 @@ public class FormEndFragment extends Fragment implements fragmentStateListener,o
     }
 
 
-    private void notifyFormHasEnded(int pos) {
+    private void notifyFormHasEnded() {
 
         try {
             listener.uploadForm();
@@ -68,9 +74,43 @@ public class FormEndFragment extends Fragment implements fragmentStateListener,o
         }
     }
 
+
+    @OnClick(R.id.fragment_end_btn_save_form)
+    public void prepareToNotify() {
+        String formName = textInputLayout.getEditText().getText().toString().trim();
+        if (formName.length() == 0) {
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError("This field cannot be empty");
+            textInputLayout.requestFocus();
+            return;
+        }
+
+        notifyFormHasEnded();
+    }
+
+    private void setTextInputLayoutListener(){
+        textInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                textInputLayout.setCounterEnabled(false);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+
     @Override
     public void fragmentStateChange(int state, int pos) {
-        notifyFormHasEnded(pos);
+        //notifyFormHasEnded(pos);
     }
 
     @Override

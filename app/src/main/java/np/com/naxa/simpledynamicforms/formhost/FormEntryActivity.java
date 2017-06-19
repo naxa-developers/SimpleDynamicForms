@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import org.json.JSONObject;
 
@@ -32,7 +33,6 @@ import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
-import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
 public class FormEntryActivity extends AppCompatActivity implements onAnswerSelectedListener, onFormFinishedListener, ViewPager.OnPageChangeListener, shouldAllowViewPagerSwipeListener {
@@ -47,6 +47,10 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     @BindView(R.id.root_layout_activity_form_entry)
     CoordinatorLayout rootlayout;
+
+
+    @BindView(R.id.act_form_entry_linear_layout_btn)
+    LinearLayout btnLayout;
 
     private ViewPagerAdapter adapter;
     public String jsonToSend;
@@ -157,7 +161,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     public void nextFragment(View view) {
         fakeScroll();
-        if (shouldStopViewPagerSwipe){
+        if (shouldStopViewPagerSwipe) {
             return;
         }
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
@@ -165,7 +169,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     public void prevFragment(View view) {
         fakeScroll();
-        if (shouldStopViewPagerSwipe){
+        if (shouldStopViewPagerSwipe) {
             return;
         }
 
@@ -230,12 +234,22 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     @Override
     public void onPageSelected(int fragmentPositionInViewPager) {
         this.fragmentPositionInViewPager = fragmentPositionInViewPager;
+        hideBtnAtEndFrag();
 
         onPageVisibleListener pageVisibleListener = (onPageVisibleListener) adapter.instantiateItem(viewPager, fragmentPositionInViewPager);
         if (pageVisibleListener != null) {
             pageVisibleListener.fragmentIsVisible();
         }
 
+
+    }
+
+    private void hideBtnAtEndFrag() {
+        if (fragmentPositionInViewPager == viewPager.getAdapter().getCount() - 1) {
+            btnLayout.setVisibility(View.GONE);
+        } else {
+            btnLayout.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -263,7 +277,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     @Override
     public void stopViewpagerScroll(boolean stop) {
-
 
 
         this.shouldStopViewPagerSwipe = stop;

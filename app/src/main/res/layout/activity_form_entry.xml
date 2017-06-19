@@ -4,6 +4,7 @@
     android:id="@+id/root_layout_activity_form_entry"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:fitsSystemWindows="true">
 
 
@@ -39,7 +40,7 @@
 
 
         <LinearLayout
-
+            android:id="@+id/act_form_entry_linear_layout_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

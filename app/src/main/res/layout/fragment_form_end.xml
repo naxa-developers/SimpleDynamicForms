@@ -1,14 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
+    android:animateLayoutChanges="true"
     android:layout_height="match_parent">
 
-    <Button
-        android:onClick="showJSONDialog"
 
-        android:layout_centerInParent="true"
-        android:text="Show Answers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/fragment_form_end_wrapper_form_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/spacing_xlarge"
+        android:layout_marginRight="@dimen/spacing_xlarge"
+        android:layout_marginBottom="@dimen/spacing_xsmall"
+        android:hint="Save Form As">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <LinearLayout
+        android:layout_below="@+id/fragment_form_end_wrapper_form_name"
+        android:layout_marginLeft="@dimen/spacing_xlarge"
+        android:layout_marginRight="@dimen/spacing_xlarge"
+        android:weightSum="2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <Button
+        android:layout_weight="1"
+        android:id="@+id/fragment_end_btn_save_form"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_form_end_wrapper_form_name"
+        android:text="Save"
+        android:textColor="@color/white_text" />
+
+    <Button
+        android:layout_weight="1"
+        android:id="@+id/fragment_end_btn_upload_form"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_end_btn_save_form"
+        android:text="Upload"
+        android:textColor="@color/white_text" />
+    </LinearLayout>
+
 
 </RelativeLayout>
+
