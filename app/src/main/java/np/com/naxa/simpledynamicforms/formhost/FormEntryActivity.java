@@ -72,6 +72,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     float mLastPositionOffset = 0f;
     private boolean shouldStopViewPagerSwipe;
+    private JSONArray formJsonArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,14 +121,14 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject row = jsonArray.getJSONObject(i);
-                handleJSONForm(row, i);
+                handleJSONForm(row, i + 1);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
-        ToastUtils.showLongSafe("Loading "+jsonArray.length() + " questions completed");
+        ToastUtils.showLongSafe("Loading " + jsonArray.length() + " questions completed");
 
     }
 
@@ -217,13 +218,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormStartFragment(), "Start");
 
 
-        if (getIntent().getStringExtra("form").isEmpty()) {
+        if (getIntent().getStringExtra("form") != null && getIntent().getStringExtra("form").isEmpty()) {
             ToastUtils.showLongSafe(":(");
         } else {
 
             try {
-                JSONArray jsonArray = new JSONArray(getIntent().getStringExtra("form"));
-                loadForm(jsonArray);
+                formJsonArray = new JSONArray(getIntent().getStringExtra("form"));
+                loadForm(formJsonArray);
             } catch (JSONException e) {
 
                 e.printStackTrace();
@@ -350,12 +351,18 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         DialogFactory.createActionDialog(this, "Save Successful", "Your form has been save successfully").setPositiveButton("New Form", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(getApplicationContext(), FormEntryActivity.class));
+
+                Intent intent = new Intent(getApplicationContext(), FormEntryActivity.class);
+                intent.putExtra("form", formJsonArray.toString());
+                startActivity(intent);
             }
         }).setNegativeButton("View Saved Form", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(FormEntryActivity.this, SavedFormActivity.class));
+
+                Intent intent = new Intent(FormEntryActivity.this, SavedFormActivity.class);
+                startActivity(intent);
+                finish();
 
             }
         }).create().show();

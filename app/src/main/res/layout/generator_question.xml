@@ -25,12 +25,24 @@
         android:layout_height="wrap_content" />
 
     <Button
+        android:drawableLeft="@drawable/ic_add_black_24dp"
+        android:drawableStart="@drawable/ic_add_black_24dp"
         android:id="@+id/btnAddQuestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Question" />
 
     <Button
+        android:drawableLeft="@drawable/ic_clear_all_black_24dp"
+        android:drawableStart="@drawable/ic_clear_all_black_24dp"
+        android:id="@+id/btnClearForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clear Form" />
+
+    <Button
+        android:drawableLeft="@drawable/ic_form"
+        android:drawableStart="@drawable/ic_form"
         android:id="@+id/btnFormGen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

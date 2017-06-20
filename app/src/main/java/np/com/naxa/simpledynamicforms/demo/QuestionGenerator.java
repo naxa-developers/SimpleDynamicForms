@@ -58,7 +58,8 @@ public class QuestionGenerator extends AppCompatActivity {
                     return;
                 }
 
-                btnAddQuestion.setText(getString(R.string.btn_question_add,form.length()));
+                btnAddQuestion.setText(getString(R.string.btn_question_add, form.length() + 1));
+
 
                 JSONObject jsonObject = new JSONObject();
                 try {
@@ -70,6 +71,8 @@ public class QuestionGenerator extends AppCompatActivity {
 
                 form.put(jsonObject);
 
+                etQuestion.setText("");
+
                 break;
             case R.id.btnFormGen:
 
@@ -78,5 +81,16 @@ public class QuestionGenerator extends AppCompatActivity {
                 startActivity(toFormEntry);
                 break;
         }
+    }
+
+    @OnClick(R.id.btnClearForm)
+    public void onViewClicked() {
+
+        form = null;
+        form = new JSONArray();
+
+        ToastUtils.showLongSafe("All questions are now cleared.");
+        btnAddQuestion.setText("Add Question");
+
     }
 }
