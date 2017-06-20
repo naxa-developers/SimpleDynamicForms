@@ -5,4 +5,5 @@
     <string name="dialog_error_title">Error</string>
     <string name="fragment_photo_btn_open_camera">Open Camera</string>
     <string name="fragment_photo_btn_open_gallery">Open Gallery</string>
+    <string name="transition_name_name">transition:NAME</string>
 </resources>

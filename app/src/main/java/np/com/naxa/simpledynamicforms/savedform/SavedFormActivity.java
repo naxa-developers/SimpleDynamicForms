@@ -3,10 +3,14 @@ package np.com.naxa.simpledynamicforms.savedform;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.Toast;
 
@@ -40,12 +44,7 @@ public class SavedFormActivity extends AppCompatActivity {
 
         //ArrayList<Form> forms = Lists.newArrayList(myIterator);
 
-
         forms = Form.findWithQuery(Form.class, "SELECT * FROM Form ORDER BY ID DESC", null);
-
-        forms.addAll(Form.createFormlist(20));
-
-
 
         FormsAdapter adapter = new FormsAdapter(this, forms);
         rvforms.setAdapter(adapter);
@@ -57,9 +56,14 @@ public class SavedFormActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View itemView, int position) {
                 String name = forms.get(position).getFormName();
-//                Intent intent = new Intent(SavedFormActivity.this, EditF.class);
-//                intent.putExtra(DetailsActivity.ID, Contact.CONTACTS[position].getId());
-//                startActivity(intent);
+                Intent intent = new Intent(SavedFormActivity.this, EditSavedForm.class);
+                intent.putExtra(EditSavedForm.NAME, forms.get(position).getFormName());
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        SavedFormActivity.this,
+                        new Pair<View, String>(itemView.findViewById(R.id.form_circle), getString(R.string.transition_name_name))
+                );
+                ActivityCompat.startActivity(SavedFormActivity.this, intent, options.toBundle());
+
             }
         });
 

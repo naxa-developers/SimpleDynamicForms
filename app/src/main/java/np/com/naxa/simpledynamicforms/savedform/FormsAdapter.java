@@ -27,9 +27,12 @@ public class FormsAdapter extends
         RecyclerView.Adapter<FormsAdapter.ViewHolder> {
 
 
+
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
         public Button btnEditForm, btnReviewForm;
+        private final TextView tvDateTime;
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -37,6 +40,7 @@ public class FormsAdapter extends
             nameTextView = (TextView) itemView.findViewById(R.id.form_name);
             btnEditForm = (Button) itemView.findViewById(R.id.edit_button);
             btnReviewForm = (Button) itemView.findViewById(R.id.review_form);
+            tvDateTime = (TextView) itemView.findViewById(R.id.date_time);
             // Setup the click listener
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,6 +89,10 @@ public class FormsAdapter extends
 
         TextView textView = viewHolder.nameTextView;
         textView.setText(form.getFormName());
+
+        TextView tvDateTime = viewHolder.tvDateTime;
+        tvDateTime.setText(form.getFilledDateTime());
+
         Button btnEditForm = viewHolder.btnEditForm;
         btnEditForm.setText("Edit");
 

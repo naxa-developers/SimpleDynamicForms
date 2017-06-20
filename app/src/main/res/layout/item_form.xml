@@ -13,9 +13,23 @@
         android:layout_height="wrap_content"
         android:layout_weight="2">
 
-        <TextView
-            android:textSize="@dimen/material_text_body1"
 
+        <View
+            android:transitionName="@string/transition_name_name"
+            android:layout_marginLeft="@dimen/spacing_medium"
+            android:layout_marginRight="@dimen/spacing_medium"
+            android:id="@+id/form_circle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:text="a"
+            android:layout_toRightOf="@id/form_circle"
+            android:textSize="@dimen/material_text_body1"
             android:gravity="top"
             android:id="@+id/form_name"
             android:layout_width="wrap_content"
@@ -23,6 +37,7 @@
             />
 
         <TextView
+            android:layout_toRightOf="@id/form_circle"
             android:text="Date will be here"
             android:textSize="@dimen/material_text_caption"
             android:layout_below="@id/form_name"
