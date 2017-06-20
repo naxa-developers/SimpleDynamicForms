@@ -50,7 +50,7 @@ public class PhotoFragment extends Fragment implements fragmentStateListener,onP
     private static final int REQUEST_IMAGE_FROM_GALLERY = 101;
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 201;
     private static final int REQUEST_IMAGE_CAPTURE = 102;
-    private static final int REQUEST_MULTIPLE_PERMISSION = 103;
+    public static final int REQUEST_MULTIPLE_PERMISSION = 103;
 
 
     @BindView(R.id.tv_question_edit_text)

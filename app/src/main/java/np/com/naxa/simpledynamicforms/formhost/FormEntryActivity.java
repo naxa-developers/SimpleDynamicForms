@@ -26,6 +26,7 @@ import np.com.naxa.simpledynamicforms.form.components.DateTimeFragment;
 import np.com.naxa.simpledynamicforms.form.components.EditTextFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormEndFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormStartFragment;
+import np.com.naxa.simpledynamicforms.form.components.LocationFragment;
 import np.com.naxa.simpledynamicforms.form.components.MultiSelectSpinnerFragment;
 import np.com.naxa.simpledynamicforms.form.components.PhotoFragment;
 import np.com.naxa.simpledynamicforms.form.components.SpinnerFragment;
@@ -39,7 +40,6 @@ import np.com.naxa.simpledynamicforms.model.Form;
 import np.com.naxa.simpledynamicforms.savedform.SavedFormActivity;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
-import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
 public class FormEntryActivity extends AppCompatActivity implements onAnswerSelectedListener, onFormFinishedListener, ViewPager.OnPageChangeListener, shouldAllowViewPagerSwipeListener {
@@ -117,7 +117,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormStartFragment(), "Start");
 
         EditTextFragment etfragOwnerName = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Name", "Enter your name", InputType.TYPE_CLASS_TEXT,false, 1);
+        etfragOwnerName.prepareQuestionAndAnswer("Name", "Enter your name", InputType.TYPE_CLASS_TEXT, false, 1);
         adapter.addFragment(etfragOwnerName, generateFragmentName());
 
         EditTextFragment etfragContactNumber = new EditTextFragment();
@@ -154,6 +154,11 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
         spinnerWithOtherFragment.prepareQuestionAndAnswer("Choose other from drop down", options, 7);
         adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
+
+
+        LocationFragment locationFragment = new LocationFragment();
+        locationFragment.prepareQuestionAndAnswer("GPS", 8);
+        adapter.addFragment(locationFragment, generateFragmentName());
 
         adapter.addFragment(new FormEndFragment(), "End of Form");
         viewPager.setAdapter(adapter);
@@ -226,7 +231,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         DialogFactory.createActionDialog(this, "Save Successful", "Your form has been save successfully").setPositiveButton("New Form", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(getApplicationContext(),FormEntryActivity.class));
+                startActivity(new Intent(getApplicationContext(), FormEntryActivity.class));
             }
         }).setNegativeButton("View Saved Form", new DialogInterface.OnClickListener() {
             @Override
