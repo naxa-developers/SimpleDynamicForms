@@ -87,6 +87,12 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         snackBarUtils = new SnackBarUtils(rootlayout);
         viewPager.addOnPageChangeListener(this);
 
+
+
+
+
+
+
     }
 
     private void initUI() {
@@ -115,12 +121,12 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     }
 
 
-    private void loadForm() {
+    private void loadForm(JSONArray jsonArray) {
         try {
-            for (int i = 0; i < getForm().length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
 
                 Timber.e("Fuck %s", i);
-                JSONObject row = getForm().getJSONObject(i);
+                JSONObject row = jsonArray.getJSONObject(i);
                 handleJSONForm(row, i);
             }
         } catch (JSONException e) {
@@ -172,7 +178,26 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
         adapter.addFragment(new FormStartFragment(), "Start");
 
-        loadForm();
+
+        if (getIntent().getStringExtra("form").isEmpty()){
+            ToastUtils.showLongSafe(":(");
+        }else {
+
+            try {
+                JSONArray jsonArray = new JSONArray(getIntent().getStringExtra("form"));
+                loadForm(jsonArray);
+
+                ToastUtils.showLongSafe("Hey");
+
+
+            } catch (JSONException e) {
+
+                e.printStackTrace();
+            }
+        }
+
+
+
 
         adapter.addFragment(new FormEndFragment(), "End of Form");
         viewPager.setAdapter(adapter);

@@ -6,4 +6,15 @@
     <string name="fragment_photo_btn_open_camera">Open Camera</string>
     <string name="fragment_photo_btn_open_gallery">Open Gallery</string>
     <string name="transition_name_name">transition:NAME</string>
+
+
+    <string-array name="question_type">
+        <item>text</item>
+        <item>Date Time</item>
+        <item>MultiSelect Dropdown</item>
+        <item>Photo</item>
+        <item>DropDown</item>
+        <item>DropDown With Other</item>
+
+    </string-array>
 </resources>
