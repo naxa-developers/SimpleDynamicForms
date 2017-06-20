@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -36,6 +37,8 @@ public class QuestionGenerator extends AppCompatActivity {
     Spinner spinnerQuestionTypes;
     @BindView(R.id.etQuestion)
     EditText etQuestion;
+    @BindView(R.id.btnAddQuestion)
+    Button btnAddQuestion;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,10 +53,12 @@ public class QuestionGenerator extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.btnAddQuestion:
 
-                if (etQuestion.getText().length() == 0){
+                if (etQuestion.getText().length() == 0) {
                     ToastUtils.showLongSafe("Questions cannot be empty");
                     return;
                 }
+
+                btnAddQuestion.setText(getString(R.string.btn_question_add,form.length()));
 
                 JSONObject jsonObject = new JSONObject();
                 try {
@@ -69,7 +74,7 @@ public class QuestionGenerator extends AppCompatActivity {
             case R.id.btnFormGen:
 
                 Intent toFormEntry = new Intent(this, FormEntryActivity.class);
-                toFormEntry.putExtra("form",form.toString());
+                toFormEntry.putExtra("form", form.toString());
                 startActivity(toFormEntry);
                 break;
         }

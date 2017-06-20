@@ -88,11 +88,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         viewPager.addOnPageChangeListener(this);
 
 
-
-
-
-
-
     }
 
     private void initUI() {
@@ -124,8 +119,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     private void loadForm(JSONArray jsonArray) {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
-
-                Timber.e("Fuck %s", i);
                 JSONObject row = jsonArray.getJSONObject(i);
                 handleJSONForm(row, i);
             }
@@ -134,14 +127,11 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         }
 
 
-        try {
-            ToastUtils.showLongSafe(getForm().length() + "");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        ToastUtils.showLongSafe("Loading "+jsonArray.length() + " questions completed");
+
     }
 
-
+    //todo needs to be removed
     private JSONArray getForm() throws JSONException {
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
@@ -162,12 +152,60 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
 
         String questionType = jsonObject.getString("question_type");
+        String question = jsonObject.getString("question");
         switch (questionType) {
-            case "text":
-                String question = jsonObject.getString("question");
+            case "Text":
                 EditTextFragment etfragOwnerName = new EditTextFragment();
                 etfragOwnerName.prepareQuestionAndAnswer(question, question, InputType.TYPE_CLASS_TEXT, true, pos);
                 adapter.addFragment(etfragOwnerName, generateFragmentName());
+                break;
+            case "Date Time":
+
+                DateTimeFragment dateTimeFragment = new DateTimeFragment();
+                dateTimeFragment.prepareQuestionAndAnswer(question, pos);
+                adapter.addFragment(dateTimeFragment, generateFragmentName());
+
+                break;
+            case "MultiSelect Dropdown":
+
+                ArrayList<String> songs = new ArrayList<>();
+                songs.add("Yellow - Coldplay");
+                songs.add("Pani Paryo - Rohit");
+                songs.add("Jhilimili - Rohit");
+                songs.add("Muskuraye - Astha Tamang Maskey");
+
+                MultiSelectSpinnerFragment multiSelectionSpinner = new MultiSelectSpinnerFragment();
+                multiSelectionSpinner.prepareQuestionAndAnswer(question, songs, pos);
+                adapter.addFragment(multiSelectionSpinner, generateFragmentName());
+
+                break;
+            case "Photo":
+
+                PhotoFragment photoFragment = new PhotoFragment();
+                photoFragment.prepareQuestionAndAnswer(question, pos);
+                adapter.addFragment(photoFragment, generateFragmentName());
+
+                break;
+            case "DropDown":
+                ArrayList<String> options = new ArrayList<>();
+                options.add("Yes");
+                options.add("No");
+
+                SpinnerFragment spinnerFragment = new SpinnerFragment();
+                spinnerFragment.prepareQuestionAndAnswer(question, options, pos);
+                adapter.addFragment(spinnerFragment, generateFragmentName());
+
+
+                break;
+            case "DropDown With Other":
+                ArrayList<String> options2 = new ArrayList<>();
+                options2.add("Yes");
+                options2.add("No");
+
+                SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
+                spinnerWithOtherFragment.prepareQuestionAndAnswer(question, options2, pos);
+                adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
+
                 break;
         }
 
@@ -179,24 +217,18 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormStartFragment(), "Start");
 
 
-        if (getIntent().getStringExtra("form").isEmpty()){
+        if (getIntent().getStringExtra("form").isEmpty()) {
             ToastUtils.showLongSafe(":(");
-        }else {
+        } else {
 
             try {
                 JSONArray jsonArray = new JSONArray(getIntent().getStringExtra("form"));
                 loadForm(jsonArray);
-
-                ToastUtils.showLongSafe("Hey");
-
-
             } catch (JSONException e) {
 
                 e.printStackTrace();
             }
         }
-
-
 
 
         adapter.addFragment(new FormEndFragment(), "End of Form");
