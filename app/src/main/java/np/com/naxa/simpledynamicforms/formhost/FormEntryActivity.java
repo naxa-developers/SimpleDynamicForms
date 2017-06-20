@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 
 import com.orm.SugarRecord;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -90,7 +92,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     private void initUI() {
         setupToolbar();
         setupTabLayout();
-        setupForm();
+        setupDemoForm();
     }
 
     private void setupTabLayout() {
@@ -112,12 +114,77 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+
+    private void loadForm() {
+        try {
+            for (int i = 0; i < getForm().length(); i++) {
+
+                Timber.e("Fuck %s", i);
+                JSONObject row = getForm().getJSONObject(i);
+                handleJSONForm(row, i);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            ToastUtils.showLongSafe(getForm().length() + "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private JSONArray getForm() throws JSONException {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("question", "Hello world");
+        jsonObject.put("question_type", "text");
+        jsonArray.put(jsonObject);
+
+        JSONObject jsonObject2 = new JSONObject();
+        jsonObject2.put("question", "Hello world2");
+        jsonObject2.put("question_type", "text");
+        jsonArray.put(jsonObject2);
+        return jsonArray;
+
+    }
+
+
+    private void handleJSONForm(JSONObject jsonObject, int pos) throws JSONException {
+
+
+        String questionType = jsonObject.getString("question_type");
+        switch (questionType) {
+            case "text":
+                String question = jsonObject.getString("question");
+                EditTextFragment etfragOwnerName = new EditTextFragment();
+                etfragOwnerName.prepareQuestionAndAnswer(question, question, InputType.TYPE_CLASS_TEXT, true, pos);
+                adapter.addFragment(etfragOwnerName, generateFragmentName());
+                break;
+        }
+
+
+    }
+
+    private void setupDemoForm() {
+
+        adapter.addFragment(new FormStartFragment(), "Start");
+
+        loadForm();
+
+        adapter.addFragment(new FormEndFragment(), "End of Form");
+        viewPager.setAdapter(adapter);
+
+    }
+
     private void setupForm() {
 
         adapter.addFragment(new FormStartFragment(), "Start");
 
         EditTextFragment etfragOwnerName = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Name", "Enter your name", InputType.TYPE_CLASS_TEXT,false, 1);
+        etfragOwnerName.prepareQuestionAndAnswer("Name", "Enter your name", InputType.TYPE_CLASS_TEXT, false, 1);
         adapter.addFragment(etfragOwnerName, generateFragmentName());
 
         EditTextFragment etfragContactNumber = new EditTextFragment();
@@ -226,7 +293,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         DialogFactory.createActionDialog(this, "Save Successful", "Your form has been save successfully").setPositiveButton("New Form", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(getApplicationContext(),FormEntryActivity.class));
+                startActivity(new Intent(getApplicationContext(), FormEntryActivity.class));
             }
         }).setNegativeButton("View Saved Form", new DialogInterface.OnClickListener() {
             @Override
