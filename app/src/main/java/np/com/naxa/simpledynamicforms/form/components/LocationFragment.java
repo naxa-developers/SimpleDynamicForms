@@ -11,8 +11,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -27,6 +27,7 @@ import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
+import np.com.naxa.simpledynamicforms.uitils.SpanUtils;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
@@ -39,7 +40,7 @@ import static np.com.naxa.simpledynamicforms.form.components.PhotoFragment.REQUE
  * @email nishon.tan@gmail.com
  */
 
-public class LocationFragment extends Fragment implements View.OnClickListener, fragmentStateListener, onPageVisibleListener {
+public class LocationFragment extends Fragment implements fragmentStateListener, onPageVisibleListener {
     public static final int GEOPOINT_RESULT_CODE = 1994;
     public static final String LOCATION_RESULT = "LOCATION_RESULT";
     private onAnswerSelectedListener listener;
@@ -52,6 +53,12 @@ public class LocationFragment extends Fragment implements View.OnClickListener, 
 
     @BindView(R.id.tv_question_edit_text)
     TextView tvQuestion;
+
+    @BindView(R.id.tv_preview_location)
+    TextView tvLocationPreview;
+
+    @BindView(R.id.btn_location_fragment_get_location)
+    Button btnGetLocation;
 
 
     private String location;
@@ -167,11 +174,7 @@ public class LocationFragment extends Fragment implements View.OnClickListener, 
                 }
             }
 
-
-            Timber.e(" notAvaliablePermList %s", notAvaliablePermList.size());
-
             if (notAvaliablePermList.size() >= 1) {
-                Timber.e(" I am here");
 
                 requestPermissions(notAvaliablePermList.toArray(new String[notAvaliablePermList.size()]), requestCode);
                 return false;
@@ -180,14 +183,6 @@ public class LocationFragment extends Fragment implements View.OnClickListener, 
         return true;
     }
 
-    @Override
-    public void onClick(View v) {
-        int idOfTheClickedItem = v.getId();
-        switch (idOfTheClickedItem) {
-            case R.id.btn_location_fragment_get_location:
-
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -197,11 +192,19 @@ public class LocationFragment extends Fragment implements View.OnClickListener, 
                 switch (resultCode) {
                     case RESULT_OK:
                         location = data.getStringExtra(LOCATION_RESULT);
-                        Toast.makeText(getActivity().getApplicationContext(), location, Toast.LENGTH_SHORT).show();
+                        showLocationPreview();
                         break;
                 }
                 break;
         }
+    }
+
+
+    private void showLocationPreview() {
+        String s = "Location Recorded \n" + location;
+        SpanUtils spanUtils = new SpanUtils();
+        String boldText = spanUtils.makeSectionOfTextBold(s,"Location Recorded").toString();
+        tvLocationPreview.setText(boldText);
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {

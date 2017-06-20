@@ -13,15 +13,23 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_medium"
         android:textSize="@dimen/material_text_title" />
-
     <Button
+        android:layout_marginTop="@dimen/spacing_medium"
         android:id="@+id/btn_location_fragment_get_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Get Location"
         android:drawableLeft="@drawable/ic_location_on_black_24dp"
         android:drawableStart="@drawable/ic_location_on_black_24dp"
-     
         tools:ignore="HardcodedText" />
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/tv_preview_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:textSize="@dimen/material_text_body1" />
+
 
 </LinearLayout>
