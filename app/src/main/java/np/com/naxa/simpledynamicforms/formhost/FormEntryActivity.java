@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 
 import com.orm.SugarRecord;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ import np.com.naxa.simpledynamicforms.model.Form;
 import np.com.naxa.simpledynamicforms.savedform.SavedFormActivity;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
+import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
 public class FormEntryActivity extends AppCompatActivity implements onAnswerSelectedListener, onFormFinishedListener, ViewPager.OnPageChangeListener, shouldAllowViewPagerSwipeListener {
@@ -70,6 +73,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     float mLastPositionOffset = 0f;
     private boolean shouldStopViewPagerSwipe;
+    private JSONArray formJsonArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +89,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         snackBarUtils = new SnackBarUtils(rootlayout);
         viewPager.addOnPageChangeListener(this);
 
+
     }
 
     private void initUI() {
         setupToolbar();
         setupTabLayout();
-        setupForm();
+        setupDemoForm();
     }
 
     private void setupTabLayout() {
@@ -110,6 +115,127 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+
+    private void loadForm(JSONArray jsonArray) {
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject row = jsonArray.getJSONObject(i);
+                handleJSONForm(row, i + 1);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        ToastUtils.showLongSafe("Loading " + jsonArray.length() + " questions completed");
+
+    }
+
+    //todo needs to be removed
+    private JSONArray getForm() throws JSONException {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("question", "Hello world");
+        jsonObject.put("question_type", "text");
+        jsonArray.put(jsonObject);
+
+        JSONObject jsonObject2 = new JSONObject();
+        jsonObject2.put("question", "Hello world2");
+        jsonObject2.put("question_type", "text");
+        jsonArray.put(jsonObject2);
+        return jsonArray;
+
+    }
+
+
+    private void handleJSONForm(JSONObject jsonObject, int pos) throws JSONException {
+
+
+        String questionType = jsonObject.getString("question_type");
+        String question = jsonObject.getString("question");
+        switch (questionType) {
+            case "Text":
+                EditTextFragment etfragOwnerName = new EditTextFragment();
+                etfragOwnerName.prepareQuestionAndAnswer(question, question, InputType.TYPE_CLASS_TEXT, true, pos);
+                adapter.addFragment(etfragOwnerName, generateFragmentName());
+                break;
+            case "Date Time":
+
+                DateTimeFragment dateTimeFragment = new DateTimeFragment();
+                dateTimeFragment.prepareQuestionAndAnswer(question, pos);
+                adapter.addFragment(dateTimeFragment, generateFragmentName());
+
+                break;
+            case "MultiSelect Dropdown":
+
+                ArrayList<String> songs = new ArrayList<>();
+                songs.add("Yellow - Coldplay");
+                songs.add("Pani Paryo - Rohit");
+                songs.add("Jhilimili - Rohit");
+                songs.add("Muskuraye - Astha Tamang Maskey");
+
+                MultiSelectSpinnerFragment multiSelectionSpinner = new MultiSelectSpinnerFragment();
+                multiSelectionSpinner.prepareQuestionAndAnswer(question, songs, pos);
+                adapter.addFragment(multiSelectionSpinner, generateFragmentName());
+
+                break;
+            case "Photo":
+
+                PhotoFragment photoFragment = new PhotoFragment();
+                photoFragment.prepareQuestionAndAnswer(question, pos);
+                adapter.addFragment(photoFragment, generateFragmentName());
+
+                break;
+            case "DropDown":
+                ArrayList<String> options = new ArrayList<>();
+                options.add("Yes");
+                options.add("No");
+
+                SpinnerFragment spinnerFragment = new SpinnerFragment();
+                spinnerFragment.prepareQuestionAndAnswer(question, options, pos);
+                adapter.addFragment(spinnerFragment, generateFragmentName());
+
+
+                break;
+            case "DropDown With Other":
+                ArrayList<String> options2 = new ArrayList<>();
+                options2.add("Yes");
+                options2.add("No");
+
+                SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
+                spinnerWithOtherFragment.prepareQuestionAndAnswer(question, options2, pos);
+                adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
+
+                break;
+        }
+
+
+    }
+
+    private void setupDemoForm() {
+
+        adapter.addFragment(new FormStartFragment(), "Start");
+
+
+        if (getIntent().getStringExtra("form") != null && getIntent().getStringExtra("form").isEmpty()) {
+            ToastUtils.showLongSafe(":(");
+        } else {
+
+            try {
+                formJsonArray = new JSONArray(getIntent().getStringExtra("form"));
+                loadForm(formJsonArray);
+            } catch (JSONException e) {
+
+                e.printStackTrace();
+            }
+        }
+
+
+        adapter.addFragment(new FormEndFragment(), "End of Form");
+        viewPager.setAdapter(adapter);
+
     }
 
     private void setupForm() {
@@ -231,12 +357,19 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         DialogFactory.createActionDialog(this, "Save Successful", "Your form has been save successfully").setPositiveButton("New Form", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(getApplicationContext(), FormEntryActivity.class));
+
+                Intent intent = new Intent(getApplicationContext(), FormEntryActivity.class);
+                intent.putExtra("form", formJsonArray.toString());
+                startActivity(intent);
+
             }
         }).setNegativeButton("View Saved Form", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(FormEntryActivity.this, SavedFormActivity.class));
+
+                Intent intent = new Intent(FormEntryActivity.this, SavedFormActivity.class);
+                startActivity(intent);
+                finish();
 
             }
         }).create().show();

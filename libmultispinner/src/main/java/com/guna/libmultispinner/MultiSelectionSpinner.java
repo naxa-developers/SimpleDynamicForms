@@ -20,12 +20,13 @@ public class MultiSelectionSpinner extends Spinner implements
 
     private String title;
 
+    public static int SELECT_NOTHING = -1;
+
     public interface OnMultipleItemsSelectedListener {
         void selectedIndices(List<Integer> indices);
 
         void selectedStrings(List<String> strings);
     }
-
 
 
     private OnMultipleItemsSelectedListener listener;
@@ -44,8 +45,6 @@ public class MultiSelectionSpinner extends Spinner implements
                 android.R.layout.simple_spinner_item);
         super.setAdapter(simple_adapter);
     }
-
-
 
 
     public MultiSelectionSpinner(Context context, AttributeSet attrs) {
@@ -102,7 +101,6 @@ public class MultiSelectionSpinner extends Spinner implements
     }
 
 
-
     @Override
     public void setAdapter(SpinnerAdapter adapter) {
         throw new RuntimeException(
@@ -125,9 +123,10 @@ public class MultiSelectionSpinner extends Spinner implements
         mSelection = new boolean[_items.length];
         mSelectionAtStart = new boolean[_items.length];
         simple_adapter.clear();
-        simple_adapter.add(_items[0]);
+
+
         Arrays.fill(mSelection, false);
-        mSelection[0] = true;
+
     }
 
     public void setSelection(String[] selection) {

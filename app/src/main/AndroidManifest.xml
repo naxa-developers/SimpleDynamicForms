@@ -49,27 +49,47 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
 
 
         <activity
             android:name=".savedform.SavedFormActivity"
-            android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
-
 
         </activity>
 
 
         <activity
             android:name=".savedform.EditSavedForm"
+            android:exported="true"
+            android:parentActivityName=".savedform.SavedFormActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".savedform.SavedFormActivity" />
+
+        </activity>
+
+
+        <activity
+            android:name=".demo.FirstActivity"
+            android:exported="true"
+            android:parentActivityName=".savedform.SavedFormActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".savedform.SavedFormActivity" />
+
+        </activity>
+
+        <activity
+            android:name=".demo.SecondActivity"
             android:exported="true"
             android:parentActivityName=".savedform.SavedFormActivity"
             android:screenOrientation="portrait"
@@ -90,6 +110,19 @@
 
         <activity
             android:name=".demo.QuestionGenerator"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".formloader.StorageJSONLoaderActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">

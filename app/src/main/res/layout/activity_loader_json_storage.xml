@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:id="@+id/activity_loader_json_storage_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_sd_storage_black_24dp"
+        android:drawableStart="@drawable/ic_sd_storage_black_24dp"
+        android:padding="@dimen/spacing_large"
+        android:text="@string/activity_loader_json_storage_btn"
+        android:textSize="@dimen/material_text_button" />
+
+</LinearLayout>

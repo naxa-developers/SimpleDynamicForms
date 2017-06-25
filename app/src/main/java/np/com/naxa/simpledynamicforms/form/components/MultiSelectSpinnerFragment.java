@@ -28,6 +28,8 @@ import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
+import static com.guna.libmultispinner.MultiSelectionSpinner.SELECT_NOTHING;
+
 
 public class MultiSelectSpinnerFragment extends Fragment implements fragmentStateListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener,onPageVisibleListener {
 
@@ -74,6 +76,7 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
         multiSelectionSpinner.setTitle(question);
         multiSelectionSpinner.setItems(options);
         multiSelectionSpinner.setListener(this);
+
     }
 
     public void selectOptions(int[] options){

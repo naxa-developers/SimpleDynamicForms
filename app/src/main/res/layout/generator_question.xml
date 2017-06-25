@@ -1,10 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/spacing_xlarge"
+    android:orientation="vertical">
 
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Form Generator" />
+
+    <Spinner
+        android:id="@+id/spinnerQuestionTypes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/question_type"
+       />
 
 
+    <EditText
+        android:id="@+id/etQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:drawableLeft="@drawable/ic_add_black_24dp"
+        android:drawableStart="@drawable/ic_add_black_24dp"
+        android:id="@+id/btnAddQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Question" />
+
+    <Button
+        android:drawableLeft="@drawable/ic_clear_all_black_24dp"
+        android:drawableStart="@drawable/ic_clear_all_black_24dp"
+        android:id="@+id/btnClearForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clear Form" />
+
+    <Button
+        android:drawableLeft="@drawable/ic_form"
+        android:drawableStart="@drawable/ic_form"
+        android:id="@+id/btnFormGen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Generate Form" />
 
 </LinearLayout>
