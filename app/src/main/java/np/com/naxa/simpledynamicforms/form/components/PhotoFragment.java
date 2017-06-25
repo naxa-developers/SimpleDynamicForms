@@ -163,7 +163,9 @@ public class PhotoFragment extends Fragment implements fragmentStateListener,onP
     @OnClick(R.id.fragment_photo_btn_open_camera)
     public void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (hasPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_IMAGE_CAPTURE) && takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+        if (hasPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_IMAGE_CAPTURE)
+                && takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
 
             File photoFile = null;
             try {
