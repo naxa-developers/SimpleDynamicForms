@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -225,6 +226,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
             try {
                 formJsonArray = new JSONArray(getIntent().getStringExtra("form"));
+
                 loadForm(formJsonArray);
             } catch (JSONException e) {
 
@@ -243,48 +245,105 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormStartFragment(), "Start");
 
         EditTextFragment etfragOwnerName = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Name", "Enter your name", InputType.TYPE_CLASS_TEXT, false, 1);
+        etfragOwnerName.prepareQuestionAndAnswer("Surveyor Identify Number", "", InputType.TYPE_CLASS_TEXT, true, 1);
         adapter.addFragment(etfragOwnerName, generateFragmentName());
 
-        EditTextFragment etfragContactNumber = new EditTextFragment();
-        etfragContactNumber.prepareQuestionAndAnswer("Age", "Enter your age ", InputType.TYPE_CLASS_NUMBER, true, 2);
-        etfragContactNumber.shouldStopSwipe();
-        adapter.addFragment(etfragContactNumber, generateFragmentName());
+        EditTextFragment two = new EditTextFragment();
+        etfragOwnerName.prepareQuestionAndAnswer("Name of Surveyor", "", InputType.TYPE_CLASS_TEXT, true, 2);
+        adapter.addFragment(two, generateFragmentName());
 
-        ArrayList<String> options = new ArrayList<>();
-        options.add("Yes");
-        options.add("No");
+        DateTimeFragment three = new DateTimeFragment();
+        three.prepareQuestionAndAnswer("Date of Survey",3);
+        adapter.addFragment(three, generateFragmentName());
 
-        SpinnerFragment spinnerFragment = new SpinnerFragment();
-        spinnerFragment.prepareQuestionAndAnswer("Do you like dancing?", options, 3);
-        adapter.addFragment(spinnerFragment, generateFragmentName());
+        EditTextFragment four = new EditTextFragment();
+        etfragOwnerName.prepareQuestionAndAnswer("Household Identify Code", "", InputType.TYPE_CLASS_NUMBER, true, 3);
+        adapter.addFragment(four, generateFragmentName());
 
-        ArrayList<String> songs = new ArrayList<>();
-        songs.add("Yellow - Coldplay");
-        songs.add("Pani Paryo - Rohit");
-        songs.add("Jhilimili - Rohit");
-        songs.add("Muskuraye - Astha Tamang Maskey");
+        EditTextFragment five = new EditTextFragment();
+        etfragOwnerName.prepareQuestionAndAnswer("Municipality", "", InputType.TYPE_CLASS_NUMBER, true, 4);
+        adapter.addFragment(five, generateFragmentName());
 
-        MultiSelectSpinnerFragment multiSelectionSpinner = new MultiSelectSpinnerFragment();
-        multiSelectionSpinner.prepareQuestionAndAnswer("Select at least two songs?", songs, 4);
-        adapter.addFragment(multiSelectionSpinner, generateFragmentName());
+        EditTextFragment six = new EditTextFragment();
+        etfragOwnerName.prepareQuestionAndAnswer("Ward Number", "", InputType.TYPE_CLASS_NUMBER, true, 5);
+        adapter.addFragment(six, generateFragmentName());
 
-        PhotoFragment photoFragment = new PhotoFragment();
-        photoFragment.prepareQuestionAndAnswer("Take a photo", 5);
-        adapter.addFragment(photoFragment, generateFragmentName());
-
-        DateTimeFragment dateTimeFragment = new DateTimeFragment();
-        dateTimeFragment.prepareQuestionAndAnswer("Record Date and Time", 6);
-        adapter.addFragment(dateTimeFragment, generateFragmentName());
-
-        SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
-        spinnerWithOtherFragment.prepareQuestionAndAnswer("Choose other from drop down", options, 7);
-        adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
-
+        EditTextFragment seven = new EditTextFragment();
+        etfragOwnerName.prepareQuestionAndAnswer("Address/Line", "", InputType.TYPE_CLASS_TEXT, true, 5);
+        adapter.addFragment(seven, generateFragmentName());
 
         LocationFragment locationFragment = new LocationFragment();
-        locationFragment.prepareQuestionAndAnswer("GPS", 8);
+        locationFragment.prepareQuestionAndAnswer("GPS Location", 7);
         adapter.addFragment(locationFragment, generateFragmentName());
+
+
+        PhotoFragment eight = new PhotoFragment();
+        eight.prepareQuestionAndAnswer("House Facade Photo", 8);
+        adapter.addFragment(eight, generateFragmentName());
+
+        ArrayList<String> options = new ArrayList<>();
+        options.add("Male");
+        options.add("Female");
+
+        SpinnerFragment nine = new SpinnerFragment();
+        nine.prepareQuestionAndAnswer("Respondent Sex", options, 9);
+        adapter.addFragment(nine, generateFragmentName());
+
+        EditTextFragment ten = new EditTextFragment();
+        ten.prepareQuestionAndAnswer("Respondent Age", "", InputType.TYPE_CLASS_NUMBER, true, 10);
+        adapter.addFragment(ten, generateFragmentName());
+
+        EditTextFragment eleven = new EditTextFragment();
+        eleven.prepareQuestionAndAnswer("Email", "", InputType.TYPE_CLASS_TEXT, true, 11);
+        adapter.addFragment(eleven, generateFragmentName());
+
+        EditTextFragment tweleve = new EditTextFragment();
+        tweleve.prepareQuestionAndAnswer("What is the number of Inhabitants/Family Members in the Household?", "", InputType.TYPE_CLASS_TEXT, true, 11);
+        adapter.addFragment(tweleve, generateFragmentName());
+
+
+
+//        EditTextFragment seven = new EditTextFragment();
+//        etfragOwnerName.prepareQuestionAndAnswer("Address/Line", "", InputType.TYPE_CLASS_TEXT, true, 5);
+//        adapter.addFragment(seven, generateFragmentName());
+//
+//        EditTextFragment etfragContactNumber = new EditTextFragment();
+//        etfragContactNumber.prepareQuestionAndAnswer("Age", "Enter your age ", InputType.TYPE_CLASS_NUMBER, true, 2);
+//        etfragContactNumber.shouldStopSwipe();
+//        adapter.addFragment(etfragContactNumber, generateFragmentName());
+//
+//        ArrayList<String> options = new ArrayList<>();
+//        options.add("Yes");
+//        options.add("No");
+//
+//        SpinnerFragment spinnerFragment = new SpinnerFragment();
+//        spinnerFragment.prepareQuestionAndAnswer("Do you like dancing?", options, 3);
+//        adapter.addFragment(spinnerFragment, generateFragmentName());
+//
+//        ArrayList<String> songs = new ArrayList<>();
+//        songs.add("Yellow - Coldplay");
+//        songs.add("Pani Paryo - Rohit");
+//        songs.add("Jhilimili - Rohit");
+//        songs.add("Muskuraye - Astha Tamang Maskey");
+//
+//        MultiSelectSpinnerFragment multiSelectionSpinner = new MultiSelectSpinnerFragment();
+//        multiSelectionSpinner.prepareQuestionAndAnswer("Select at least two songs?", songs, 4);
+//        adapter.addFragment(multiSelectionSpinner, generateFragmentName());
+//
+//        PhotoFragment photoFragment = new PhotoFragment();
+//        photoFragment.prepareQuestionAndAnswer("Take a photo", 5);
+//        adapter.addFragment(photoFragment, generateFragmentName());
+//
+//
+//
+//        SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
+//        spinnerWithOtherFragment.prepareQuestionAndAnswer("Choose other from drop down", options, 7);
+//        adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
+//
+//
+//        LocationFragment locationFragment = new LocationFragment();
+//        locationFragment.prepareQuestionAndAnswer("GPS", 8);
+//        adapter.addFragment(locationFragment, generateFragmentName());
 
         adapter.addFragment(new FormEndFragment(), "End of Form");
         viewPager.setAdapter(adapter);
