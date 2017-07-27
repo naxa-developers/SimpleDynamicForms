@@ -96,7 +96,8 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     private void initUI() {
         setupToolbar();
         setupTabLayout();
-        setupDemoForm();
+        setupForm();
+        //setupDemoForm();
     }
 
     private void setupTabLayout() {
@@ -249,58 +250,57 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(etfragOwnerName, generateFragmentName());
 
         EditTextFragment two = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Name of Surveyor", "", InputType.TYPE_CLASS_TEXT, true, 2);
+        two.prepareQuestionAndAnswer("Name of Surveyor", "", InputType.TYPE_CLASS_TEXT, true, 2);
         adapter.addFragment(two, generateFragmentName());
 
         DateTimeFragment three = new DateTimeFragment();
-        three.prepareQuestionAndAnswer("Date of Survey",3);
+        three.prepareQuestionAndAnswer("Date of Survey", 3);
         adapter.addFragment(three, generateFragmentName());
 
         EditTextFragment four = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Household Identify Code", "", InputType.TYPE_CLASS_NUMBER, true, 3);
+        four.prepareQuestionAndAnswer("Household Identify Code", "", InputType.TYPE_CLASS_NUMBER, true, 4);
         adapter.addFragment(four, generateFragmentName());
 
         EditTextFragment five = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Municipality", "", InputType.TYPE_CLASS_NUMBER, true, 4);
+        five.prepareQuestionAndAnswer("Municipality", "", InputType.TYPE_CLASS_TEXT, true, 5);
         adapter.addFragment(five, generateFragmentName());
 
         EditTextFragment six = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Ward Number", "", InputType.TYPE_CLASS_NUMBER, true, 5);
+        six.prepareQuestionAndAnswer("Ward Number", "", InputType.TYPE_CLASS_NUMBER, true, 6);
         adapter.addFragment(six, generateFragmentName());
 
         EditTextFragment seven = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Address/Line", "", InputType.TYPE_CLASS_TEXT, true, 5);
+        seven.prepareQuestionAndAnswer("Address/Line", "", InputType.TYPE_CLASS_TEXT, true, 7);
         adapter.addFragment(seven, generateFragmentName());
 
-        LocationFragment locationFragment = new LocationFragment();
-        locationFragment.prepareQuestionAndAnswer("GPS Location", 7);
-        adapter.addFragment(locationFragment, generateFragmentName());
-
-
-        PhotoFragment eight = new PhotoFragment();
-        eight.prepareQuestionAndAnswer("House Facade Photo", 8);
+        LocationFragment eight = new LocationFragment();
+        eight.prepareQuestionAndAnswer("GPS Location", 8);
         adapter.addFragment(eight, generateFragmentName());
+
+
+        PhotoFragment nine = new PhotoFragment();
+        nine.prepareQuestionAndAnswer("House Facade Photo", 9);
+        adapter.addFragment(nine, generateFragmentName());
 
         ArrayList<String> options = new ArrayList<>();
         options.add("Male");
         options.add("Female");
 
-        SpinnerFragment nine = new SpinnerFragment();
-        nine.prepareQuestionAndAnswer("Respondent Sex", options, 9);
-        adapter.addFragment(nine, generateFragmentName());
-
-        EditTextFragment ten = new EditTextFragment();
-        ten.prepareQuestionAndAnswer("Respondent Age", "", InputType.TYPE_CLASS_NUMBER, true, 10);
+        SpinnerFragment ten = new SpinnerFragment();
+        ten.prepareQuestionAndAnswer("Respondent Sex", options, 10);
         adapter.addFragment(ten, generateFragmentName());
 
         EditTextFragment eleven = new EditTextFragment();
-        eleven.prepareQuestionAndAnswer("Email", "", InputType.TYPE_CLASS_TEXT, true, 11);
+        eleven.prepareQuestionAndAnswer("Respondent Age", "", InputType.TYPE_CLASS_NUMBER, true, 11);
         adapter.addFragment(eleven, generateFragmentName());
 
         EditTextFragment tweleve = new EditTextFragment();
-        tweleve.prepareQuestionAndAnswer("What is the number of Inhabitants/Family Members in the Household?", "", InputType.TYPE_CLASS_TEXT, true, 11);
+        tweleve.prepareQuestionAndAnswer("Email", "", InputType.TYPE_CLASS_TEXT, true, 12);
         adapter.addFragment(tweleve, generateFragmentName());
 
+        EditTextFragment thirteen = new EditTextFragment();
+        thirteen.prepareQuestionAndAnswer("What is the number of Inhabitants/Family Members in the Household?", "", InputType.TYPE_CLASS_TEXT, true, 11);
+        adapter.addFragment(thirteen, generateFragmentName());
 
 
 //        EditTextFragment seven = new EditTextFragment();
@@ -493,6 +493,15 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        DialogFactory.createActionDialog(this, "Close form", "Your changes would be lost").setPositiveButton("Close form", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        }).setNegativeButton("No", null).show();
+    }
 
     @Override
     public void stopViewpagerScroll(boolean stop) {
