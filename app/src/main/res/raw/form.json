@@ -77,7 +77,7 @@
     "drop_options": "[0,1,2,3,4,5,6]"
   },
   {
-    "question": "Notes \n What is the number of Inhabitants/Family Members in the Household?",
+    "question": "What is the number of Inhabitants/Family Members in the Household?",
     "question_type": "Text",
     "is_required": false
   },
@@ -93,7 +93,7 @@
     "is_required": false
   },
   {
-    "question": "(In case of other than wage Income based,please ask the income month-by-month, January to Feburary)",
+    "question": "(In case of other than wage Income based,please ask the income month-by-month, January to February)",
     "question_type": "Note"
   },
   {

@@ -98,11 +98,11 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
     private void getAnswer(final int pos) {
         //selectedStrings methods reads the answer
 
-        String otherAnswer = wrapperMultiSelectOther.getEditText().getText().toString().trim();
-
-        if (otherAnswer.length() > 0) {
-            userSelectedAnswer.replace(getString(R.string.msg_other), wrapperMultiSelectOther.getEditText().getText());
-        }
+//        String otherAnswer = wrapperMultiSelectOther.getEditText().getText().toString().trim();
+//
+//        if (otherAnswer.length() > 0) {
+//            userSelectedAnswer.replace(getString(R.string.msg_other), wrapperMultiSelectOther.getEditText().getText());
+//        }
 
 
 
