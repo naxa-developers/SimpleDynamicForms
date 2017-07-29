@@ -22,7 +22,6 @@ import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
-import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
 
@@ -58,8 +57,8 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
         setQuestionAndAnswers();
 
         if (validationRequired) {
-            shouldStopSwipe();
-            setValidation();
+            stopViewPagerSwipe();
+            setRulesForValidation();
         }
 
         return rootView;
@@ -89,7 +88,7 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
     }
 
 
-    public void shouldStopSwipe() {
+    public void stopViewPagerSwipe() {
         shouldStopWipe = true;
     }
 
@@ -176,7 +175,7 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
     }
 
 
-    private void setValidation() {
+    private void setRulesForValidation() {
 
 
         textInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
@@ -188,7 +187,7 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (textInputLayout.getEditText().getText().toString().trim().length() == 0) {
-                    shouldStopSwipe();
+                    stopViewPagerSwipe();
                     setErrorMessage("This Field Cannot be empty");
                 } else {
 

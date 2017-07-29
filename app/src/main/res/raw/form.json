@@ -2,7 +2,7 @@
   {
     "question": "Surveyor Identify Number",
     "question_type": "Text",
-    "answer_text_type":"InputNumber",
+    "answer_text_type": "InputNumber",
     "is_required": true
   },
   {
@@ -13,7 +13,7 @@
   {
     "question": "Date of Survey",
     "question_type": "DateTime",
-    "date_format":"dd/mm/yyyy"
+    "date_format": "dd/mm/yyyy"
   },
   {
     "question": "Household Identify Code",
@@ -26,7 +26,7 @@
   {
     "question": "Ward Number",
     "question_type": "Text",
-    "answer_text_type":"InputNumber"
+    "answer_text_type": "InputNumber"
   },
   {
     "question": "Address/Line",
@@ -45,7 +45,7 @@
     "question_type": "Photo"
   },
   {
-    "question": "Respondent's Sex",
+    "question": "Respondent Sex",
     "question_type": "RadioButton"
   },
   {
@@ -59,21 +59,66 @@
   {
     "question": "Husband",
     "question_type": "DropDown",
-    "drop_options":"[0,1,2,3,4,5,6]"
+    "drop_options": "[0,1,2,3,4,5,6]"
   },
   {
     "question": "Wife",
     "question_type": "DropDown",
-    "drop_options":"[0,1,2,3,4,5,6]"
+    "drop_options": "[0,1,2,3,4,5,6]"
   },
   {
     "question": "Childrens(s)",
     "question_type": "DropDown",
-    "drop_options":"[0,1,2,3,4,5,6]"
+    "drop_options": "[0,1,2,3,4,5,6]"
   },
   {
     "question": "Others",
     "question_type": "DropDown",
-    "drop_options":"[0,1,2,3,4,5,6]"
+    "drop_options": "[0,1,2,3,4,5,6]"
+  },
+  {
+    "question": "Notes \n What is the number of Inhabitants/Family Members in the Household?",
+    "question_type": "Text",
+    "is_required": false
+  },
+  {
+    "question": "What is the Source of Income per Inhabitant in this HouseHold per member?",
+    "question_type": "Text",
+    "answer_text_type": "InputNumber",
+    "is_required": false
+  },
+  {
+    "question": "What is the Average monthly Income in the Household per member? ",
+    "question_type": "Text",
+    "is_required": false
+  },
+  {
+    "question": "(In case of other than wage Income based,please ask the income month-by-month, January to Feburary)",
+    "question_type": "Note"
+  },
+  {
+    "question": "Husband",
+    "question_type": "MultiSelectDropdown",
+    "drop_options": "[None,Farm,Wage,n-farm-entrep.,Rent,Transfer,Value,Other]"
+  },
+  {
+    "question": "Wife",
+    "question_type": "MultiSelectDropdown",
+    "drop_options": "[None,Farm,Wage,n-farm-entrep.,Rent,Transfer,Value,Other]"
+  },
+  {
+    "question": "Children(s)",
+    "question_type": "MultiSelectDropdown",
+    "drop_options": "[None,Farm,Wage,n-farm-entrep.,Rent,Transfer,Value,Other]"
+  },
+  {
+    "question": "Relatives",
+    "question_type": "MultiSelectDropdown",
+    "drop_options": "[None,Farm,Wage,n-farm-entrep.,Rent,Transfer,Value,Other]"
+  },
+  {
+    "question": "Others",
+    "question_type": "MultiSelectDropdown",
+    "drop_options": "[None,Farm,Wage,n-farm-entrep.,Rent,Transfer,Value,Other]"
   }
 ]

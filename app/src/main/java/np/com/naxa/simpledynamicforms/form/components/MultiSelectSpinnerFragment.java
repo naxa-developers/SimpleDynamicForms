@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,7 @@ import android.widget.TextView;
 import com.guna.libmultispinner.MultiSelectionSpinner;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +33,8 @@ import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
-import static com.guna.libmultispinner.MultiSelectionSpinner.SELECT_NOTHING;
 
-
-public class MultiSelectSpinnerFragment extends Fragment implements fragmentStateListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener,onPageVisibleListener {
+public class MultiSelectSpinnerFragment extends Fragment implements fragmentStateListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener, onPageVisibleListener {
 
 
     @BindView(R.id.tv_question_edit_text)
@@ -40,6 +43,8 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
 
     @BindView(R.id.multi_select_spinner_answer_options)
     MultiSelectionSpinner multiSelectionSpinner;
+    @BindView(R.id.wrapper_multi_select_other)
+    TextInputLayout wrapperMultiSelectOther;
 
     private String userSelectedAnswer = "";
     private String question;
@@ -79,7 +84,7 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
 
     }
 
-    public void selectOptions(int[] options){
+    public void selectOptions(int[] options) {
         multiSelectionSpinner.setSelection(options);
     }
 
@@ -92,6 +97,15 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
 
     private void getAnswer(final int pos) {
         //selectedStrings methods reads the answer
+
+        String otherAnswer = wrapperMultiSelectOther.getEditText().getText().toString().trim();
+
+        if (otherAnswer.length() > 0) {
+            userSelectedAnswer.replace(getString(R.string.msg_other), wrapperMultiSelectOther.getEditText().getText());
+        }
+
+
+
         sendAnswerToActivity(pos);
     }
 
@@ -108,7 +122,6 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
 
         Timber.i("Question: %s Answer: %s", question, userSelectedAnswer);
     }
-
 
 
     public void onAttach(Context context) {
@@ -145,7 +158,9 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
             throw new RuntimeException(activity.toString()
                     + " must implement shouldAllowViewPagerSwipeListener");
         }
-    }    @Override
+    }
+
+    @Override
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
 
         Timber.d("Asking Fragment At Postion %s for answer for the question ", fragmentPositionInViewPager);
@@ -166,7 +181,33 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
 
     @Override
     public void selectedStrings(List<String> strings) {
-        userSelectedAnswer = new JSONArray(strings).toString();
+
+
+        try {
+            userSelectedAnswer = new JSONArray(strings).toString();
+            handleOtherInDropDown(new JSONArray(strings));
+        } catch (JSONException e) {
+            ToastUtils.showLongSafe(e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    private void handleOtherInDropDown(JSONArray jsonArray) throws JSONException {
+
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            String j = jsonArray.getString(i);
+            if (j.equalsIgnoreCase(getString(R.string.msg_other))) {
+                showOtherInputView();
+            }
+        }
+    }
+
+    private void showOtherInputView() {
+        wrapperMultiSelectOther.setVisibility(View.VISIBLE);
+        wrapperMultiSelectOther.requestFocus();
+
+
     }
 
 
@@ -174,4 +215,6 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
     public void fragmentIsVisible() {
         allowViewPagerSwipeListener.stopViewpagerScroll(false);
     }
+
+
 }

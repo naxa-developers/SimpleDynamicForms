@@ -9,6 +9,8 @@
     <string name="btn_question_add">Add Question  ( %1$d ) </string>
     <string name="activity_loader_json_storage_btn">Load Question From Phone</string>
 
+    <string name="msg_other">Other</string>
+
 
     <string-array name="question_type">
         <item>Text</item>

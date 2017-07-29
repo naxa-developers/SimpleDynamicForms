@@ -40,6 +40,7 @@ import np.com.naxa.simpledynamicforms.form.components.FormEndFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormStartFragment;
 import np.com.naxa.simpledynamicforms.form.components.LocationFragment;
 import np.com.naxa.simpledynamicforms.form.components.MultiSelectSpinnerFragment;
+import np.com.naxa.simpledynamicforms.form.components.NoteComponent;
 import np.com.naxa.simpledynamicforms.form.components.PhotoFragment;
 import np.com.naxa.simpledynamicforms.form.components.SpinnerFragment;
 import np.com.naxa.simpledynamicforms.form.components.SpinnerWithOtherFragment;
@@ -144,8 +145,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         }
 
 
-
-
     }
 
     //todo needs to be removed
@@ -171,6 +170,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         String questionType = jsonObject.getString("question_type");
         String question = jsonObject.getString("question");
         String isRequired = "false";
+        ArrayList<String> dropDownOptions = null;
 
         if (jsonObject.has("is_required")) {
             isRequired = jsonObject.getString("is_required");
@@ -209,16 +209,19 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 adapter.addFragment(dateTimeFragment, generateFragmentName());
 
                 break;
-            case "MultiSelect Dropdown":
+            case "MultiSelectDropdown":
 
-                ArrayList<String> songs = new ArrayList<>();
-                songs.add("Yellow - Coldplay");
-                songs.add("Pani Paryo - Rohit");
-                songs.add("Jhilimili - Rohit");
-                songs.add("Muskuraye - Astha Tamang Maskey");
+
+                if (jsonObject.has("drop_options")) {
+                    String dropOptions = jsonObject.getString("drop_options");
+                    Gson gson = new Gson();
+                    dropDownOptions =
+                            new ArrayList<>(Arrays.asList(
+                                    gson.fromJson(dropOptions, String[].class)));
+                }
 
                 MultiSelectSpinnerFragment multiSelectionSpinner = new MultiSelectSpinnerFragment();
-                multiSelectionSpinner.prepareQuestionAndAnswer(question, songs, pos);
+                multiSelectionSpinner.prepareQuestionAndAnswer(question, dropDownOptions, pos);
                 adapter.addFragment(multiSelectionSpinner, generateFragmentName());
 
                 break;
@@ -230,18 +233,18 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 break;
             case "DropDown":
-                ArrayList<String> options = null;
+
 
                 if (jsonObject.has("drop_options")) {
                     String dropOptions = jsonObject.getString("drop_options");
                     Gson gson = new Gson();
-                    options =
+                    dropDownOptions =
                             new ArrayList<>(Arrays.asList(
                                     gson.fromJson(dropOptions, String[].class)));
                 }
 
                 SpinnerFragment spinnerFragment = new SpinnerFragment();
-                spinnerFragment.prepareQuestionAndAnswer(question, options, pos);
+                spinnerFragment.prepareQuestionAndAnswer(question, dropDownOptions, pos);
                 adapter.addFragment(spinnerFragment, generateFragmentName());
 
 
@@ -262,7 +265,17 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 adapter.addFragment(eight, generateFragmentName());
 
                 break;
+            case "Note":
+                NoteComponent noteComponent = new NoteComponent();
+                noteComponent.setNote(question);
+                adapter.addFragment(noteComponent, "Note");
+
+                //hide itself from form
+                pos = pos - 1;
+
+                break;
         }
+
 
 
     }
@@ -414,7 +427,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 //
 //        EditTextFragment etfragContactNumber = new EditTextFragment();
 //        etfragContactNumber.prepareQuestionAndAnswer("Age", "Enter your age ", InputType.TYPE_CLASS_NUMBER, true, 2);
-//        etfragContactNumber.shouldStopSwipe();
+//        etfragContactNumber.stopViewPagerSwipe();
 //        adapter.addFragment(etfragContactNumber, generateFragmentName());
 //
 //        ArrayList<String> options = new ArrayList<>();

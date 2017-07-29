@@ -5,10 +5,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -60,6 +63,9 @@ public class MultiSelectionSpinner extends Spinner implements
     }
 
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+
+
+
         if (mSelection != null && which < mSelection.length) {
             mSelection[which] = isChecked;
             simple_adapter.clear();
@@ -80,7 +86,7 @@ public class MultiSelectionSpinner extends Spinner implements
         builder.setTitle(title);
         builder.setMultiChoiceItems(_items, mSelection, this);
         _itemsAtStart = getSelectedItemsAsString();
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Select", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 System.arraycopy(mSelection, 0, mSelectionAtStart, 0, mSelection.length);
