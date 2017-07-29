@@ -1,6 +1,6 @@
 [
   {
-    "question": "Surveyour Identify Number",
+    "question": "Surveyor Identify Number",
     "question_type": "Text",
     "answer_text_type":"InputNumber",
     "is_required": true
@@ -45,7 +45,7 @@
     "question_type": "Photo"
   },
   {
-    "question": "Respondante Sex",
+    "question": "Respondent's Sex",
     "question_type": "RadioButton"
   },
   {
@@ -59,21 +59,21 @@
   {
     "question": "Husband",
     "question_type": "DropDown",
-    "drop_options":"[1,2,3,4,5,6]"
+    "drop_options":"[0,1,2,3,4,5,6]"
   },
   {
     "question": "Wife",
     "question_type": "DropDown",
-    "drop_options":"[1,2,3,4,5,6]"
+    "drop_options":"[0,1,2,3,4,5,6]"
   },
   {
     "question": "Childrens(s)",
     "question_type": "DropDown",
-    "drop_options":"[1,2,3,4,5,6]"
+    "drop_options":"[0,1,2,3,4,5,6]"
   },
   {
     "question": "Others",
     "question_type": "DropDown",
-    "drop_options":"[1,2,3,4,5,6]"
+    "drop_options":"[0,1,2,3,4,5,6]"
   }
 ]

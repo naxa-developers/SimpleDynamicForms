@@ -183,10 +183,8 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 if (jsonObject.has("answer_text_type")) {
                     answerInputType = jsonObject.getString("answer_text_type");
-                    ToastUtils.showLongSafe(answerInputType);
-                    Log.d("Bath",answerInputType);
-                }
 
+                }
 
 
                 switch (answerInputType) {
@@ -235,11 +233,11 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 ArrayList<String> options = null;
 
                 if (jsonObject.has("drop_options")) {
-                    JSONArray jsonArray = jsonObject.getJSONArray("drop_options");
+                    String dropOptions = jsonObject.getString("drop_options");
                     Gson gson = new Gson();
                     options =
                             new ArrayList<>(Arrays.asList(
-                                    gson.fromJson(jsonArray.toString(), String[].class)));
+                                    gson.fromJson(dropOptions, String[].class)));
                 }
 
                 SpinnerFragment spinnerFragment = new SpinnerFragment();
