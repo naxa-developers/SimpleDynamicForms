@@ -2,6 +2,7 @@ package np.com.naxa.simpledynamicforms.formhost;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
@@ -9,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -19,6 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -96,8 +100,9 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     private void initUI() {
         setupToolbar();
         setupTabLayout();
-        setupForm();
+        //setupForm();
         //setupDemoForm();
+        setupRAWForm();
     }
 
     private void setupTabLayout() {
@@ -218,6 +223,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     private void setupDemoForm() {
 
+
         adapter.addFragment(new FormStartFragment(), "Start");
 
 
@@ -239,6 +245,59 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormEndFragment(), "End of Form");
         viewPager.setAdapter(adapter);
 
+    }
+
+
+    private void setupRAWForm() {
+        adapter.addFragment(new FormStartFragment(), "Start");
+        String form = readSingleForm(R.raw.form);
+
+
+        if (TextUtils.isEmpty(form)) {
+            ToastUtils.showLongSafe(":( \n Failed to laod form");
+        } else {
+
+            try {
+                formJsonArray = new JSONArray(form);
+
+                loadForm(formJsonArray);
+            } catch (JSONException e) {
+
+                e.printStackTrace();
+            }
+        }
+
+        adapter.addFragment(new FormEndFragment(), "End of Form");
+        viewPager.setAdapter(adapter);
+    }
+
+
+    private String readSingleForm(int rawId) {
+        InputStream in = null;
+        String form = null;
+        try {
+            Resources res = getResources();
+            in = res.openRawResource(rawId);
+
+            byte[] b = new byte[in.available()];
+            in.read(b);
+            form = new String(b);
+            in.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return form;
     }
 
     private void setupForm() {

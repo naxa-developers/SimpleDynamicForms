@@ -1,0 +1,78 @@
+[
+  {
+    "question": "Surveyor Identify Number",
+    "question_type": "Text",
+    "is_required": true
+  },
+  {
+    "question": "Name of surveyor",
+    "question_type": "Text",
+    "is_required": true
+  },
+  {
+    "question": "Date of Survey",
+    "question_type": "Text",
+    "is_required": true,
+    "date_format":"dd/mm/yyyy"
+  },
+  {
+    "question": "Household Identify Code",
+    "question_type": "Text"
+  },
+  {
+    "question": "Municipality",
+    "question_type": "Text"
+  },
+  {
+    "question": "Ward Number",
+    "question_type": "Text"
+  },
+  {
+    "question": "Address/Line",
+    "question_type": "Text"
+  },
+  {
+    "question": "GPS",
+    "question_type": "Text"
+  },
+  {
+    "question": "House Facade Photo",
+    "question_type": "Photo"
+  },
+  {
+    "question": "Respondent Age",
+    "question_type": "Photo"
+  },
+  {
+    "question": "Respondante Sex",
+    "question_type": "RadioButton"
+  },
+  {
+    "question": "E-mail",
+    "question_type": "Text"
+  },
+  {
+    "question": "What is the number of Inhabitants/Family Members in the Household?",
+    "question_type": "Number"
+  },
+  {
+    "question": "Husband",
+    "question_type": "DropDown",
+    "drop_options":"[1,2,3,4,5,6]"
+  },
+  {
+    "question": "Wife",
+    "question_type": "DropDown",
+    "drop_options":"[1,2,3,4,5,6]"
+  },
+  {
+    "question": "Childrens(s)",
+    "question_type": "DropDown",
+    "drop_options":"[1,2,3,4,5,6]"
+  },
+  {
+    "question": "Others",
+    "question_type": "DropDown",
+    "drop_options":"[1,2,3,4,5,6]"
+  }
+]
