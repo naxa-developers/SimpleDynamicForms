@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.orm.SugarRecord;
 
 import org.json.JSONArray;
@@ -23,7 +25,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -131,12 +136,15 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 JSONObject row = jsonArray.getJSONObject(i);
                 handleJSONForm(row, i + 1);
             }
+
+            ToastUtils.showLongSafe("Loading " + jsonArray.length() + " questions completed");
         } catch (JSONException e) {
             e.printStackTrace();
+            ToastUtils.showLongSafe(e.toString());
         }
 
 
-        ToastUtils.showLongSafe("Loading " + jsonArray.length() + " questions completed");
+
 
     }
 
@@ -162,13 +170,41 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
         String questionType = jsonObject.getString("question_type");
         String question = jsonObject.getString("question");
+        String isRequired = "false";
+
+        if (jsonObject.has("is_required")) {
+            isRequired = jsonObject.getString("is_required");
+        }
+
         switch (questionType) {
             case "Text":
+                String answerInputType = "InputText";
+                int answerInputId = InputType.TYPE_CLASS_TEXT;
+
+                if (jsonObject.has("answer_text_type")) {
+                    answerInputType = jsonObject.getString("answer_text_type");
+                    ToastUtils.showLongSafe(answerInputType);
+                    Log.d("Bath",answerInputType);
+                }
+
+
+
+                switch (answerInputType) {
+                    case "InputText":
+                        answerInputId = InputType.TYPE_CLASS_TEXT;
+                        break;
+                    case "InputNumber":
+
+                        answerInputId = InputType.TYPE_CLASS_NUMBER;
+                        break;
+                }
+
                 EditTextFragment etfragOwnerName = new EditTextFragment();
-                etfragOwnerName.prepareQuestionAndAnswer(question, question, InputType.TYPE_CLASS_TEXT, true, pos);
+                etfragOwnerName.prepareQuestionAndAnswer(question, question, answerInputId, Boolean.parseBoolean(isRequired), pos);
                 adapter.addFragment(etfragOwnerName, generateFragmentName());
+
                 break;
-            case "Date Time":
+            case "DateTime":
 
                 DateTimeFragment dateTimeFragment = new DateTimeFragment();
                 dateTimeFragment.prepareQuestionAndAnswer(question, pos);
@@ -196,9 +232,15 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 break;
             case "DropDown":
-                ArrayList<String> options = new ArrayList<>();
-                options.add("Yes");
-                options.add("No");
+                ArrayList<String> options = null;
+
+                if (jsonObject.has("drop_options")) {
+                    JSONArray jsonArray = jsonObject.getJSONArray("drop_options");
+                    Gson gson = new Gson();
+                    options =
+                            new ArrayList<>(Arrays.asList(
+                                    gson.fromJson(jsonArray.toString(), String[].class)));
+                }
 
                 SpinnerFragment spinnerFragment = new SpinnerFragment();
                 spinnerFragment.prepareQuestionAndAnswer(question, options, pos);
@@ -214,6 +256,12 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
                 spinnerWithOtherFragment.prepareQuestionAndAnswer(question, options2, pos);
                 adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
+
+                break;
+            case "GPS":
+                LocationFragment eight = new LocationFragment();
+                eight.prepareQuestionAndAnswer(question, pos);
+                adapter.addFragment(eight, generateFragmentName());
 
                 break;
         }
@@ -554,7 +602,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     @Override
     public void onBackPressed() {
-        DialogFactory.createActionDialog(this, "Close form", "Your changes would be lost").setPositiveButton("Close form", new DialogInterface.OnClickListener() {
+        DialogFactory.createActionDialog(this, "Close form?", "Your changes would be lost").setPositiveButton("Close form", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 finish();

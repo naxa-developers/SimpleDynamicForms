@@ -37,5 +37,7 @@ dependencies {
     compile 'com.github.florent37:singledateandtimepicker:1.1.4'
     compile 'com.github.satyan:sugar:1.5'
     compile 'com.google.guava:guava:22.0-android'
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
 
 }

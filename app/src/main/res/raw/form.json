@@ -1,7 +1,8 @@
 [
   {
-    "question": "Surveyor Identify Number",
+    "question": "Surveyour Identify Number",
     "question_type": "Text",
+    "answer_text_type":"InputNumber",
     "is_required": true
   },
   {
@@ -11,8 +12,7 @@
   },
   {
     "question": "Date of Survey",
-    "question_type": "Text",
-    "is_required": true,
+    "question_type": "DateTime",
     "date_format":"dd/mm/yyyy"
   },
   {
@@ -25,7 +25,8 @@
   },
   {
     "question": "Ward Number",
-    "question_type": "Text"
+    "question_type": "Text",
+    "answer_text_type":"InputNumber"
   },
   {
     "question": "Address/Line",
@@ -53,7 +54,7 @@
   },
   {
     "question": "What is the number of Inhabitants/Family Members in the Household?",
-    "question_type": "Number"
+    "question_type": "InputNumber"
   },
   {
     "question": "Husband",

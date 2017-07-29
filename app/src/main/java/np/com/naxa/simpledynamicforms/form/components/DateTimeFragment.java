@@ -43,6 +43,7 @@ public class DateTimeFragment extends Fragment implements fragmentStateListener,
     private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
 
 
+
     public DateTimeFragment() {
 
     }
@@ -64,6 +65,7 @@ public class DateTimeFragment extends Fragment implements fragmentStateListener,
 
         Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
     }
+
 
     public void setQuestionAndAnswers() {
         tvQuestion.setText(question);
