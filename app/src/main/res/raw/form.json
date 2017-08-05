@@ -46,7 +46,8 @@
   },
   {
     "question": "Respondent Sex",
-    "question_type": "RadioButton"
+    "question_type": "DropDown",
+    "drop_options": "[Male,Female,Other]"
   },
   {
     "question": "E-mail",
@@ -54,7 +55,8 @@
   },
   {
     "question": "What is the number of Inhabitants/Family Members in the Household?",
-    "question_type": "InputNumber"
+    "question_type": "Text",
+    "answer_text_type": "InputNumber"
   },
   {
     "question": "Husband",

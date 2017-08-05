@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 import com.orm.SugarRecord;
 
 import org.json.JSONArray;
@@ -93,6 +95,8 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         ButterKnife.bind(this);
         initUI();
         initVar();
+
+        Logger.addLogAdapter(new AndroidLogAdapter());
     }
 
     private void initVar() {
@@ -275,7 +279,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 break;
         }
-
 
 
     }
@@ -501,6 +504,8 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     @Override
     public void onAnswerSelected(String question, String answer) {
         jsonAnswerBuilder.addAnswerToJSON(question, answer);
+
+        Logger.json(jsonAnswerBuilder.finalizeAnswers());
 
     }
 
