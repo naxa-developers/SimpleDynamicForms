@@ -120,7 +120,7 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
 
         }
 
-        Timber.i("Question: %s Answer: %s", question, userSelectedAnswer);
+        Timber.i("Question: %s QuestionAnswer: %s", question, userSelectedAnswer);
     }
 
 

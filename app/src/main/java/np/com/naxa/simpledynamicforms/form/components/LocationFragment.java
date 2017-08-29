@@ -147,7 +147,7 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
 
         }
 
-        Timber.i("Question: %s Answer: %s", question, location);
+        Timber.i("Question: %s QuestionAnswer: %s", question, location);
     }
 
 

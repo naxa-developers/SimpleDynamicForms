@@ -41,5 +41,6 @@ dependencies {
     compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
 
     compile 'com.orhanobut:logger:2.1.1'
+    compile 'org.apache.commons:commons-collections4:4.0'
 
 }

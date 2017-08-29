@@ -89,12 +89,12 @@ public class FormEndFragment extends Fragment implements fragmentStateListener, 
 
         Form form = new Form();
         String currentDateTime = TimeUtils.getNowString();
-
         form.setFilledDateTime(currentDateTime);
         form.setFormName(formName);
 
         try {
-            listener.saveForm(form);
+           // listener.saveForm(form);
+            listener.saveForm(formName);
         } catch (ClassCastException cce) {
 
         }

@@ -87,7 +87,7 @@ public class DateTimeFragment extends Fragment implements fragmentStateListener,
 
         }
 
-        Timber.i("Question: %s Answer: %s", question, userSelectedAnswer);
+        Timber.i("Question: %s QuestionAnswer: %s", question, userSelectedAnswer);
     }
 
     public void onAttach(Context context) {

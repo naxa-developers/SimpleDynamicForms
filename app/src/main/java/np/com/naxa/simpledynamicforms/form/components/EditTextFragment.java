@@ -22,6 +22,9 @@ import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswerFactory;
+import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
 
@@ -35,14 +38,10 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
     TextInputLayout textInputLayout;
 
     private String userSelectedAnswer = "";
-    private String question;
-    private String hint;
-    private int inputType;
-    private int position;
+    private QuestionAnswer questionAnswer;
     private onAnswerSelectedListener listener;
     private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
     private boolean shouldStopWipe = false;
-    private boolean validationRequired;
 
 
     public EditTextFragment() {
@@ -56,7 +55,7 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
         ButterKnife.bind(this, rootView);
         setQuestionAndAnswers();
 
-        if (validationRequired) {
+        if (questionAnswer.isRequired()) {
             stopViewPagerSwipe();
             setRulesForValidation();
         }
@@ -64,23 +63,13 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
         return rootView;
     }
 
-    public void prepareQuestionAndAnswer(String question, String hint, int inputType, int position) {
-        this.question = question;
-        this.hint = hint;
-        this.position = position;
-        this.position = position;
-        Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
+    public void prepareQuestionAndAnswer(QuestionAnswer questionAnswer) {
+        this.questionAnswer = questionAnswer;
+
+
+        Timber.i("Preparing question with question \' %s \' at postion %s", questionAnswer.getQuestion(), questionAnswer.getOrder());
     }
 
-    public void prepareQuestionAndAnswer(String question, String hint, int inputType, boolean validationRequired, int position) {
-        this.question = question;
-        this.hint = hint;
-        this.position = position;
-        this.inputType = inputType;
-        this.validationRequired = validationRequired;
-        Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
-
-    }
 
     public void setMaxCounter(@NonNull int counterMaxLength) {
         textInputLayout.setCounterEnabled(true);
@@ -94,9 +83,9 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
 
 
     public void setQuestionAndAnswers() {
-        tvQuestion.setText(question);
-        textInputLayout.getEditText().setHint(hint);
-        textInputLayout.getEditText().setInputType(inputType);
+        tvQuestion.setText(questionAnswer.getQuestion());
+        textInputLayout.getEditText().setHint(questionAnswer.getHint());
+        textInputLayout.getEditText().setInputType(questionAnswer.getInputType());
     }
 
     private void getAnswer(final int pos) {
@@ -106,16 +95,21 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
 
     private void sendAnswerToActivity(int pos) {
 
+
         try {
-            listener.onAnswerSelected(StringFormatter.replaceStringWithUnderScore(question), userSelectedAnswer);
+
+            questionAnswer.setAnswer(userSelectedAnswer);
+
+            listener.onAnswerSelected(questionAnswer);
             listener.shoudStopSwipe(shouldStopWipe);
+
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());
 
         }
 
-        Timber.i("Question: %s Answer: %s", question, userSelectedAnswer);
+        Timber.i("Question: %s QuestionAnswer: %s", questionAnswer.getQuestion(), userSelectedAnswer);
     }
 
     public void onAttach(Context context) {
@@ -157,14 +151,15 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
     @Override
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
 
-        Timber.d("Asking Fragment At Postion %s for answer for the question ", fragmentPositionInViewPager);
+        //making sure the fragment only reports to activity when it is it's turn
 
-        Boolean doFragmentIdMatch = fragmentPositionInViewPager == position;
+        //  index of fragmentPositionInViewPager begins at 1
+        // index of order begins at 0
 
-        Timber.d(" %s and %s are the same ? %s \n question: %s", fragmentPositionInViewPager, position, doFragmentIdMatch.toString(), question);
+        // substract to match
 
-        if (fragmentPositionInViewPager == position) {
-            getAnswer(position);
+        if (fragmentPositionInViewPager - 1 == questionAnswer.getOrder()) {
+            getAnswer(questionAnswer.getOrder());
         }
     }
 

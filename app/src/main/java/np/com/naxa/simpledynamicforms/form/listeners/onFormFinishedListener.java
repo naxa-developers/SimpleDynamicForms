@@ -10,4 +10,5 @@ public interface onFormFinishedListener {
     void uploadForm();
 
     void saveForm(Form form);
+    void saveForm(String formName);
 }

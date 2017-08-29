@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -147,7 +148,7 @@ public class PhotoFragment extends Fragment implements fragmentStateListener,onP
 
         }
 
-        Timber.i("Question: %s Answer: %s", question, mCurrentPhotoPath);
+        Timber.i("Question: %s QuestionAnswer: %s", question, mCurrentPhotoPath);
     }
 
     @OnClick(R.id.fragment_photo_btn_open_gallery)
@@ -207,7 +208,7 @@ public class PhotoFragment extends Fragment implements fragmentStateListener,onP
             ArrayList<String> notAvaliablePermList = new ArrayList<>();
 
             for (String currentPermission : permission) {
-                int permissionCheck = checkSelfPermission(getActivity(), currentPermission);
+                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), currentPermission);
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     notAvaliablePermList.add(currentPermission);
                 }

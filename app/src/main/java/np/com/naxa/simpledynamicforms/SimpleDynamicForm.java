@@ -2,6 +2,8 @@ package np.com.naxa.simpledynamicforms;
 
 import android.app.Application;
 
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 import com.orm.SugarApp;
 
 import timber.log.Timber;
@@ -28,6 +30,8 @@ public class SimpleDynamicForm extends SugarApp {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+
+        Logger.addLogAdapter(new AndroidLogAdapter());
     }
 
 

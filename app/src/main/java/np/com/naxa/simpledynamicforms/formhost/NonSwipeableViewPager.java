@@ -16,6 +16,7 @@ import android.widget.Scroller;
 import java.lang.reflect.Field;
 
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
 import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 
 public class NonSwipeableViewPager extends ViewPager implements onAnswerSelectedListener {
@@ -76,6 +77,11 @@ public class NonSwipeableViewPager extends ViewPager implements onAnswerSelected
         if (shouldStopSwipe){
             ToastUtils.showLongSafe("This question is mandatory.");
         }
+
+    }
+
+    @Override
+    public void onAnswerSelected(QuestionAnswer questionAnswer) {
 
     }
 

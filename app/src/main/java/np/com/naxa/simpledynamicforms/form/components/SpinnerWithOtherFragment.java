@@ -111,7 +111,7 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
 
         }
 
-        Timber.i("Question: %s Answer: %s", question, userSelectedAnswer);
+        Timber.i("Question: %s QuestionAnswer: %s", question, userSelectedAnswer);
     }
 
     public void onAttach(Context context) {

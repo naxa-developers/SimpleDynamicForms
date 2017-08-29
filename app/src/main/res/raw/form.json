@@ -1,126 +1,41 @@
 [
   {
-    "question": "Surveyor Identify Number",
+    "question": "Name(Organization/Responsible Individual)",
+    "question_type": "Text",
+    "is_required": true
+  },
+  {
+    "question": "Contact",
     "question_type": "Text",
     "answer_text_type": "InputNumber",
     "is_required": true
   },
   {
-    "question": "Name of surveyor",
-    "question_type": "Text",
+    "question": "Target area ",
+    "question_type": "AutoComplete",
+    "drop_options": "[Tent,Food,Medics,Clothes,Other]",
     "is_required": true
   },
   {
-    "question": "Date of Survey",
+    "question": "Supplies",
+    "question_type": "MultiSelectDropdown",
+    "drop_options": "[Tent,Food,Medics,Clothes,Other]",
+    "is_required": true
+  },
+  {
+    "question": "Target Population",
+    "question_type": "Text",
+    "answer_text_type": "InputNumber",
+    "is_required": true
+  },
+  {
+    "question": "Date",
     "question_type": "DateTime",
-    "date_format": "dd/mm/yyyy"
+    "is_required": true
   },
   {
-    "question": "Household Identify Code",
-    "question_type": "Text"
-  },
-  {
-    "question": "Municipality",
-    "question_type": "Text"
-  },
-  {
-    "question": "Ward Number",
+    "question": "Comments",
     "question_type": "Text",
-    "answer_text_type": "InputNumber"
-  },
-  {
-    "question": "Address/Line",
-    "question_type": "Text"
-  },
-  {
-    "question": "GPS",
-    "question_type": "Text"
-  },
-  {
-    "question": "House Facade Photo",
-    "question_type": "Photo"
-  },
-  {
-    "question": "Respondent Age",
-    "question_type": "Photo"
-  },
-  {
-    "question": "Respondent Sex",
-    "question_type": "DropDown",
-    "drop_options": "[Male,Female,Other]"
-  },
-  {
-    "question": "E-mail",
-    "question_type": "Text"
-  },
-  {
-    "question": "What is the number of Inhabitants/Family Members in the Household?",
-    "question_type": "Text",
-    "answer_text_type": "InputNumber"
-  },
-  {
-    "question": "Husband",
-    "question_type": "DropDown",
-    "drop_options": "[0,1,2,3,4,5,6]"
-  },
-  {
-    "question": "Wife",
-    "question_type": "DropDown",
-    "drop_options": "[0,1,2,3,4,5,6]"
-  },
-  {
-    "question": "Childrens(s)",
-    "question_type": "DropDown",
-    "drop_options": "[0,1,2,3,4,5,6]"
-  },
-  {
-    "question": "Others",
-    "question_type": "DropDown",
-    "drop_options": "[0,1,2,3,4,5,6]"
-  },
-  {
-    "question": "What is the number of Inhabitants/Family Members in the Household?",
-    "question_type": "Text",
-    "is_required": false
-  },
-  {
-    "question": "What is the Source of Income per Inhabitant in this HouseHold per member?",
-    "question_type": "Text",
-    "answer_text_type": "InputNumber",
-    "is_required": false
-  },
-  {
-    "question": "What is the Average monthly Income in the Household per member? ",
-    "question_type": "Text",
-    "is_required": false
-  },
-  {
-    "question": "(In case of other than wage Income based,please ask the income month-by-month, January to February)",
-    "question_type": "Note"
-  },
-  {
-    "question": "Husband",
-    "question_type": "MultiSelectDropdown",
-    "drop_options": "[None,Farm,Wage,n-farm-entrep.,Rent,Transfer,Value,Other]"
-  },
-  {
-    "question": "Wife",
-    "question_type": "MultiSelectDropdown",
-    "drop_options": "[None,Farm,Wage,n-farm-entrep.,Rent,Transfer,Value,Other]"
-  },
-  {
-    "question": "Children(s)",
-    "question_type": "MultiSelectDropdown",
-    "drop_options": "[None,Farm,Wage,n-farm-entrep.,Rent,Transfer,Value,Other]"
-  },
-  {
-    "question": "Relatives",
-    "question_type": "MultiSelectDropdown",
-    "drop_options": "[None,Farm,Wage,n-farm-entrep.,Rent,Transfer,Value,Other]"
-  },
-  {
-    "question": "Others",
-    "question_type": "MultiSelectDropdown",
-    "drop_options": "[None,Farm,Wage,n-farm-entrep.,Rent,Transfer,Value,Other]"
+    "is_required": true
   }
 ]

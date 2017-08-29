@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.orm.SugarRecord;
@@ -27,8 +26,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -36,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.demo.JSONFormatter;
+import np.com.naxa.simpledynamicforms.form.components.AutoCompleteTextFragment;
 import np.com.naxa.simpledynamicforms.form.components.DateTimeFragment;
 import np.com.naxa.simpledynamicforms.form.components.EditTextFragment;
 import np.com.naxa.simpledynamicforms.form.components.FormEndFragment;
@@ -52,9 +50,12 @@ import np.com.naxa.simpledynamicforms.form.listeners.onFormFinishedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.model.Form;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswerFactory;
 import np.com.naxa.simpledynamicforms.savedform.SavedFormActivity;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
+import np.com.naxa.simpledynamicforms.uitils.TabLayoutUtils;
 import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
@@ -95,6 +96,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         ButterKnife.bind(this);
         initUI();
         initVar();
+        TabLayoutUtils.enableTabs(tabLayout, false);
 
         Logger.addLogAdapter(new AndroidLogAdapter());
     }
@@ -107,12 +109,35 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     }
 
+
     private void initUI() {
         setupToolbar();
         setupTabLayout();
-        //setupForm();
-        //setupDemoForm();
-        setupRAWForm();
+        //setupWizardForm();
+        setupDemoForm();
+        //setupRAWForm();
+    }
+
+    private void setupDemoForm() {
+
+
+        adapter.addFragment(new FormStartFragment(), "Start");
+
+        EditTextFragment etfragOwnerName = new EditTextFragment();
+        QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(0, "Question", "Hint", InputType.TYPE_CLASS_TEXT, true);
+        etfragOwnerName.prepareQuestionAndAnswer(questionAnswer);
+
+        adapter.addFragment(etfragOwnerName, generateFragmentName());
+
+        adapter.addFragment(new FormEndFragment(), "End of Form");
+
+
+
+
+
+        viewPager.setAdapter(adapter);
+
+
     }
 
     private void setupTabLayout() {
@@ -175,6 +200,11 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         String question = jsonObject.getString("question");
         String isRequired = "false";
         ArrayList<String> dropDownOptions = null;
+        String answerInputType = "InputText";
+
+
+//        Gson gson = new Gson();
+//        gson.fromJson(jsonObject.toString(),)
 
         if (jsonObject.has("is_required")) {
             isRequired = jsonObject.getString("is_required");
@@ -182,7 +212,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
         switch (questionType) {
             case "Text":
-                String answerInputType = "InputText";
+
                 int answerInputId = InputType.TYPE_CLASS_TEXT;
 
                 if (jsonObject.has("answer_text_type")) {
@@ -202,7 +232,9 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 }
 
                 EditTextFragment etfragOwnerName = new EditTextFragment();
-                etfragOwnerName.prepareQuestionAndAnswer(question, question, answerInputId, Boolean.parseBoolean(isRequired), pos);
+                QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(pos, question, question, answerInputId, Boolean.parseBoolean(isRequired));
+                etfragOwnerName.prepareQuestionAndAnswer(questionAnswer);
+
                 adapter.addFragment(etfragOwnerName, generateFragmentName());
 
                 break;
@@ -278,12 +310,29 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 pos = pos - 1;
 
                 break;
+
+            case "AutoComplete":
+
+                if (jsonObject.has("drop_options")) {
+                    String dropOptions = jsonObject.getString("drop_options");
+                    Gson gson = new Gson();
+                    dropDownOptions =
+                            new ArrayList<>(Arrays.asList(
+                                    gson.fromJson(dropOptions, String[].class)));
+                }
+
+                AutoCompleteTextFragment completeTextFragment = new AutoCompleteTextFragment();
+                completeTextFragment.prepareQuestionAndAnswer(question, question, dropDownOptions, InputType.TYPE_CLASS_TEXT, pos);
+
+                adapter.addFragment(completeTextFragment, generateFragmentName());
+                break;
+
         }
 
 
     }
 
-    private void setupDemoForm() {
+    private void setupWizardForm() {
 
 
         adapter.addFragment(new FormStartFragment(), "Start");
@@ -298,7 +347,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 loadForm(formJsonArray);
             } catch (JSONException e) {
-
                 e.printStackTrace();
             }
         }
@@ -362,114 +410,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         return form;
     }
 
-    private void setupForm() {
-
-        adapter.addFragment(new FormStartFragment(), "Start");
-
-        EditTextFragment etfragOwnerName = new EditTextFragment();
-        etfragOwnerName.prepareQuestionAndAnswer("Surveyor Identify Number", "", InputType.TYPE_CLASS_TEXT, true, 1);
-        adapter.addFragment(etfragOwnerName, generateFragmentName());
-
-        EditTextFragment two = new EditTextFragment();
-        two.prepareQuestionAndAnswer("Name of Surveyor", "", InputType.TYPE_CLASS_TEXT, true, 2);
-        adapter.addFragment(two, generateFragmentName());
-
-        DateTimeFragment three = new DateTimeFragment();
-        three.prepareQuestionAndAnswer("Date of Survey", 3);
-        adapter.addFragment(three, generateFragmentName());
-
-        EditTextFragment four = new EditTextFragment();
-        four.prepareQuestionAndAnswer("Household Identify Code", "", InputType.TYPE_CLASS_NUMBER, true, 4);
-        adapter.addFragment(four, generateFragmentName());
-
-        EditTextFragment five = new EditTextFragment();
-        five.prepareQuestionAndAnswer("Municipality", "", InputType.TYPE_CLASS_TEXT, true, 5);
-        adapter.addFragment(five, generateFragmentName());
-
-        EditTextFragment six = new EditTextFragment();
-        six.prepareQuestionAndAnswer("Ward Number", "", InputType.TYPE_CLASS_NUMBER, true, 6);
-        adapter.addFragment(six, generateFragmentName());
-
-        EditTextFragment seven = new EditTextFragment();
-        seven.prepareQuestionAndAnswer("Address/Line", "", InputType.TYPE_CLASS_TEXT, true, 7);
-        adapter.addFragment(seven, generateFragmentName());
-
-        LocationFragment eight = new LocationFragment();
-        eight.prepareQuestionAndAnswer("GPS Location", 8);
-        adapter.addFragment(eight, generateFragmentName());
-
-
-        PhotoFragment nine = new PhotoFragment();
-        nine.prepareQuestionAndAnswer("House Facade Photo", 9);
-        adapter.addFragment(nine, generateFragmentName());
-
-        ArrayList<String> options = new ArrayList<>();
-        options.add("Male");
-        options.add("Female");
-
-        SpinnerFragment ten = new SpinnerFragment();
-        ten.prepareQuestionAndAnswer("Respondent Sex", options, 10);
-        adapter.addFragment(ten, generateFragmentName());
-
-        EditTextFragment eleven = new EditTextFragment();
-        eleven.prepareQuestionAndAnswer("Respondent Age", "", InputType.TYPE_CLASS_NUMBER, true, 11);
-        adapter.addFragment(eleven, generateFragmentName());
-
-        EditTextFragment tweleve = new EditTextFragment();
-        tweleve.prepareQuestionAndAnswer("Email", "", InputType.TYPE_CLASS_TEXT, true, 12);
-        adapter.addFragment(tweleve, generateFragmentName());
-
-        EditTextFragment thirteen = new EditTextFragment();
-        thirteen.prepareQuestionAndAnswer("What is the number of Inhabitants/Family Members in the Household?", "", InputType.TYPE_CLASS_TEXT, true, 11);
-        adapter.addFragment(thirteen, generateFragmentName());
-
-
-//        EditTextFragment seven = new EditTextFragment();
-//        etfragOwnerName.prepareQuestionAndAnswer("Address/Line", "", InputType.TYPE_CLASS_TEXT, true, 5);
-//        adapter.addFragment(seven, generateFragmentName());
-//
-//        EditTextFragment etfragContactNumber = new EditTextFragment();
-//        etfragContactNumber.prepareQuestionAndAnswer("Age", "Enter your age ", InputType.TYPE_CLASS_NUMBER, true, 2);
-//        etfragContactNumber.stopViewPagerSwipe();
-//        adapter.addFragment(etfragContactNumber, generateFragmentName());
-//
-//        ArrayList<String> options = new ArrayList<>();
-//        options.add("Yes");
-//        options.add("No");
-//
-//        SpinnerFragment spinnerFragment = new SpinnerFragment();
-//        spinnerFragment.prepareQuestionAndAnswer("Do you like dancing?", options, 3);
-//        adapter.addFragment(spinnerFragment, generateFragmentName());
-//
-//        ArrayList<String> songs = new ArrayList<>();
-//        songs.add("Yellow - Coldplay");
-//        songs.add("Pani Paryo - Rohit");
-//        songs.add("Jhilimili - Rohit");
-//        songs.add("Muskuraye - Astha Tamang Maskey");
-//
-//        MultiSelectSpinnerFragment multiSelectionSpinner = new MultiSelectSpinnerFragment();
-//        multiSelectionSpinner.prepareQuestionAndAnswer("Select at least two songs?", songs, 4);
-//        adapter.addFragment(multiSelectionSpinner, generateFragmentName());
-//
-//        PhotoFragment photoFragment = new PhotoFragment();
-//        photoFragment.prepareQuestionAndAnswer("Take a photo", 5);
-//        adapter.addFragment(photoFragment, generateFragmentName());
-//
-//
-//
-//        SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
-//        spinnerWithOtherFragment.prepareQuestionAndAnswer("Choose other from drop down", options, 7);
-//        adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
-//
-//
-//        LocationFragment locationFragment = new LocationFragment();
-//        locationFragment.prepareQuestionAndAnswer("GPS", 8);
-//        adapter.addFragment(locationFragment, generateFragmentName());
-
-        adapter.addFragment(new FormEndFragment(), "End of Form");
-        viewPager.setAdapter(adapter);
-
-    }
 
     private String generateFragmentName() {
         String fragmentName = "Q.no." + fragmentCount;
@@ -523,6 +463,14 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
     }
 
+    @Override
+    public void onAnswerSelected(QuestionAnswer questionAnswer) {
+
+        jsonAnswerBuilder.addAnswer(questionAnswer);
+        ToastUtils.showLongSafe("FUCK");
+
+    }
+
 
     @Override
     public void uploadForm() {
@@ -555,6 +503,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
             }
         }).create().show();
+
+    }
+
+    @Override
+    public void saveForm(String formName) {
+        jsonToSend = jsonAnswerBuilder.getFinalizedForm(formName);
+        Logger.d(jsonToSend);
 
     }
 
