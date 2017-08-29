@@ -114,7 +114,7 @@ public class FormsAdapter extends
         btnReviewForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFactory.createSimpleOkErrorDialog(getContext(), forms.get(position).getFormName(), JSONFormatter.formatString(forms.get(position).getFormJson())).show();
+                DialogFactory.createSimpleOkErrorDialog(getContext(), forms.get(position).getFormName(), JSONFormatter.formatQuestionAnswer(forms.get(position).getFormJson())).show();
             }
         });
 
