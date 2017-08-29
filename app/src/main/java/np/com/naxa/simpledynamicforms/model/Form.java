@@ -3,7 +3,11 @@ package np.com.naxa.simpledynamicforms.model;
 import com.orm.SugarRecord;
 import com.orm.dsl.Table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
+import np.com.naxa.simpledynamicforms.uitils.TimeUtils;
 
 /**
  * Created by Nishon Tandukar on 19 Jun 2017 .
@@ -12,7 +16,7 @@ import java.util.ArrayList;
  */
 
 @Table
-public class Form extends SugarRecord {
+public class Form extends SugarRecord implements Serializable {
 
 
     private String formName;
@@ -61,5 +65,18 @@ public class Form extends SugarRecord {
         }
 
         return contacts;
+    }
+
+
+
+
+    public static Form getInstance(String formName, String jsonToSend) {
+        Form form = new Form();
+        String currentDateTime = TimeUtils.getNowString();
+        form.setFilledDateTime(currentDateTime);
+        form.setFormName(formName);
+        form.setFormJson(jsonToSend);
+
+        return form;
     }
 }

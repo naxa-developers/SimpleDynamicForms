@@ -1,6 +1,8 @@
 package np.com.naxa.simpledynamicforms.savedform;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import java.util.List;
 
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.demo.JSONFormatter;
+import np.com.naxa.simpledynamicforms.formhost.FormEntryActivity;
 import np.com.naxa.simpledynamicforms.model.Form;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 
@@ -25,8 +28,6 @@ import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 
 public class FormsAdapter extends
         RecyclerView.Adapter<FormsAdapter.ViewHolder> {
-
-
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -85,7 +86,7 @@ public class FormsAdapter extends
 
     @Override
     public void onBindViewHolder(FormsAdapter.ViewHolder viewHolder, final int position) {
-        Form form = forms.get(position);
+        final Form form = forms.get(position);
 
         TextView textView = viewHolder.nameTextView;
         textView.setText(form.getFormName());
@@ -102,19 +103,24 @@ public class FormsAdapter extends
         btnEditForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("form",form);
+                Intent toFormEntry = new Intent(getContext(), FormEntryActivity.class);
+                toFormEntry.putExtra("form",bundle);
+                getContext().startActivity(toFormEntry);
             }
         });
 
         btnReviewForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFactory.createSimpleOkErrorDialog(getContext(),forms.get(position).getFormName(), JSONFormatter.formatString(forms.get(position).getFormJson())).show();
+                DialogFactory.createSimpleOkErrorDialog(getContext(), forms.get(position).getFormName(), JSONFormatter.formatString(forms.get(position).getFormJson())).show();
             }
         });
 
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -122,13 +128,14 @@ public class FormsAdapter extends
     }
 
 
-
     // Define listener member variable
     private OnItemClickListener listener;
+
     // Define the listener interface
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
     }
+
     // Define the method that allows the parent activity or fragment to define the listener
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;

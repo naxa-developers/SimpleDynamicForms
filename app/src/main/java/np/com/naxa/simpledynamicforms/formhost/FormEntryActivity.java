@@ -114,7 +114,22 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         setupToolbar();
         setupTabLayout();
         //setupWizardForm();
-        setupDemoForm();
+
+        try {
+            Form savedForm = (Form) getIntent().getBundleExtra("form").getSerializable("form");
+
+            JSONObject savedFormJson = new JSONObject(savedForm.getFormJson());
+
+
+            setupFormInViewpager(savedFormJson.getJSONArray("questionAnswers").toString());
+
+        } catch (NullPointerException | JSONException e) {
+
+            e.printStackTrace();
+            setupDemoForm();
+
+        }
+
         //setupRAWForm();
     }
 
@@ -124,15 +139,12 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormStartFragment(), "Start");
 
         EditTextFragment etfragOwnerName = new EditTextFragment();
-        QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(0, "Question", "Hint", InputType.TYPE_CLASS_TEXT, true);
+        QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(0, "Question", "Hint", "", InputType.TYPE_CLASS_TEXT, true);
         etfragOwnerName.prepareQuestionAndAnswer(questionAnswer);
 
         adapter.addFragment(etfragOwnerName, generateFragmentName());
 
         adapter.addFragment(new FormEndFragment(), "End of Form");
-
-
-
 
 
         viewPager.setAdapter(adapter);
@@ -196,22 +208,27 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     private void handleJSONForm(JSONObject jsonObject, int pos) throws JSONException {
 
 
+
         String questionType = jsonObject.getString("question_type");
         String question = jsonObject.getString("question");
         String isRequired = "false";
+        String answer = "";
         ArrayList<String> dropDownOptions = null;
         String answerInputType = "InputText";
 
-
-//        Gson gson = new Gson();
-//        gson.fromJson(jsonObject.toString(),)
 
         if (jsonObject.has("is_required")) {
             isRequired = jsonObject.getString("is_required");
         }
 
+        if (jsonObject.has("answer")) {
+            answer = jsonObject.getString("answer");
+        }
+
+
         switch (questionType) {
-            case "Text":
+            case "TEXT":
+
 
                 int answerInputId = InputType.TYPE_CLASS_TEXT;
 
@@ -232,7 +249,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 }
 
                 EditTextFragment etfragOwnerName = new EditTextFragment();
-                QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(pos, question, question, answerInputId, Boolean.parseBoolean(isRequired));
+                QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(pos, question, "", answer, answerInputId, Boolean.parseBoolean(isRequired));
                 etfragOwnerName.prepareQuestionAndAnswer(questionAnswer);
 
                 adapter.addFragment(etfragOwnerName, generateFragmentName());
@@ -358,9 +375,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     }
 
 
-    private void setupRAWForm() {
-        adapter.addFragment(new FormStartFragment(), "Start");
+    private void setupRawJson() {
         String form = readSingleForm(R.raw.form);
+        setupFormInViewpager(form);
+    }
+
+    private void setupFormInViewpager(String form) {
+        adapter.addFragment(new FormStartFragment(), "Start");
 
 
         if (TextUtils.isEmpty(form)) {
@@ -467,7 +488,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     public void onAnswerSelected(QuestionAnswer questionAnswer) {
 
         jsonAnswerBuilder.addAnswer(questionAnswer);
-        ToastUtils.showLongSafe("FUCK");
+
 
     }
 
@@ -509,7 +530,30 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     @Override
     public void saveForm(String formName) {
         jsonToSend = jsonAnswerBuilder.getFinalizedForm(formName);
-        Logger.d(jsonToSend);
+
+
+        Form form = Form.getInstance(formName, jsonToSend);
+        SugarRecord.save(form);
+
+        DialogFactory.createActionDialog(this, "Save Successful", "Your form has been save successfully").setPositiveButton("New Form", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Intent intent = new Intent(getApplicationContext(), FormEntryActivity.class);
+                intent.putExtra("form", formJsonArray.toString());
+                startActivity(intent);
+
+            }
+        }).setNegativeButton("View Saved Form", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Intent intent = new Intent(FormEntryActivity.this, SavedFormActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+        }).create().show();
 
     }
 

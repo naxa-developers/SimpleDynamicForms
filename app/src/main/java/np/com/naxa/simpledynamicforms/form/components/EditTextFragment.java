@@ -86,6 +86,7 @@ public class EditTextFragment extends Fragment implements fragmentStateListener,
         tvQuestion.setText(questionAnswer.getQuestion());
         textInputLayout.getEditText().setHint(questionAnswer.getHint());
         textInputLayout.getEditText().setInputType(questionAnswer.getInputType());
+        textInputLayout.getEditText().setText(questionAnswer.getAnswer());
     }
 
     private void getAnswer(final int pos) {

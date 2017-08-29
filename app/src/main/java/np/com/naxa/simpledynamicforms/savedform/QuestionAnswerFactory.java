@@ -12,15 +12,16 @@ public class QuestionAnswerFactory {
     public static String QUESTION_TYPE_TEXT = "TEXT";
 
 
-    public static QuestionAnswer getEditTextQuestion(@NonNull int order,@NonNull String question, @NonNull String hint,@NonNull int InputType, @NonNull boolean isRequired) {
+    public static QuestionAnswer getEditTextQuestion(@NonNull int order,@NonNull String question, @NonNull String hint,@NonNull String answer,@NonNull int InputType, @NonNull boolean isRequired) {
         QuestionAnswer questionAnswer = new QuestionAnswer();
 
         questionAnswer.setQuestionType(QUESTION_TYPE_TEXT);
         questionAnswer.setQuestion(question);
-        questionAnswer.setHint(question);
+        questionAnswer.setHint(hint);
         questionAnswer.setRequired(isRequired);
         questionAnswer.setInputType(InputType);
         questionAnswer.setOrder(order);
+        questionAnswer.setAnswer(answer);
 
         return questionAnswer;
     }

@@ -1,5 +1,7 @@
 package np.com.naxa.simpledynamicforms.savedform;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -9,12 +11,24 @@ import java.util.ArrayList;
 
 public class QuestionAnswer extends DropOptions {
 
+
     private int order;
+
+    @SerializedName("question")
     private String question;
+    @SerializedName("answer")
     private String answer;
+
+    @SerializedName("question_type")
     private String questionType;
+
+    @SerializedName("hint")
     private String hint;
+
+    @SerializedName("answer_text_type")
     private int inputType;
+
+    @SerializedName("is_required")
     private boolean isRequired = false;
 
     public int getInputType() {

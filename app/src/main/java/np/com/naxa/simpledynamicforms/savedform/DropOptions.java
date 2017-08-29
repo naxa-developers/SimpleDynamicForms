@@ -1,5 +1,7 @@
 package np.com.naxa.simpledynamicforms.savedform;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 
 public abstract class DropOptions {
 
+    @SerializedName("drop_options")
     private ArrayList<String> DropOptions;
 
     public ArrayList<String> getDropOptions() {
