@@ -56,8 +56,13 @@ import np.com.naxa.simpledynamicforms.savedform.SavedFormActivity;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
 import np.com.naxa.simpledynamicforms.uitils.TabLayoutUtils;
+import np.com.naxa.simpledynamicforms.uitils.TimeUtils;
 import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
+
+import static np.com.naxa.simpledynamicforms.savedform.QuestionAnswerFactory.QUESTION_TYPE_DATETIME;
+import static np.com.naxa.simpledynamicforms.savedform.QuestionAnswerFactory.QUESTION_TYPE_TEXT;
+import static np.com.naxa.simpledynamicforms.uitils.TimeUtils.DEFAULT_FORMAT;
 
 public class FormEntryActivity extends AppCompatActivity implements onAnswerSelectedListener, onFormFinishedListener, ViewPager.OnPageChangeListener, shouldAllowViewPagerSwipeListener {
 
@@ -120,17 +125,18 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
             JSONObject savedFormJson = new JSONObject(savedForm.getFormJson());
 
-
             setupFormInViewpager(savedFormJson.getJSONArray("questionAnswers").toString());
 
         } catch (NullPointerException | JSONException e) {
 
             e.printStackTrace();
-            setupDemoForm();
+
+            setupRawJson();
+            //setupDemoForm();
 
         }
 
-        //setupRAWForm();
+
     }
 
     private void setupDemoForm() {
@@ -176,7 +182,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject row = jsonArray.getJSONObject(i);
-                handleJSONForm(row, i + 1);
+                handleJSONForm(row, i);
             }
 
             ToastUtils.showLongSafe("Loading " + jsonArray.length() + " questions completed");
@@ -208,17 +214,18 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
     private void handleJSONForm(JSONObject jsonObject, int pos) throws JSONException {
 
 
-
         String questionType = jsonObject.getString("question_type");
         String question = jsonObject.getString("question");
-        String isRequired = "false";
+        String isRequiredRaw = "false";
+        Boolean isRequired = Boolean.parseBoolean(isRequiredRaw);
+        String EmptyString = "";
         String answer = "";
         ArrayList<String> dropDownOptions = null;
         String answerInputType = "InputText";
 
 
         if (jsonObject.has("is_required")) {
-            isRequired = jsonObject.getString("is_required");
+            isRequired = Boolean.valueOf(jsonObject.getString("is_required"));
         }
 
         if (jsonObject.has("answer")) {
@@ -227,7 +234,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
 
         switch (questionType) {
-            case "TEXT":
+            case QUESTION_TYPE_TEXT:
 
 
                 int answerInputId = InputType.TYPE_CLASS_TEXT;
@@ -249,16 +256,17 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 }
 
                 EditTextFragment etfragOwnerName = new EditTextFragment();
-                QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(pos, question, "", answer, answerInputId, Boolean.parseBoolean(isRequired));
+                QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(pos, question, EmptyString, answer, answerInputId, isRequired);
                 etfragOwnerName.prepareQuestionAndAnswer(questionAnswer);
 
                 adapter.addFragment(etfragOwnerName, generateFragmentName());
 
                 break;
-            case "DateTime":
+            case QUESTION_TYPE_DATETIME:
 
                 DateTimeFragment dateTimeFragment = new DateTimeFragment();
-                dateTimeFragment.prepareQuestionAndAnswer(question, pos);
+                QuestionAnswer datetimeQuestion = QuestionAnswerFactory.getDateTimeQuestion(pos, question, TimeUtils.getNowString(DEFAULT_FORMAT), isRequired);
+                dateTimeFragment.prepareQuestionAndAnswer(datetimeQuestion);
                 adapter.addFragment(dateTimeFragment, generateFragmentName());
 
                 break;
@@ -376,7 +384,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
 
     private void setupRawJson() {
-        String form = readSingleForm(R.raw.form);
+        String form = readSingleForm(R.raw.debug_form);
         setupFormInViewpager(form);
     }
 
@@ -385,7 +393,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
 
         if (TextUtils.isEmpty(form)) {
-            ToastUtils.showLongSafe(":( \n Failed to laod form");
+            ToastUtils.showLongSafe(":( \n Failed to Load form");
         } else {
 
             try {

@@ -9,7 +9,8 @@ import android.support.annotation.NonNull;
 
 public class QuestionAnswerFactory {
 
-    public static String QUESTION_TYPE_TEXT = "TEXT";
+    public final static String QUESTION_TYPE_TEXT = "TEXT";
+    public final static String QUESTION_TYPE_DATETIME = "DATETIME";
 
 
     public static QuestionAnswer getEditTextQuestion(@NonNull int order,@NonNull String question, @NonNull String hint,@NonNull String answer,@NonNull int InputType, @NonNull boolean isRequired) {
@@ -25,4 +26,19 @@ public class QuestionAnswerFactory {
 
         return questionAnswer;
     }
+
+    public static QuestionAnswer getDateTimeQuestion(@NonNull int order,@NonNull String question, @NonNull String answer, @NonNull boolean isRequired) {
+        QuestionAnswer questionAnswer = new QuestionAnswer();
+
+        questionAnswer.setQuestionType(QUESTION_TYPE_DATETIME);
+        questionAnswer.setQuestion(question);
+        questionAnswer.setRequired(isRequired);
+        questionAnswer.setOrder(order);
+        questionAnswer.setAnswer(answer);
+
+        return questionAnswer;
+    }
+
+
+
 }

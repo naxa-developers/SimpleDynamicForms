@@ -11,18 +11,24 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import np.com.naxa.simpledynamicforms.Dump;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
+import np.com.naxa.simpledynamicforms.uitils.CalendarUtils;
+import np.com.naxa.simpledynamicforms.uitils.TimeUtils;
 import timber.log.Timber;
 
 
@@ -36,12 +42,9 @@ public class DateTimeFragment extends Fragment implements fragmentStateListener,
     SingleDateAndTimePicker singleDateAndTimePicker;
 
     private String userSelectedAnswer = "";
-    private String question;
-    private ArrayList<String> options;
-    private int position;
     private onAnswerSelectedListener listener;
     private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
-
+    private QuestionAnswer questionAnswer;
 
 
     public DateTimeFragment() {
@@ -59,17 +62,22 @@ public class DateTimeFragment extends Fragment implements fragmentStateListener,
         return rootView;
     }
 
-    public void prepareQuestionAndAnswer(String question, int position) {
-        this.question = question;
-        this.position = position;
 
-        Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
+    public void prepareQuestionAndAnswer(QuestionAnswer questionAnswer) {
+        this.questionAnswer = questionAnswer;
+
+
+        Timber.i("Preparing question with question \' %s \' at postion %s", questionAnswer.getQuestion(), questionAnswer.getOrder());
     }
 
 
     public void setQuestionAndAnswers() {
-        tvQuestion.setText(question);
+        tvQuestion.setText(questionAnswer.getQuestion());
 
+        Date date = TimeUtils.string2Date(questionAnswer.getAnswer());
+        Calendar calendar = CalendarUtils.toCalendar(date);
+
+        singleDateAndTimePicker.selectDate(calendar);
     }
 
 
@@ -80,14 +88,20 @@ public class DateTimeFragment extends Fragment implements fragmentStateListener,
     private void sendAnswerToActivity(int pos) {
 
         try {
-            listener.onAnswerSelected(StringFormatter.replaceStringWithUnderScore(question), userSelectedAnswer);
+
+            questionAnswer.setAnswer(userSelectedAnswer);
+
+            Dump.object("DateTime", questionAnswer);
+
+            listener.onAnswerSelected(questionAnswer);
+
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());
 
         }
 
-        Timber.i("Question: %s QuestionAnswer: %s", question, userSelectedAnswer);
+        Timber.i("Question: %s QuestionAnswer: %s", questionAnswer.getQuestion(), userSelectedAnswer);
     }
 
     public void onAttach(Context context) {
@@ -129,14 +143,16 @@ public class DateTimeFragment extends Fragment implements fragmentStateListener,
     @Override
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
 
-        Timber.d("Asking Fragment At Postion %s for answer for the question ", fragmentPositionInViewPager);
 
-        Boolean doFragmentIdMatch = fragmentPositionInViewPager == position;
+        //making sure the fragment only reports to activity when it is it's turn
 
-        Timber.d(" %s and %s are the same ? %s \n question: %s", fragmentPositionInViewPager, position, doFragmentIdMatch.toString(), question);
+        //  index of fragmentPositionInViewPager begins at 1
+        // index of order begins at 0
 
-        if (fragmentPositionInViewPager == position) {
-            getAnswer(position);
+        // substract to match
+
+        if (fragmentPositionInViewPager - 1 == questionAnswer.getOrder()) {
+            getAnswer(questionAnswer.getOrder());
         }
     }
 

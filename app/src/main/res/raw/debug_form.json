@@ -1,0 +1,18 @@
+[
+  {
+    "question": "Name(Organization/Responsible Individual)",
+    "question_type": "TEXT",
+    "is_required": true
+  },
+  {
+    "question": "Contact",
+    "question_type": "TEXT",
+    "answer_text_type": "InputNumber",
+    "is_required": true
+  },
+  {
+    "question": "DOB",
+    "question_type": "DATETIME",
+    "is_required": true
+  }
+]
