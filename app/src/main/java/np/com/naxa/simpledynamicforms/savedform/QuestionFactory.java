@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * by nishon.tan@gmail.com
  */
 
-public class QuestionAnswerFactory {
+public class QuestionFactory {
 
 
     public final class QuestionType {
@@ -17,10 +17,11 @@ public class QuestionAnswerFactory {
         public final static String DATETIME = "DATE_TIME";
         public final static String SINGLE_DROPDOWN = "DROP_DOWN";
         public final static String AUTO_COMPLETE_TEXT = "AUTO_COMPLETE_TEXT";
+        public final static String LOCATION = "LOCATION";
     }
 
 
-    public static QuestionAnswer getEditTextQuestion(int order, @NonNull String question, @NonNull String hint, @NonNull String answer, @NonNull int InputType, @NonNull boolean isRequired) {
+    public static QuestionAnswer getText(int order, @NonNull String question, @NonNull String hint, @NonNull String answer, @NonNull int InputType, @NonNull boolean isRequired) {
         QuestionAnswer questionAnswer = new QuestionAnswer();
 
         questionAnswer.setQuestionType(QuestionType.TEXT);
@@ -34,7 +35,7 @@ public class QuestionAnswerFactory {
         return questionAnswer;
     }
 
-    public static QuestionAnswer getDateTimeQuestion(int order, @NonNull String question, @NonNull String answer, boolean isRequired) {
+    public static QuestionAnswer getDateTime(int order, @NonNull String question, @NonNull String answer, boolean isRequired) {
 
         //todo loading date in edit is wrong
         QuestionAnswer questionAnswer = new QuestionAnswer();
@@ -48,7 +49,7 @@ public class QuestionAnswerFactory {
         return questionAnswer;
     }
 
-    public static QuestionAnswer getSpinnerQuestion(int order, @NonNull String question, @NonNull String answer, @NonNull ArrayList<String> dropOptions, boolean isRequired) {
+    public static QuestionAnswer getSpinner(int order, @NonNull String question, @NonNull String answer, @NonNull ArrayList<String> dropOptions, boolean isRequired) {
 
 
         QuestionAnswer questionAnswer = new QuestionAnswer();
@@ -63,7 +64,7 @@ public class QuestionAnswerFactory {
         return questionAnswer;
     }
 
-    public static QuestionAnswer getAutoCompleteTextQuestion(int order, String question, String hint, String answer, ArrayList<String> options, int inputType, boolean isRequired) {
+    public static QuestionAnswer getAutoCompleteText(int order, String question, String hint, String answer, ArrayList<String> options, int inputType, boolean isRequired) {
         QuestionAnswer questionAnswer = new QuestionAnswer();
 
         questionAnswer.setQuestionType(QuestionType.AUTO_COMPLETE_TEXT);
@@ -77,4 +78,21 @@ public class QuestionAnswerFactory {
 
         return questionAnswer;
     }
+
+    public static QuestionAnswer getLocation(int order, String question, String answer, boolean isRequired) {
+        QuestionAnswer questionAnswer = new QuestionAnswer();
+
+        questionAnswer.setQuestionType(QuestionType.LOCATION);
+        questionAnswer.setQuestion(question);
+
+        questionAnswer.setRequired(isRequired);
+
+        questionAnswer.setOrder(order);
+        questionAnswer.setAnswer(answer);
+
+
+        return questionAnswer;
+    }
+
+
 }

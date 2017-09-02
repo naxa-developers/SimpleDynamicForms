@@ -30,7 +30,6 @@ import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import np.com.naxa.simpledynamicforms.Dump;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.demo.JSONFormatter;
 import np.com.naxa.simpledynamicforms.form.components.AutoCompleteTextFragment;
@@ -51,8 +50,8 @@ import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.model.Form;
 import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
-import np.com.naxa.simpledynamicforms.savedform.QuestionAnswerFactory;
-import np.com.naxa.simpledynamicforms.savedform.QuestionAnswerFactory.QuestionType;
+import np.com.naxa.simpledynamicforms.savedform.QuestionFactory;
+import np.com.naxa.simpledynamicforms.savedform.QuestionFactory.QuestionType;
 import np.com.naxa.simpledynamicforms.savedform.SavedFormActivity;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
@@ -145,7 +144,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormStartFragment(), "Start");
 
         EditTextFragment etfragOwnerName = new EditTextFragment();
-        QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(0, "Question", "Hint", "", InputType.TYPE_CLASS_TEXT, true);
+        QuestionAnswer questionAnswer = QuestionFactory.getText(0, "Question", "Hint", "", InputType.TYPE_CLASS_TEXT, true);
         etfragOwnerName.prepareQuestionAndAnswer(questionAnswer);
 
         adapter.addFragment(etfragOwnerName, generateFragmentName());
@@ -259,7 +258,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 }
 
                 EditTextFragment etfragOwnerName = new EditTextFragment();
-                QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(pos, question, EmptyString, answer, answerInputId, isRequired);
+                QuestionAnswer questionAnswer = QuestionFactory.getText(pos, question, EmptyString, answer, answerInputId, isRequired);
                 etfragOwnerName.prepareQuestionAndAnswer(questionAnswer);
 
                 adapter.addFragment(etfragOwnerName, generateFragmentName());
@@ -268,7 +267,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
             case QuestionType.DATETIME:
 
                 DateTimeFragment dateTimeFragment = new DateTimeFragment();
-                QuestionAnswer datetimeQuestion = QuestionAnswerFactory.getDateTimeQuestion(pos, question, TimeUtils.getNowString(DEFAULT_FORMAT), isRequired);
+                QuestionAnswer datetimeQuestion = QuestionFactory.getDateTime(pos, question, TimeUtils.getNowString(DEFAULT_FORMAT), isRequired);
                 dateTimeFragment.prepareQuestionAndAnswer(datetimeQuestion);
                 adapter.addFragment(dateTimeFragment, generateFragmentName());
 
@@ -307,7 +306,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                                     gson.fromJson(dropOptions, String[].class)));
                 }
 
-                QuestionAnswer singleDropdown = QuestionAnswerFactory.getSpinnerQuestion(pos, question, EmptyString, dropDownOptions, isRequired);
+                QuestionAnswer singleDropdown = QuestionFactory.getSpinner(pos, question, EmptyString, dropDownOptions, isRequired);
 
                 SpinnerFragment spinnerFragment = new SpinnerFragment();
                 spinnerFragment.prepareQuestionAndAnswer(singleDropdown);
@@ -326,10 +325,14 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
 
                 break;
-            case "GPS":
-                LocationFragment eight = new LocationFragment();
-                eight.prepareQuestionAndAnswer(question, pos);
-                adapter.addFragment(eight, generateFragmentName());
+            case QuestionType.LOCATION:
+                LocationFragment location = new LocationFragment();
+
+                QuestionAnswer locationQuestion = QuestionFactory.getLocation(pos,question,answer,isRequired);
+                location.prepareQuestionAndAnswer(locationQuestion);
+
+
+                adapter.addFragment(location, generateFragmentName());
 
                 break;
             case "Note":
@@ -355,7 +358,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 AutoCompleteTextFragment completeTextFragment = new AutoCompleteTextFragment();
 
-                QuestionAnswer autocompletetext = QuestionAnswerFactory.getAutoCompleteTextQuestion(pos,question,hint,answer,dropDownOptions,answerInputId,isRequired);
+                QuestionAnswer autocompletetext = QuestionFactory.getAutoCompleteText(pos,question,hint,answer,dropDownOptions,answerInputId,isRequired);
                 completeTextFragment.prepareQuestionAndAnswer(autocompletetext);
 
                 adapter.addFragment(completeTextFragment, generateFragmentName());

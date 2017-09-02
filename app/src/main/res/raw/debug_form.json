@@ -11,9 +11,14 @@
     "is_required": true
   },
   {
-    "question": "Target area ",
+    "question": "Target area",
     "question_type": "AUTO_COMPLETE_TEXT",
     "drop_options": "[Tent,Food,Medics,Clothes,Other]",
+    "is_required": true
+  },
+  {
+    "question": "Record Location",
+    "question_type": "LOCATION",
     "is_required": true
   }
 ]
