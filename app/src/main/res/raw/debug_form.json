@@ -11,8 +11,9 @@
     "is_required": true
   },
   {
-    "question": "DOB",
-    "question_type": "DATETIME",
+    "question": "Target area ",
+    "question_type": "AUTO_COMPLETE_TEXT",
+    "drop_options": "[Tent,Food,Medics,Clothes,Other]",
     "is_required": true
   }
 ]

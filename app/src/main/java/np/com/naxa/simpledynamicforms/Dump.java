@@ -23,7 +23,7 @@ import java.util.Set;
 
 public class Dump {
 
-    private String TAG;
+    public String TAG;
 
 
     public Dump(String TAG, Bundle bundle) {
@@ -66,7 +66,7 @@ public class Dump {
     }
 
 
-    private static void printLine(String TAG) {
+    public static void printLine(String TAG) {
         Log.i(TAG, "-------------------------------------------------------");
     }
 
@@ -75,7 +75,7 @@ public class Dump {
      * Prints all the attributes of a hashmap
      */
 
-    private static void printHashMap(String TAG, @NonNull Map<String, String> map) {
+    public static void printHashMap(String TAG, @NonNull Map<String, String> map) {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
@@ -92,7 +92,7 @@ public class Dump {
      * @param someList
      */
 
-    private static void printArrayList(String TAG, @NonNull ArrayList<Object> someList) {
+    public static void arraylist(String TAG, @NonNull ArrayList<Object> someList) {
         for (Object someObject : someList) {
             for (Field field : someObject.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
@@ -109,6 +109,23 @@ public class Dump {
                 }
 
             }
+        }
+
+        printLine(TAG);
+    }
+
+
+    /**
+     * prints all the attributes of an objects in a arraylist
+     *
+     * @param someList
+     */
+
+    public static void stringlist(String TAG, @NonNull ArrayList<String> someList) {
+        for (String string : someList) {
+
+
+            Log.i(TAG,string);
         }
 
         printLine(TAG);
@@ -142,7 +159,7 @@ public class Dump {
     /**
      * @param filename
      */
-    private static void printXml(String TAG, File filename) {
+    public static void printXml(String TAG, File filename) {
 
         FileReader fileReader;
 
@@ -171,7 +188,7 @@ public class Dump {
         printLine(TAG);
     }
 
-    private String printBundle(Bundle bundle) {
+    public String printBundle(Bundle bundle) {
         if (bundle == null) {
             return null;
         }
@@ -184,7 +201,7 @@ public class Dump {
     }
 
 
-    private static String generateTAG() {
+    public static String generateTAG() {
         String callerClassName = new Exception().getStackTrace()[1].getClassName();
         String calleeClassName = new Exception().getStackTrace()[0].getClassName();
         return callerClassName;
