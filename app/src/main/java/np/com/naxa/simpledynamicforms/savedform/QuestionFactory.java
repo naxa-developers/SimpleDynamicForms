@@ -18,6 +18,7 @@ public class QuestionFactory {
         public final static String SINGLE_DROPDOWN = "DROP_DOWN";
         public final static String AUTO_COMPLETE_TEXT = "AUTO_COMPLETE_TEXT";
         public final static String LOCATION = "LOCATION";
+        public static final String PHOTO = "PHOTO";
     }
 
 
@@ -83,6 +84,23 @@ public class QuestionFactory {
         QuestionAnswer questionAnswer = new QuestionAnswer();
 
         questionAnswer.setQuestionType(QuestionType.LOCATION);
+        questionAnswer.setQuestion(question);
+
+        questionAnswer.setRequired(isRequired);
+
+        questionAnswer.setOrder(order);
+        questionAnswer.setAnswer(answer);
+
+
+        return questionAnswer;
+    }
+
+
+    public static QuestionAnswer getPhoto(int order, String question, String answer, Boolean isRequired) {
+
+        QuestionAnswer questionAnswer = new QuestionAnswer();
+
+        questionAnswer.setQuestionType(QuestionType.PHOTO);
         questionAnswer.setQuestion(question);
 
         questionAnswer.setRequired(isRequired);

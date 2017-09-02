@@ -38,6 +38,7 @@ import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import timber.log.Timber;
 
@@ -45,7 +46,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 
-public class PhotoFragment extends Fragment implements fragmentStateListener,onPageVisibleListener {
+public class PhotoFragment extends Fragment implements fragmentStateListener, onPageVisibleListener {
 
 
     private static final int REQUEST_IMAGE_FROM_GALLERY = 101;
@@ -64,12 +65,10 @@ public class PhotoFragment extends Fragment implements fragmentStateListener,onP
     ImageView ivImagePreview;
 
 
-    private String question;
-    private String hint;
-    private int position;
     private onAnswerSelectedListener listener;
     private String mCurrentPhotoPath;
     private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
+    private QuestionAnswer photoQuestion;
 
 
     public PhotoFragment() {
@@ -85,15 +84,14 @@ public class PhotoFragment extends Fragment implements fragmentStateListener,onP
         return rootView;
     }
 
-    public void prepareQuestionAndAnswer(String question, int position) {
-        this.question = question;
-        this.position = position;
 
-        Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
+    public void prepareQuestionAndAnswer(QuestionAnswer photoQuestion) {
+        this.photoQuestion = photoQuestion;
+        Timber.i("Preparing question with question \' %s \' at postion %s", photoQuestion.getQuestion(), photoQuestion.getOrder());
     }
 
     public void setQuestionAndAnswers() {
-        tvQuestion.setText(question);
+        tvQuestion.setText(photoQuestion.getQuestion());
 
     }
 
@@ -141,14 +139,18 @@ public class PhotoFragment extends Fragment implements fragmentStateListener,onP
     private void sendAnswerToActivity(int pos) {
 
         try {
-            listener.onAnswerSelected(StringFormatter.replaceStringWithUnderScore(question), mCurrentPhotoPath);
+
+            photoQuestion.setAnswer(mCurrentPhotoPath);
+            listener.onAnswerSelected(photoQuestion);
+
+
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());
 
         }
 
-        Timber.i("Question: %s QuestionAnswer: %s", question, mCurrentPhotoPath);
+        Timber.i("Question: %s QuestionAnswer: %s", photoQuestion.getQuestion(), photoQuestion.getAnswer());
     }
 
     @OnClick(R.id.fragment_photo_btn_open_gallery)
@@ -225,16 +227,12 @@ public class PhotoFragment extends Fragment implements fragmentStateListener,onP
     @Override
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
 
-        Timber.d("Asking Fragment At Postion %s for answer for the question ", fragmentPositionInViewPager);
 
-        Boolean doFragmentIdMatch = fragmentPositionInViewPager == position;
-
-        Timber.d(" %s and %s are the same ? %s \n question: %s", fragmentPositionInViewPager, position, doFragmentIdMatch.toString(), question);
-
-        if (fragmentPositionInViewPager == position) {
-            getAnswer(position);
+        if (fragmentPositionInViewPager - 1 == photoQuestion.getOrder()) {
+            getAnswer(photoQuestion.getOrder());
         }
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -342,4 +340,6 @@ public class PhotoFragment extends Fragment implements fragmentStateListener,onP
     public void fragmentIsVisible() {
         allowViewPagerSwipeListener.stopViewpagerScroll(false);
     }
+
+
 }

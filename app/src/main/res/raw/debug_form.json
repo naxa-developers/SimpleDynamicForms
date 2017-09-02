@@ -20,5 +20,11 @@
     "question": "Record Location",
     "question_type": "LOCATION",
     "is_required": true
+  },
+  {
+    "question": "Take photo",
+    "question_type": "PHOTO",
+    "is_required": true
   }
+
 ]

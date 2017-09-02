@@ -288,10 +288,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 adapter.addFragment(multiSelectionSpinner, generateFragmentName());
 
                 break;
-            case "Photo":
+            case QuestionType.PHOTO:
 
                 PhotoFragment photoFragment = new PhotoFragment();
-                photoFragment.prepareQuestionAndAnswer(question, pos);
+
+                QuestionAnswer photoQuestion = QuestionFactory.getPhoto(pos,question,answer,isRequired);
+                photoFragment.prepareQuestionAndAnswer(photoQuestion);
+
                 adapter.addFragment(photoFragment, generateFragmentName());
 
                 break;
