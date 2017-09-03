@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import np.com.naxa.simpledynamicforms.Dump;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
@@ -104,7 +105,12 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
         try {
 
             spinnerOtherQuestion.setAnswer(userSelectedAnswer);
+
+
+            Dump.object("NIRVANA",spinnerOtherQuestion);
             listener.onAnswerSelected(spinnerOtherQuestion);
+
+
 
 
         } catch (ClassCastException cce) {
@@ -188,7 +194,6 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
 
     @Override
     public void fragmentIsVisible() {

@@ -40,6 +40,9 @@ public class JSONAnswerBuilder {
 
 //        #REF https://www.leveluplunch.com/java/examples/find-element-in-list/
 
+
+        Timber.i(" %s save answer in index %s", newAnswer.getAnswer(), newAnswer.getOrder());
+
         Predicate condition = new Predicate() {
             public boolean evaluate(Object sample) {
                 return ((QuestionAnswer) sample).getQuestion().equals(newAnswer.getQuestion());
@@ -49,10 +52,7 @@ public class JSONAnswerBuilder {
         List<QuestionAnswer> commitedQuestionAnswer = (List<QuestionAnswer>) CollectionUtils.select(filledForm.getQuestionAnswers(), condition);
 
 
-
-
         if (commitedQuestionAnswer.isEmpty()) {
-
 
 
             //does not have any question for that order
@@ -62,7 +62,7 @@ public class JSONAnswerBuilder {
         } else {
 
             QuestionAnswer oldAnswer = commitedQuestionAnswer.get(0);
-            filledForm.setQuestionAnswer(oldAnswer.getOrder(),newAnswer, filledForm.getQuestionAnswers());
+            filledForm.setQuestionAnswer(oldAnswer.getOrder(), newAnswer, filledForm.getQuestionAnswers());
 
         }
 

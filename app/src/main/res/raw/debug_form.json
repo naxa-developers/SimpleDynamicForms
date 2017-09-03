@@ -13,7 +13,7 @@
   {
     "question": "Target area",
     "question_type": "AUTO_COMPLETE_TEXT",
-    "drop_options": "[Tent,Food,Medics,Clothes,Other]",
+    "drop_options": "[Tent,Food,Medics,Clothes]",
     "is_required": true
   },
   {
@@ -27,19 +27,19 @@
     "is_required": true
   },
   {
-    "question": "Target area",
+    "question": "A drop down question",
     "question_type": "DROP_DOWN",
-    "drop_options": "[Tent,Food,Medics,Clothes,Other]",
+    "drop_options": "[Tent,Food,Medics,Clothes]",
     "is_required": true
   },
   {
-    "question": "Target area",
+    "question": "A drop down question with other",
     "question_type": "DROPDOWN_WITH_OTHER",
-    "drop_options": "[Tent,Food,Medics,Clothes,Other]",
+    "drop_options": "[Tent,Food,Medics,Clothes]",
     "is_required": true
   },
   {
-    "question": "Target area",
+    "question": "A drop down multi select question",
     "question_type": "DROPDOWN_MULTI_SELECT",
     "drop_options": "[Tent,Food,Medics,Clothes]",
     "is_required": true

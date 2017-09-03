@@ -120,7 +120,7 @@ public class QuestionFactory {
     public static QuestionAnswer getSpinnerWithOther(int order, String question, String answer, ArrayList<String> dropDownOptions, Boolean isRequired) {
         QuestionAnswer questionAnswer = new QuestionAnswer();
 
-        questionAnswer.setQuestionType(QuestionType.DROPDOWN_SINGLE);
+        questionAnswer.setQuestionType(QuestionType.DROPDOWN_WITH_OTHER);
         questionAnswer.setQuestion(question);
         questionAnswer.setRequired(isRequired);
         questionAnswer.setOrder(order);

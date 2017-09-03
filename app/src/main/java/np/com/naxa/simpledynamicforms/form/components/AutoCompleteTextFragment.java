@@ -100,6 +100,8 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
     private void sendAnswerToActivity(int pos) {
 
         try {
+
+            questionAnswer.setAnswer(userSelectedAnswer);
             listener.onAnswerSelected(questionAnswer);
             listener.shoudStopSwipe(shouldStopWipe);
         } catch (ClassCastException cce) {

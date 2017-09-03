@@ -100,7 +100,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         ButterKnife.bind(this);
         initUI();
         initVar();
-        TabLayoutUtils.enableTabs(tabLayout, true);
+        TabLayoutUtils.disableTabs(tabLayout);
 
         Logger.addLogAdapter(new AndroidLogAdapter());
     }
