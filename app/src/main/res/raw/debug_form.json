@@ -25,6 +25,23 @@
     "question": "Take photo",
     "question_type": "PHOTO",
     "is_required": true
+  },
+  {
+    "question": "Target area",
+    "question_type": "DROP_DOWN",
+    "drop_options": "[Tent,Food,Medics,Clothes,Other]",
+    "is_required": true
+  },
+  {
+    "question": "Target area",
+    "question_type": "DROPDOWN_WITH_OTHER",
+    "drop_options": "[Tent,Food,Medics,Clothes,Other]",
+    "is_required": true
+  },
+  {
+    "question": "Target area",
+    "question_type": "DROPDOWN_MULTI_SELECT",
+    "drop_options": "[Tent,Food,Medics,Clothes]",
+    "is_required": true
   }
-
 ]

@@ -24,6 +24,7 @@ import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
 import timber.log.Timber;
 
 
@@ -40,12 +41,10 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     TextInputLayout textInputLayout;
 
     private String userSelectedAnswer = "";
-    private String question;
-    private ArrayList<String> options;
-    private int position;
     private onAnswerSelectedListener listener;
     private boolean shouldGetValueFromOther;
     private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
+    private QuestionAnswer spinnerOtherQuestion;
 
 
     public SpinnerWithOtherFragment() {
@@ -63,12 +62,11 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
         return rootView;
     }
 
-    public void prepareQuestionAndAnswer(String question, ArrayList<String> options, int position) {
-        this.question = question;
-        this.options = options;
-        this.position = position;
 
-        Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
+    public void prepareQuestionAndAnswer(QuestionAnswer spinnerOtherQuestion) {
+        this.spinnerOtherQuestion = spinnerOtherQuestion;
+
+        Timber.i("Preparing question with question \' %s \' at postion %s", spinnerOtherQuestion.getQuestion(), spinnerOtherQuestion.getOrder());
     }
 
 
@@ -83,11 +81,11 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     }
 
     public void setQuestionAndAnswers() {
-        tvQuestion.setText(question);
-        optionsSpinner.setPrompt(question);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, options);
+        tvQuestion.setText(spinnerOtherQuestion.getQuestion());
+        optionsSpinner.setPrompt(spinnerOtherQuestion.getQuestion());
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, spinnerOtherQuestion.getDropOptions());
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        options.add("Other");
+        spinnerOtherQuestion.getDropOptions().add("Other");
         optionsSpinner.setAdapter(dataAdapter);
     }
 
@@ -104,14 +102,18 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     private void sendAnswerToActivity(int pos) {
 
         try {
-            listener.onAnswerSelected(StringFormatter.replaceStringWithUnderScore(question), userSelectedAnswer);
+
+            spinnerOtherQuestion.setAnswer(userSelectedAnswer);
+            listener.onAnswerSelected(spinnerOtherQuestion);
+
+
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());
 
         }
 
-        Timber.i("Question: %s QuestionAnswer: %s", question, userSelectedAnswer);
+        Timber.i("Question: %s QuestionAnswer: %s", spinnerOtherQuestion.getQuestion(), spinnerOtherQuestion.getAnswer());
     }
 
     public void onAttach(Context context) {
@@ -153,22 +155,17 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     @Override
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
 
-        Timber.d("Asking Fragment At Postion %s for answer for the question ", fragmentPositionInViewPager);
 
-        Boolean doFragmentIdMatch = fragmentPositionInViewPager == position;
-
-        Timber.d(" %s and %s are the same ? %s \n question: %s", fragmentPositionInViewPager, position, doFragmentIdMatch.toString(), question);
-
-        if (fragmentPositionInViewPager == position) {
-            getAnswer(position);
+        if (fragmentPositionInViewPager - 1 == spinnerOtherQuestion.getOrder()) {
+            getAnswer(spinnerOtherQuestion.getOrder());
         }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        Timber.d("position %s size %s", position, options.size());
-        if (position == options.size() - 1) {
+        Timber.d("position %s size %s", position, spinnerOtherQuestion.getDropOptions().size());
+        if (position == spinnerOtherQuestion.getDropOptions().size() - 1) {
             setGetValueFromOther();
             showTextInputLayout();
         } else {
@@ -197,4 +194,6 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     public void fragmentIsVisible() {
         allowViewPagerSwipeListener.stopViewpagerScroll(false);
     }
+
+
 }

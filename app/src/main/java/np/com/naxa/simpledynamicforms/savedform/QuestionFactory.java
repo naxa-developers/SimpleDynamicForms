@@ -12,13 +12,17 @@ import java.util.ArrayList;
 public class QuestionFactory {
 
 
+
     public final class QuestionType {
         public final static String TEXT = "TEXT";
         public final static String DATETIME = "DATE_TIME";
-        public final static String SINGLE_DROPDOWN = "DROP_DOWN";
+        public final static String DROPDOWN_SINGLE = "DROP_DOWN";
         public final static String AUTO_COMPLETE_TEXT = "AUTO_COMPLETE_TEXT";
         public final static String LOCATION = "LOCATION";
         public static final String PHOTO = "PHOTO";
+        public static final String DROPDOWN_WITH_OTHER = "DROPDOWN_WITH_OTHER";
+        public static final String DROPDOWN_MULTI_SELECT = "DROPDOWN_MULTI_SELECT";
+
     }
 
 
@@ -55,7 +59,7 @@ public class QuestionFactory {
 
         QuestionAnswer questionAnswer = new QuestionAnswer();
 
-        questionAnswer.setQuestionType(QuestionType.SINGLE_DROPDOWN);
+        questionAnswer.setQuestionType(QuestionType.DROPDOWN_SINGLE);
         questionAnswer.setQuestion(question);
         questionAnswer.setRequired(isRequired);
         questionAnswer.setOrder(order);
@@ -111,6 +115,36 @@ public class QuestionFactory {
 
         return questionAnswer;
     }
+
+
+    public static QuestionAnswer getSpinnerWithOther(int order, String question, String answer, ArrayList<String> dropDownOptions, Boolean isRequired) {
+        QuestionAnswer questionAnswer = new QuestionAnswer();
+
+        questionAnswer.setQuestionType(QuestionType.DROPDOWN_SINGLE);
+        questionAnswer.setQuestion(question);
+        questionAnswer.setRequired(isRequired);
+        questionAnswer.setOrder(order);
+        questionAnswer.setAnswer(answer);
+        questionAnswer.setDropOptions(dropDownOptions);
+
+        return questionAnswer;
+
+    }
+
+
+    public static QuestionAnswer getSpinnerMultiSelect(int order, String question, String answer, ArrayList<String> dropDownOptions, Boolean isRequired) {
+        QuestionAnswer questionAnswer = new QuestionAnswer();
+
+        questionAnswer.setQuestionType(QuestionType.DROPDOWN_MULTI_SELECT);
+        questionAnswer.setQuestion(question);
+        questionAnswer.setRequired(isRequired);
+        questionAnswer.setOrder(order);
+        questionAnswer.setAnswer(answer);
+        questionAnswer.setDropOptions(dropDownOptions);
+
+        return questionAnswer;
+    }
+
 
 
 }

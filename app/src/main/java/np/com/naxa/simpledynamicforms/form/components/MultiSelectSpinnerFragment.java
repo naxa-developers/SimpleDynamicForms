@@ -30,6 +30,7 @@ import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
 import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
@@ -47,11 +48,11 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
     TextInputLayout wrapperMultiSelectOther;
 
     private String userSelectedAnswer = "";
-    private String question;
-    private ArrayList<String> options;
-    private int position;
+
+
     private onAnswerSelectedListener listener;
     private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
+    private QuestionAnswer multiselectSpinnerQuestion;
 
 
     public MultiSelectSpinnerFragment() {
@@ -67,22 +68,21 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
         return rootView;
     }
 
-    public void prepareQuestionAndAnswer(String question, ArrayList<String> options, int position) {
-        this.question = question;
-        this.options = options;
-        this.position = position;
 
 
-        Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
+    public void prepareQuestionAndAnswer(QuestionAnswer multiselectSpinnerQuestion) {
+        this.multiselectSpinnerQuestion = multiselectSpinnerQuestion;
+        Timber.i("Preparing question with question \' %s \' at postion %s", multiselectSpinnerQuestion.getQuestion(), multiselectSpinnerQuestion.getOrder());
     }
 
     public void setQuestionAndAnswers() {
-        tvQuestion.setText(question);
-        multiSelectionSpinner.setTitle(question);
-        multiSelectionSpinner.setItems(options);
+        tvQuestion.setText(multiselectSpinnerQuestion.getQuestion());
+        multiSelectionSpinner.setTitle(multiselectSpinnerQuestion.getQuestion());
+        multiSelectionSpinner.setItems(multiselectSpinnerQuestion.getDropOptions());
         multiSelectionSpinner.setListener(this);
 
     }
+
 
     public void selectOptions(int[] options) {
         multiSelectionSpinner.setSelection(options);
@@ -105,7 +105,6 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
 //        }
 
 
-
         sendAnswerToActivity(pos);
     }
 
@@ -113,14 +112,16 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
 
 
         try {
-            listener.onAnswerSelected(StringFormatter.replaceStringWithUnderScore(question), userSelectedAnswer);
+            multiselectSpinnerQuestion.setAnswer(userSelectedAnswer);
+            listener.onAnswerSelected(multiselectSpinnerQuestion);
+
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());
 
         }
 
-        Timber.i("Question: %s QuestionAnswer: %s", question, userSelectedAnswer);
+        Timber.i("Question: %s QuestionAnswer: %s", multiselectSpinnerQuestion.getQuestion(), multiselectSpinnerQuestion.getAnswer());
     }
 
 
@@ -163,14 +164,9 @@ public class MultiSelectSpinnerFragment extends Fragment implements fragmentStat
     @Override
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
 
-        Timber.d("Asking Fragment At Postion %s for answer for the question ", fragmentPositionInViewPager);
 
-        Boolean doFragmentIdMatch = fragmentPositionInViewPager == position;
-
-        Timber.d(" %s and %s are the same ? %s \n question: %s", fragmentPositionInViewPager, position, doFragmentIdMatch.toString(), question);
-
-        if (fragmentPositionInViewPager == position) {
-            getAnswer(position);
+        if (fragmentPositionInViewPager -1  == multiselectSpinnerQuestion.getOrder()) {
+            getAnswer(multiselectSpinnerQuestion.getOrder());
         }
     }
 

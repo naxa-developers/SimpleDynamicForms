@@ -239,8 +239,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
             case QuestionType.TEXT:
 
 
-
-
                 if (jsonObject.has("answer_text_type")) {
                     answerInputType = jsonObject.getString("answer_text_type");
 
@@ -272,7 +270,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 adapter.addFragment(dateTimeFragment, generateFragmentName());
 
                 break;
-            case "MultiSelectDropdown":
+            case QuestionType.DROPDOWN_MULTI_SELECT:
 
 
                 if (jsonObject.has("drop_options")) {
@@ -283,8 +281,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                                     gson.fromJson(dropOptions, String[].class)));
                 }
 
+
                 MultiSelectSpinnerFragment multiSelectionSpinner = new MultiSelectSpinnerFragment();
-                multiSelectionSpinner.prepareQuestionAndAnswer(question, dropDownOptions, pos);
+
+
+                QuestionAnswer multiselectSpinnerQuestion = QuestionFactory.getSpinnerMultiSelect(pos, question, EmptyString, dropDownOptions, isRequired);
+                multiSelectionSpinner.prepareQuestionAndAnswer(multiselectSpinnerQuestion);
+
                 adapter.addFragment(multiSelectionSpinner, generateFragmentName());
 
                 break;
@@ -292,13 +295,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 PhotoFragment photoFragment = new PhotoFragment();
 
-                QuestionAnswer photoQuestion = QuestionFactory.getPhoto(pos,question,answer,isRequired);
+                QuestionAnswer photoQuestion = QuestionFactory.getPhoto(pos, question, answer, isRequired);
                 photoFragment.prepareQuestionAndAnswer(photoQuestion);
 
                 adapter.addFragment(photoFragment, generateFragmentName());
 
                 break;
-            case QuestionType.SINGLE_DROPDOWN:
+            case QuestionType.DROPDOWN_SINGLE:
 
 
                 if (jsonObject.has("drop_options")) {
@@ -318,20 +321,30 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 break;
 
-            case "DropDown With Other":
-                ArrayList<String> options2 = new ArrayList<>();
-                options2.add("Yes");
-                options2.add("No");
+            case QuestionType.DROPDOWN_WITH_OTHER:
+
+
+                if (jsonObject.has("drop_options")) {
+                    String dropOptions = jsonObject.getString("drop_options");
+                    Gson gson = new Gson();
+                    dropDownOptions =
+                            new ArrayList<>(Arrays.asList(
+                                    gson.fromJson(dropOptions, String[].class)));
+                }
 
                 SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
-                spinnerWithOtherFragment.prepareQuestionAndAnswer(question, options2, pos);
+
+                QuestionAnswer spinnerOtherQuestion = QuestionFactory.getSpinnerWithOther(pos, question, EmptyString, dropDownOptions, isRequired);
+                spinnerWithOtherFragment.prepareQuestionAndAnswer(spinnerOtherQuestion);
+
+
                 adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
 
                 break;
             case QuestionType.LOCATION:
                 LocationFragment location = new LocationFragment();
 
-                QuestionAnswer locationQuestion = QuestionFactory.getLocation(pos,question,answer,isRequired);
+                QuestionAnswer locationQuestion = QuestionFactory.getLocation(pos, question, answer, isRequired);
                 location.prepareQuestionAndAnswer(locationQuestion);
 
 
@@ -361,7 +374,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 AutoCompleteTextFragment completeTextFragment = new AutoCompleteTextFragment();
 
-                QuestionAnswer autocompletetext = QuestionFactory.getAutoCompleteText(pos,question,hint,answer,dropDownOptions,answerInputId,isRequired);
+                QuestionAnswer autocompletetext = QuestionFactory.getAutoCompleteText(pos, question, hint, answer, dropDownOptions, answerInputId, isRequired);
                 completeTextFragment.prepareQuestionAndAnswer(autocompletetext);
 
                 adapter.addFragment(completeTextFragment, generateFragmentName());
