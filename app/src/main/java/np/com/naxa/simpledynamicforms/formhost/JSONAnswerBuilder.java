@@ -45,6 +45,7 @@ public class JSONAnswerBuilder {
         List<QuestionAnswer> commitedQuestionAnswer = getAnswer(newAnswer);
 
         if (commitedQuestionAnswer.isEmpty()) {
+
             //does not have any question for that order
             //so just add the object to list
 
@@ -79,6 +80,7 @@ public class JSONAnswerBuilder {
      */
     @SuppressWarnings("unchecked")
     private List<QuestionAnswer> getAnswer(final QuestionAnswer newAnswer) {
+
         Predicate condition = new Predicate() {
             public boolean evaluate(Object sample) {
                 return ((QuestionAnswer) sample).getQuestion().equals(newAnswer.getQuestion());

@@ -32,14 +32,16 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import np.com.naxa.simpledynamicforms.Dump;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
-import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
+import np.com.naxa.simpledynamicforms.uitils.ExceptionLogger;
+import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
@@ -66,7 +68,7 @@ public class PhotoFragment extends Fragment implements fragmentStateListener, on
 
 
     private onAnswerSelectedListener listener;
-    private String mCurrentPhotoPath;
+    private String currentPhotoPath;
     private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
     private QuestionAnswer photoQuestion;
 
@@ -92,6 +94,16 @@ public class PhotoFragment extends Fragment implements fragmentStateListener, on
 
     public void setQuestionAndAnswers() {
         tvQuestion.setText(photoQuestion.getQuestion());
+
+
+        try {
+            setPic();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Timber.e(e.toString());
+            ToastUtils.showShort(e.toString());
+        }
+
 
     }
 
@@ -140,7 +152,7 @@ public class PhotoFragment extends Fragment implements fragmentStateListener, on
 
         try {
 
-            photoQuestion.setAnswer(mCurrentPhotoPath);
+            photoQuestion.setAnswer(currentPhotoPath);
             listener.onAnswerSelected(photoQuestion);
 
 
@@ -251,10 +263,10 @@ public class PhotoFragment extends Fragment implements fragmentStateListener, on
                         filePathColumn, null, null, null);
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                mCurrentPhotoPath = cursor.getString(columnIndex);
+                currentPhotoPath = cursor.getString(columnIndex);
                 cursor.close();
                 //todo fix cursor leak
-                ivImagePreview.setImageBitmap(BitmapFactory.decodeFile(mCurrentPhotoPath));
+                ivImagePreview.setImageBitmap(BitmapFactory.decodeFile(currentPhotoPath));
 
             } catch (Exception e) {
                 DialogFactory.createGenericErrorDialog(getActivity(), e.toString());
@@ -281,7 +293,7 @@ public class PhotoFragment extends Fragment implements fragmentStateListener, on
                 ".jpg",
                 storageDir);
 
-        mCurrentPhotoPath = image.getAbsolutePath();
+        currentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
@@ -294,7 +306,7 @@ public class PhotoFragment extends Fragment implements fragmentStateListener, on
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        BitmapFactory.decodeFile(photoQuestion.getAnswer(), bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
 
@@ -306,7 +318,7 @@ public class PhotoFragment extends Fragment implements fragmentStateListener, on
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        Bitmap bitmap = BitmapFactory.decodeFile(photoQuestion.getAnswer(), bmOptions);
 
 
         ivImagePreview.setImageBitmap(bitmap);

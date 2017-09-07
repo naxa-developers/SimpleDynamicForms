@@ -101,7 +101,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         initUI();
         initVar();
         TabLayoutUtils.disableTabs(tabLayout);
-
         Logger.addLogAdapter(new AndroidLogAdapter());
     }
 
@@ -284,7 +283,6 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 MultiSelectSpinnerFragment multiSelectionSpinner = new MultiSelectSpinnerFragment();
 
-
                 QuestionAnswer multiselectSpinnerQuestion = QuestionFactory.getSpinnerMultiSelect(pos, question, EmptyString, dropDownOptions, isRequired);
                 multiSelectionSpinner.prepareQuestionAndAnswer(multiselectSpinnerQuestion);
 
@@ -296,13 +294,13 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 PhotoFragment photoFragment = new PhotoFragment();
 
                 QuestionAnswer photoQuestion = QuestionFactory.getPhoto(pos, question, answer, isRequired);
+
                 photoFragment.prepareQuestionAndAnswer(photoQuestion);
 
                 adapter.addFragment(photoFragment, generateFragmentName());
 
                 break;
             case QuestionType.DROPDOWN_SINGLE:
-
 
                 if (jsonObject.has("drop_options")) {
                     String dropOptions = jsonObject.getString("drop_options");
@@ -312,7 +310,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                                     gson.fromJson(dropOptions, String[].class)));
                 }
 
-                QuestionAnswer singleDropdown = QuestionFactory.getSpinner(pos, question, EmptyString, dropDownOptions, isRequired);
+                QuestionAnswer singleDropdown = QuestionFactory.getSpinner(pos, question, answer, dropDownOptions, isRequired);
 
                 SpinnerFragment spinnerFragment = new SpinnerFragment();
                 spinnerFragment.prepareQuestionAndAnswer(singleDropdown);
@@ -334,10 +332,9 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
 
-                QuestionAnswer spinnerOtherQuestion = QuestionFactory.getSpinnerWithOther(pos, question, EmptyString, dropDownOptions, isRequired);
+                QuestionAnswer spinnerOtherQuestion = QuestionFactory.getSpinnerWithOther(pos, question, answer, dropDownOptions, isRequired);
+
                 spinnerWithOtherFragment.prepareQuestionAndAnswer(spinnerOtherQuestion);
-
-
                 adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
 
                 break;
@@ -375,6 +372,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 AutoCompleteTextFragment completeTextFragment = new AutoCompleteTextFragment();
 
                 QuestionAnswer autocompletetext = QuestionFactory.getAutoCompleteText(pos, question, hint, answer, dropDownOptions, answerInputId, isRequired);
+
                 completeTextFragment.prepareQuestionAndAnswer(autocompletetext);
 
                 adapter.addFragment(completeTextFragment, generateFragmentName());
@@ -413,7 +411,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
 
     private void setupRawJson() {
-        String form = readSingleForm(R.raw.debug_form);
+        String form = readSingleForm(R.raw.form);
         setupFormInViewpager(form);
     }
 

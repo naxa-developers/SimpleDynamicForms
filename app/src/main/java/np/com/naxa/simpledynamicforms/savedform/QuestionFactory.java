@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
+import np.com.naxa.simpledynamicforms.Dump;
+
 /**
  * Created on 8/29/17
  * by nishon.tan@gmail.com
@@ -80,6 +82,9 @@ public class QuestionFactory {
         questionAnswer.setOrder(order);
         questionAnswer.setAnswer(answer);
         questionAnswer.setDropOptions(options);
+
+
+        Dump.object("NIRVANA",questionAnswer);
 
         return questionAnswer;
     }

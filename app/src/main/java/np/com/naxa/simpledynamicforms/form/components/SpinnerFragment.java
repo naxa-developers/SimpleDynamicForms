@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,9 +59,18 @@ public class SpinnerFragment extends Fragment implements fragmentStateListener, 
     public void setQuestionAndAnswers() {
         tvQuestion.setText(questionAnswer.getQuestion());
         optionsSpinner.setPrompt(questionAnswer.getQuestion());
+
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, questionAnswer.getDropOptions());
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         optionsSpinner.setAdapter(dataAdapter);
+
+
+        boolean hasAnswer = !TextUtils.isEmpty(questionAnswer.getAnswer());
+        if (hasAnswer){
+            int positionOfAnswer = dataAdapter.getPosition(questionAnswer.getAnswer());
+            optionsSpinner.setSelection(positionOfAnswer);
+        }
+
     }
 
     private void getAnswer(final int pos) {

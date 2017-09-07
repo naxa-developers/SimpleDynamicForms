@@ -1,46 +1,7 @@
 [
   {
-    "question": "Name(Organization/Responsible Individual)",
-    "question_type": "TEXT",
-    "is_required": true
-  },
-  {
-    "question": "Contact",
-    "question_type": "TEXT",
-    "answer_text_type": "InputNumber",
-    "is_required": true
-  },
-  {
-    "question": "Target area",
-    "question_type": "AUTO_COMPLETE_TEXT",
-    "drop_options": "[Tent,Food,Medics,Clothes]",
-    "is_required": true
-  },
-  {
-    "question": "Record Location",
-    "question_type": "LOCATION",
-    "is_required": true
-  },
-  {
-    "question": "Take photo",
-    "question_type": "PHOTO",
-    "is_required": true
-  },
-  {
-    "question": "A drop down question",
-    "question_type": "DROP_DOWN",
-    "drop_options": "[Tent,Food,Medics,Clothes]",
-    "is_required": true
-  },
-  {
     "question": "A drop down question with other",
     "question_type": "DROPDOWN_WITH_OTHER",
-    "drop_options": "[Tent,Food,Medics,Clothes]",
-    "is_required": true
-  },
-  {
-    "question": "A drop down multi select question",
-    "question_type": "DROPDOWN_MULTI_SELECT",
     "drop_options": "[Tent,Food,Medics,Clothes]",
     "is_required": true
   }

@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,8 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
@@ -25,7 +21,6 @@ import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
-import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
 import timber.log.Timber;
 
@@ -38,6 +33,7 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
 
     @BindView(R.id.tv_question_edit_text)
     TextView tvQuestion;
+
 
 
     private String userSelectedAnswer = "";
@@ -76,9 +72,9 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
     }
 
 
-
     public void setQuestionAndAnswers() {
         tvQuestion.setText(questionAnswer.getQuestion());
+        autoCompleteTextView.setText(questionAnswer.getAnswer());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, questionAnswer.getDropOptions());
         autoCompleteTextView.setThreshold(1);//will start working from first character
@@ -153,7 +149,7 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
 
 
-        if (fragmentPositionInViewPager -1 == questionAnswer.getOrder()) {
+        if (fragmentPositionInViewPager - 1 == questionAnswer.getOrder()) {
             getAnswer(questionAnswer.getOrder());
         }
     }
@@ -205,5 +201,11 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
     public void fragmentIsVisible() {
 
         allowViewPagerSwipeListener.stopViewpagerScroll(shouldStopWipe);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
     }
 }

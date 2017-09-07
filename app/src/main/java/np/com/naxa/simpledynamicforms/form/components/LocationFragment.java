@@ -90,6 +90,7 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
 
     public void setQuestionAndAnswers() {
         tvQuestion.setText(locationQuestion.getQuestion());
+        tvLocationPreview.setText(locationQuestion.getAnswer());
 
     }
 
@@ -138,7 +139,6 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
 
         try {
             locationQuestion.setAnswer(location);
-
             listener.onAnswerSelected(locationQuestion);
 
         } catch (ClassCastException cce) {
