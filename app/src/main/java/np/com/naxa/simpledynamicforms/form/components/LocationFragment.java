@@ -46,7 +46,7 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
     public static final String LOCATION_RESULT = "LOCATION_RESULT";
     private onAnswerSelectedListener listener;
     private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
-    private boolean shouldStopWipe = false;
+
 
     @BindView(R.id.tv_question_edit_text)
     TextView tvQuestion;
@@ -78,10 +78,6 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
         View rootView = inflater.inflate(R.layout.fragment_location, container, false);
         ButterKnife.bind(this, rootView);
         setQuestionAndAnswers();
-
-        if (locationQuestion.isRequired()) {
-            stopViewPagerSwipe();
-        }
         return rootView;
 
     }
@@ -101,10 +97,6 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
     private void getAnswer(final int pos) {
 
         sendAnswerToActivity(pos);
-    }
-
-    public void stopViewPagerSwipe() {
-        shouldStopWipe = true;
     }
 
     public void onAttach(Context context) {
@@ -148,7 +140,6 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
         try {
             locationQuestion.setAnswer(location);
             listener.onAnswerSelected(locationQuestion);
-            listener.shoudStopSwipe(shouldStopWipe);
 
         } catch (ClassCastException cce) {
 
@@ -233,23 +224,13 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
 
         if (fragmentPositionInViewPager - 1 == locationQuestion.getOrder()) {
-            if(location != null){
-                shouldAllowSwipe();
-                getAnswer(locationQuestion.getOrder());
-            }else {
-
-            }
+            getAnswer(locationQuestion.getOrder());
         }
     }
 
-    private void shouldAllowSwipe() {
-
-        shouldStopWipe = false;
-        listener.shoudStopSwipe(shouldStopWipe);
-    }
     @Override
     public void fragmentIsVisible() {
-        allowViewPagerSwipeListener.stopViewpagerScroll(shouldStopWipe);
+
     }
 
 
