@@ -1,8 +1,8 @@
 [
   {
     "question": "What is the status of electric light ?",
-    "question_type": "TEXT",
-    "drop_options": "[Functional,Non Functional]",
+    "question_type": "DROP_DOWN",
+    "drop_options": "[Functional,Non-Functional]",
     "is_required": true
   },
   {

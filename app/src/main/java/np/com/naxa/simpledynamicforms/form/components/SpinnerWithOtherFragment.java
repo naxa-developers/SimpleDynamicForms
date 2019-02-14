@@ -59,6 +59,7 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_spinner, container, false);
         spinner = new SpinnerHelper(rootView.findViewById(R.id.spinner_answer_options));
+        setSpinnerSelectionWithoutCallingListener((Spinner) rootView.findViewById(R.id.spinner_answer_options));
         ButterKnife.bind(this, rootView);
         setQuestionAndAnswers();
 
