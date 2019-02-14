@@ -1,40 +1,46 @@
 [
   {
-    "question": "Name(Organization/Responsible Individual)",
+    "question": "What is the status of electric light ?",
     "question_type": "TEXT",
+    "drop_options": "[Functional,Non Functional]",
     "is_required": true
   },
   {
-    "question": "Contact",
+    "question": "Location",
+    "question_type": "LOCATION",
+    "is_required": true
+  },
+  {
+    "question": "Photo of the street light",
+    "question_type": "PHOTO",
+    "is_required": true
+  },
+  {
+    "question": "Type of street light",
+    "question_type": "DROP_DOWN",
+    "drop_options": "[Solar,Electric]",
+    "is_required": true
+  },
+  {
+    "question": "Type of Street Light Poles",
+    "question_type": "DROPDOWN_WITH_OTHER",
+    "drop_options": "[Wooden,Concrete,Galvanized_steel]",
+    "is_required": true
+  },
+  {
+    "question": "Where is it located ?",
+    "question_type": "DROPDOWN_WITH_OTHER",
+    "drop_options": "[Highway,Regular]",
+    "is_required": true
+  },
+  {
+    "question": "Pole No.",
     "question_type": "TEXT",
-    "answer_text_type": "InputNumber",
+    "answer_text_type": "InputText",
     "is_required": true
   },
   {
-    "question": "Target area ",
-    "question_type": "AUTO_COMPLETE_TEXT",
-    "drop_options": "[Tent,Food,Medics,Clothes,Other]",
-    "is_required": true
-  },
-  {
-    "question": "Supplies",
-    "question_type": "DROPDOWN_MULTI_SELECT",
-    "drop_options": "[Tent,Food,Medics,Clothes,Other]",
-    "is_required": true
-  },
-  {
-    "question": "Target Population",
-    "question_type": "TEXT",
-    "answer_text_type": "InputNumber",
-    "is_required": true
-  },
-  {
-    "question": "Date",
-    "question_type": "DATE_TIME",
-    "is_required": true
-  },
-  {
-    "question": "Comments",
+    "question": "Message/Text Body",
     "question_type": "TEXT",
     "is_required": true
   }
