@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import np.com.naxa.simpledynamicforms.R;
+import np.com.naxa.simpledynamicforms.formhost.FormEntryActivity;
 import np.com.naxa.simpledynamicforms.model.Form;
 
 /**
@@ -67,5 +68,12 @@ public class SavedFormActivity extends AppCompatActivity {
             }
         });
 
+
+        findViewById(R.id.btn_new_form).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SavedFormActivity.this, FormEntryActivity.class));
+            }
+        });
     }
 }
