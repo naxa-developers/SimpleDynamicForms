@@ -16,6 +16,7 @@
     <string name="dialog_action_dismiss">Dismiss</string>
     <string name="dialog_error_title">Error</string>
     <string name="msg_fill_new_form">Fill New Form</string>
+    <string name="msg_no_data_found">No filled forms present</string>
 
 
     <string-array name="question_type">

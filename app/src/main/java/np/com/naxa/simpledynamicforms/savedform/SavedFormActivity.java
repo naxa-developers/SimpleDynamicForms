@@ -23,6 +23,7 @@ import java.util.List;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.formhost.FormEntryActivity;
 import np.com.naxa.simpledynamicforms.model.Form;
+import np.com.naxa.simpledynamicforms.uitils.RecyclerViewEmptySupport;
 
 /**
  * Created by Nishon Tandukar on 19 Jun 2017 .
@@ -41,17 +42,13 @@ public class SavedFormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_form);
 
-        RecyclerView rvforms = (RecyclerView) findViewById(R.id.rvforms);
-
-        //ArrayList<Form> forms = Lists.newArrayList(myIterator);
-
+        RecyclerViewEmptySupport rvforms = findViewById(R.id.rvforms);
+        rvforms.setEmptyView(findViewById(R.id.root_layout_empty_layout), "You have no saved forms", null);
         forms = Form.findWithQuery(Form.class, "SELECT * FROM Form ORDER BY ID DESC", null);
-
         FormsAdapter adapter = new FormsAdapter(this, forms);
         rvforms.setAdapter(adapter);
         rvforms.setLayoutManager(new LinearLayoutManager(this));
-
-
+        adapter.notifyDataSetChanged();
 
         adapter.setOnItemClickListener(new FormsAdapter.OnItemClickListener() {
             @Override

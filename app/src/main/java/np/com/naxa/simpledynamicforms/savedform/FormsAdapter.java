@@ -3,6 +3,7 @@ package np.com.naxa.simpledynamicforms.savedform;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
@@ -63,7 +64,7 @@ public class FormsAdapter extends
     private List<Form> forms;
     private Context mContext;
 
-    public FormsAdapter(Context context, List<Form> forms) {
+    FormsAdapter(Context context, List<Form> forms) {
         this.forms = forms;
         mContext = context;
     }
@@ -73,20 +74,21 @@ public class FormsAdapter extends
     }
 
 
+    @NonNull
     @Override
-    public FormsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FormsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View contactView = inflater.inflate(R.layout.item_form, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
     @Override
-    public void onBindViewHolder(FormsAdapter.ViewHolder viewHolder, final int position) {
-        final Form form = forms.get(position);
+    public void onBindViewHolder(@NonNull final FormsAdapter.ViewHolder viewHolder, int position) {
+        int pos = viewHolder.getAdapterPosition();
+        final Form form = forms.get(pos);
 
         TextView textView = viewHolder.nameTextView;
         textView.setText(form.getFormName());
@@ -104,9 +106,9 @@ public class FormsAdapter extends
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("form",form);
+                bundle.putSerializable("form", form);
                 Intent toFormEntry = new Intent(getContext(), FormEntryActivity.class);
-                toFormEntry.putExtra("form",bundle);
+                toFormEntry.putExtra("form", bundle);
                 getContext().startActivity(toFormEntry);
             }
         });
@@ -114,7 +116,10 @@ public class FormsAdapter extends
         btnReviewForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFactory.createSimpleOkErrorDialog(getContext(), forms.get(position).getFormName(), JSONFormatter.formatQuestionAnswer(forms.get(position).getFormJson())).show();
+                DialogFactory.createSimpleOkErrorDialog(getContext(),
+                        forms.get(viewHolder.getAdapterPosition()).getFormName(),
+                        JSONFormatter.formatQuestionAnswer(forms.get(viewHolder.getAdapterPosition()).getFormJson()))
+                        .show();
             }
         });
 
