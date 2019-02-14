@@ -1,41 +1,41 @@
 [
   {
     "question": "Name(Organization/Responsible Individual)",
-    "question_type": "Text",
+    "question_type": "TEXT",
     "is_required": true
   },
   {
     "question": "Contact",
-    "question_type": "Text",
+    "question_type": "TEXT",
     "answer_text_type": "InputNumber",
     "is_required": true
   },
   {
     "question": "Target area ",
-    "question_type": "AutoComplete",
+    "question_type": "AUTO_COMPLETE_TEXT",
     "drop_options": "[Tent,Food,Medics,Clothes,Other]",
     "is_required": true
   },
   {
     "question": "Supplies",
-    "question_type": "MultiSelectDropdown",
+    "question_type": "DROPDOWN_MULTI_SELECT",
     "drop_options": "[Tent,Food,Medics,Clothes,Other]",
     "is_required": true
   },
   {
     "question": "Target Population",
-    "question_type": "Text",
+    "question_type": "TEXT",
     "answer_text_type": "InputNumber",
     "is_required": true
   },
   {
     "question": "Date",
-    "question_type": "DateTime",
+    "question_type": "DATE_TIME",
     "is_required": true
   },
   {
     "question": "Comments",
-    "question_type": "Text",
+    "question_type": "TEXT",
     "is_required": true
   }
 ]

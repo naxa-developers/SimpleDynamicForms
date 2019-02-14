@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * by nishon.tan@gmail.com
  */
 
-public class QuestionAnswer extends DropOptions {
+public class QuestionAnswer {
 
 
     private int order;
@@ -30,6 +30,18 @@ public class QuestionAnswer extends DropOptions {
 
     @SerializedName("is_required")
     private boolean isRequired = false;
+
+    @SerializedName("drop_options")
+    private ArrayList<String> DropOptions;
+
+    public void setDropOptions(ArrayList<String> dropOptions) {
+        DropOptions = dropOptions;
+    }
+
+    public ArrayList<String> getDropOptions() {
+        return DropOptions;
+    }
+
 
     public int getInputType() {
         return inputType;
@@ -63,10 +75,6 @@ public class QuestionAnswer extends DropOptions {
         this.hint = hint;
     }
 
-    @Override
-    public void setDropOptions(ArrayList<String> dropOptions) {
-        super.setDropOptions(dropOptions);
-    }
 
     public String getQuestion() {
         return question;

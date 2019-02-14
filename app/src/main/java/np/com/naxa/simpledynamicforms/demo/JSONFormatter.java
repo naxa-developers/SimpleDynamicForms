@@ -52,14 +52,15 @@ public class JSONFormatter {
             JSONObject savedFormJson = new JSONObject(formJson);
             JSONArray jsonArray = savedFormJson.getJSONArray("questionAnswers");
 
+
+
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 json.append(jsonObject.get("question"));
                 json.append(" : ");
                 json.append(jsonObject.get("answer"));
+                json.append("\n");
             }
-
-
 
 
         } catch (JSONException e) {

@@ -21,10 +21,7 @@ import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
-import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
 import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
-import np.com.naxa.simpledynamicforms.savedform.QuestionAnswerFactory;
-import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
 

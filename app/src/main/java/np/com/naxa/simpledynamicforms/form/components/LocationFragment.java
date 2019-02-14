@@ -26,6 +26,7 @@ import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SpanUtils;
 import timber.log.Timber;
@@ -46,10 +47,6 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
     private onAnswerSelectedListener listener;
     private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
 
-    private String question;
-
-    private int position;
-
 
     @BindView(R.id.tv_question_edit_text)
     TextView tvQuestion;
@@ -62,6 +59,7 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
 
 
     private String location;
+    private QuestionAnswer locationQuestion;
 
     public LocationFragment() {
     }
@@ -84,15 +82,15 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
 
     }
 
-    public void prepareQuestionAndAnswer(String question, int position) {
-        this.question = question;
-        this.position = position;
 
-        Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
+    public void prepareQuestionAndAnswer(QuestionAnswer locationQuestion) {
+        this.locationQuestion = locationQuestion;
+        Timber.i("Preparing question with question \' %s \' at postion %s", locationQuestion.getQuestion(), locationQuestion.getOrder());
     }
 
     public void setQuestionAndAnswers() {
-        tvQuestion.setText(question);
+        tvQuestion.setText(locationQuestion.getQuestion());
+        tvLocationPreview.setText(locationQuestion.getAnswer());
 
     }
 
@@ -140,14 +138,16 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
     private void sendAnswerToActivity(int pos) {
 
         try {
-            listener.onAnswerSelected(StringFormatter.replaceStringWithUnderScore(question), location);
+            locationQuestion.setAnswer(location);
+            listener.onAnswerSelected(locationQuestion);
+
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());
 
         }
 
-        Timber.i("Question: %s QuestionAnswer: %s", question, location);
+        Timber.i("Question: %s QuestionAnswer: %s", locationQuestion.getQuestion(), locationQuestion.getAnswer());
     }
 
 
@@ -203,7 +203,7 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
     private void showLocationPreview() {
         String s = "Location Recorded \n" + location;
         SpanUtils spanUtils = new SpanUtils();
-        String boldText = spanUtils.makeSectionOfTextBold(s,"Location Recorded").toString();
+        String boldText = spanUtils.makeSectionOfTextBold(s, "Location Recorded").toString();
         tvLocationPreview.setText(boldText);
     }
 
@@ -222,14 +222,9 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
 
     @Override
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
-        Timber.d("Asking Fragment At Postion %s for answer for the question ", fragmentPositionInViewPager);
 
-        Boolean doFragmentIdMatch = fragmentPositionInViewPager == position;
-
-        Timber.d(" %s and %s are the same ? %s \n question: %s", fragmentPositionInViewPager, position, doFragmentIdMatch.toString(), question);
-
-        if (fragmentPositionInViewPager == position) {
-            getAnswer(position);
+        if (fragmentPositionInViewPager - 1 == locationQuestion.getOrder()) {
+            getAnswer(locationQuestion.getOrder());
         }
     }
 
@@ -237,4 +232,6 @@ public class LocationFragment extends Fragment implements fragmentStateListener,
     public void fragmentIsVisible() {
 
     }
+
+
 }

@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -51,7 +50,8 @@ import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.model.Form;
 import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
-import np.com.naxa.simpledynamicforms.savedform.QuestionAnswerFactory;
+import np.com.naxa.simpledynamicforms.savedform.QuestionFactory;
+import np.com.naxa.simpledynamicforms.savedform.QuestionFactory.QuestionType;
 import np.com.naxa.simpledynamicforms.savedform.SavedFormActivity;
 import np.com.naxa.simpledynamicforms.uitils.DialogFactory;
 import np.com.naxa.simpledynamicforms.uitils.SnackBarUtils;
@@ -60,8 +60,7 @@ import np.com.naxa.simpledynamicforms.uitils.TimeUtils;
 import np.com.naxa.simpledynamicforms.uitils.ToastUtils;
 import timber.log.Timber;
 
-import static np.com.naxa.simpledynamicforms.savedform.QuestionAnswerFactory.QUESTION_TYPE_DATETIME;
-import static np.com.naxa.simpledynamicforms.savedform.QuestionAnswerFactory.QUESTION_TYPE_TEXT;
+
 import static np.com.naxa.simpledynamicforms.uitils.TimeUtils.DEFAULT_FORMAT;
 
 public class FormEntryActivity extends AppCompatActivity implements onAnswerSelectedListener, onFormFinishedListener, ViewPager.OnPageChangeListener, shouldAllowViewPagerSwipeListener {
@@ -101,8 +100,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         ButterKnife.bind(this);
         initUI();
         initVar();
-        TabLayoutUtils.enableTabs(tabLayout, false);
-
+        TabLayoutUtils.disableTabs(tabLayout);
         Logger.addLogAdapter(new AndroidLogAdapter());
     }
 
@@ -145,7 +143,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         adapter.addFragment(new FormStartFragment(), "Start");
 
         EditTextFragment etfragOwnerName = new EditTextFragment();
-        QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(0, "Question", "Hint", "", InputType.TYPE_CLASS_TEXT, true);
+        QuestionAnswer questionAnswer = QuestionFactory.getText(0, "Question", "Hint", "", InputType.TYPE_CLASS_TEXT, true);
         etfragOwnerName.prepareQuestionAndAnswer(questionAnswer);
 
         adapter.addFragment(etfragOwnerName, generateFragmentName());
@@ -217,11 +215,14 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
         String questionType = jsonObject.getString("question_type");
         String question = jsonObject.getString("question");
         String isRequiredRaw = "false";
+        //todo pasrse hint from json
+        String hint = "";
         Boolean isRequired = Boolean.parseBoolean(isRequiredRaw);
         String EmptyString = "";
         String answer = "";
         ArrayList<String> dropDownOptions = null;
         String answerInputType = "InputText";
+        int answerInputId = InputType.TYPE_CLASS_TEXT;
 
 
         if (jsonObject.has("is_required")) {
@@ -234,10 +235,8 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
 
         switch (questionType) {
-            case QUESTION_TYPE_TEXT:
+            case QuestionType.TEXT:
 
-
-                int answerInputId = InputType.TYPE_CLASS_TEXT;
 
                 if (jsonObject.has("answer_text_type")) {
                     answerInputType = jsonObject.getString("answer_text_type");
@@ -256,21 +255,21 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                 }
 
                 EditTextFragment etfragOwnerName = new EditTextFragment();
-                QuestionAnswer questionAnswer = QuestionAnswerFactory.getEditTextQuestion(pos, question, EmptyString, answer, answerInputId, isRequired);
+                QuestionAnswer questionAnswer = QuestionFactory.getText(pos, question, EmptyString, answer, answerInputId, isRequired);
                 etfragOwnerName.prepareQuestionAndAnswer(questionAnswer);
 
                 adapter.addFragment(etfragOwnerName, generateFragmentName());
 
                 break;
-            case QUESTION_TYPE_DATETIME:
+            case QuestionType.DATETIME:
 
                 DateTimeFragment dateTimeFragment = new DateTimeFragment();
-                QuestionAnswer datetimeQuestion = QuestionAnswerFactory.getDateTimeQuestion(pos, question, TimeUtils.getNowString(DEFAULT_FORMAT), isRequired);
+                QuestionAnswer datetimeQuestion = QuestionFactory.getDateTime(pos, question, TimeUtils.getNowString(DEFAULT_FORMAT), isRequired);
                 dateTimeFragment.prepareQuestionAndAnswer(datetimeQuestion);
                 adapter.addFragment(dateTimeFragment, generateFragmentName());
 
                 break;
-            case "MultiSelectDropdown":
+            case QuestionType.DROPDOWN_MULTI_SELECT:
 
 
                 if (jsonObject.has("drop_options")) {
@@ -281,19 +280,46 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                                     gson.fromJson(dropOptions, String[].class)));
                 }
 
+
                 MultiSelectSpinnerFragment multiSelectionSpinner = new MultiSelectSpinnerFragment();
-                multiSelectionSpinner.prepareQuestionAndAnswer(question, dropDownOptions, pos);
+
+                QuestionAnswer multiselectSpinnerQuestion = QuestionFactory.getSpinnerMultiSelect(pos, question, EmptyString, dropDownOptions, isRequired);
+                multiSelectionSpinner.prepareQuestionAndAnswer(multiselectSpinnerQuestion);
+
                 adapter.addFragment(multiSelectionSpinner, generateFragmentName());
 
                 break;
-            case "Photo":
+            case QuestionType.PHOTO:
 
                 PhotoFragment photoFragment = new PhotoFragment();
-                photoFragment.prepareQuestionAndAnswer(question, pos);
+
+                QuestionAnswer photoQuestion = QuestionFactory.getPhoto(pos, question, answer, isRequired);
+
+                photoFragment.prepareQuestionAndAnswer(photoQuestion);
+
                 adapter.addFragment(photoFragment, generateFragmentName());
 
                 break;
-            case "DropDown":
+            case QuestionType.DROPDOWN_SINGLE:
+
+                if (jsonObject.has("drop_options")) {
+                    String dropOptions = jsonObject.getString("drop_options");
+                    Gson gson = new Gson();
+                    dropDownOptions =
+                            new ArrayList<>(Arrays.asList(
+                                    gson.fromJson(dropOptions, String[].class)));
+                }
+
+                QuestionAnswer singleDropdown = QuestionFactory.getSpinner(pos, question, answer, dropDownOptions, isRequired);
+
+                SpinnerFragment spinnerFragment = new SpinnerFragment();
+                spinnerFragment.prepareQuestionAndAnswer(singleDropdown);
+
+                adapter.addFragment(spinnerFragment, generateFragmentName());
+
+                break;
+
+            case QuestionType.DROPDOWN_WITH_OTHER:
 
 
                 if (jsonObject.has("drop_options")) {
@@ -304,26 +330,22 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                                     gson.fromJson(dropOptions, String[].class)));
                 }
 
-                SpinnerFragment spinnerFragment = new SpinnerFragment();
-                spinnerFragment.prepareQuestionAndAnswer(question, dropDownOptions, pos);
-                adapter.addFragment(spinnerFragment, generateFragmentName());
-
-
-                break;
-            case "DropDown With Other":
-                ArrayList<String> options2 = new ArrayList<>();
-                options2.add("Yes");
-                options2.add("No");
-
                 SpinnerWithOtherFragment spinnerWithOtherFragment = new SpinnerWithOtherFragment();
-                spinnerWithOtherFragment.prepareQuestionAndAnswer(question, options2, pos);
+
+                QuestionAnswer spinnerOtherQuestion = QuestionFactory.getSpinnerWithOther(pos, question, answer, dropDownOptions, isRequired);
+
+                spinnerWithOtherFragment.prepareQuestionAndAnswer(spinnerOtherQuestion);
                 adapter.addFragment(spinnerWithOtherFragment, generateFragmentName());
 
                 break;
-            case "GPS":
-                LocationFragment eight = new LocationFragment();
-                eight.prepareQuestionAndAnswer(question, pos);
-                adapter.addFragment(eight, generateFragmentName());
+            case QuestionType.LOCATION:
+                LocationFragment location = new LocationFragment();
+
+                QuestionAnswer locationQuestion = QuestionFactory.getLocation(pos, question, answer, isRequired);
+                location.prepareQuestionAndAnswer(locationQuestion);
+
+
+                adapter.addFragment(location, generateFragmentName());
 
                 break;
             case "Note":
@@ -336,7 +358,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
                 break;
 
-            case "AutoComplete":
+            case QuestionType.AUTO_COMPLETE_TEXT:
 
                 if (jsonObject.has("drop_options")) {
                     String dropOptions = jsonObject.getString("drop_options");
@@ -344,12 +366,17 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
                     dropDownOptions =
                             new ArrayList<>(Arrays.asList(
                                     gson.fromJson(dropOptions, String[].class)));
+
                 }
 
                 AutoCompleteTextFragment completeTextFragment = new AutoCompleteTextFragment();
-                completeTextFragment.prepareQuestionAndAnswer(question, question, dropDownOptions, InputType.TYPE_CLASS_TEXT, pos);
+
+                QuestionAnswer autocompletetext = QuestionFactory.getAutoCompleteText(pos, question, hint, answer, dropDownOptions, answerInputId, isRequired);
+
+                completeTextFragment.prepareQuestionAndAnswer(autocompletetext);
 
                 adapter.addFragment(completeTextFragment, generateFragmentName());
+
                 break;
 
         }
@@ -384,7 +411,7 @@ public class FormEntryActivity extends AppCompatActivity implements onAnswerSele
 
 
     private void setupRawJson() {
-        String form = readSingleForm(R.raw.debug_form);
+        String form = readSingleForm(R.raw.form);
         setupFormInViewpager(form);
     }
 

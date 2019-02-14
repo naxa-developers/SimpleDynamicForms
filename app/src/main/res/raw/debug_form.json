@@ -1,18 +1,8 @@
 [
   {
-    "question": "Name(Organization/Responsible Individual)",
-    "question_type": "TEXT",
-    "is_required": true
-  },
-  {
-    "question": "Contact",
-    "question_type": "TEXT",
-    "answer_text_type": "InputNumber",
-    "is_required": true
-  },
-  {
-    "question": "DOB",
-    "question_type": "DATETIME",
+    "question": "A drop down question with other",
+    "question_type": "DROPDOWN_WITH_OTHER",
+    "drop_options": "[Tent,Food,Medics,Clothes]",
     "is_required": true
   }
 ]

@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,8 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import np.com.naxa.simpledynamicforms.R;
@@ -25,7 +21,7 @@ import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
-import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
 import timber.log.Timber;
 
 
@@ -39,20 +35,14 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
     TextView tvQuestion;
 
 
-        String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear"};
 
-
-
-        private String userSelectedAnswer = "";
-    private String question;
-    private String hint;
-    private int inputType;
-    private int position;
+    private String userSelectedAnswer = "";
     private onAnswerSelectedListener listener;
     private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
     private boolean shouldStopWipe = false;
     private boolean validationRequired;
-    private ArrayList<String> options;
+
+    private QuestionAnswer questionAnswer;
 
 
     public AutoCompleteTextFragment() {
@@ -67,8 +57,6 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
         setQuestionAndAnswers();
 
 
-
-
         if (validationRequired) {
             stopViewPagerSwipe();
             setRulesForValidation();
@@ -77,21 +65,18 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
         return rootView;
     }
 
-    public void prepareQuestionAndAnswer(String question, String hint, ArrayList<String> options, int inputType, int position) {
-        this.question = question;
-        this.options = options;
-        this.hint = hint;
-        this.position = position;
-        this.position = position;
-        Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
+    public void prepareQuestionAndAnswer(QuestionAnswer questionAnswer) {
+        this.questionAnswer = questionAnswer;
+
+        Timber.i("Preparing question with question \' %s \' at postion %s", questionAnswer.getQuestion(), questionAnswer.getOrder());
     }
 
 
-
     public void setQuestionAndAnswers() {
-        tvQuestion.setText(question);
+        tvQuestion.setText(questionAnswer.getQuestion());
+        autoCompleteTextView.setText(questionAnswer.getAnswer());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, options);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, questionAnswer.getDropOptions());
         autoCompleteTextView.setThreshold(1);//will start working from first character
         autoCompleteTextView.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
 
@@ -111,7 +96,9 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
     private void sendAnswerToActivity(int pos) {
 
         try {
-            listener.onAnswerSelected(StringFormatter.replaceStringWithUnderScore(question), userSelectedAnswer);
+
+            questionAnswer.setAnswer(userSelectedAnswer);
+            listener.onAnswerSelected(questionAnswer);
             listener.shoudStopSwipe(shouldStopWipe);
         } catch (ClassCastException cce) {
 
@@ -119,7 +106,7 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
 
         }
 
-        Timber.i("Question: %s QuestionAnswer: %s", question, userSelectedAnswer);
+        Timber.i("Question: %s QuestionAnswer: %s", questionAnswer.getQuestion(), questionAnswer.getAnswer());
     }
 
     public void onAttach(Context context) {
@@ -161,14 +148,9 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
     @Override
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
 
-        Timber.d("Asking Fragment At Postion %s for answer for the question ", fragmentPositionInViewPager);
 
-        Boolean doFragmentIdMatch = fragmentPositionInViewPager == position;
-
-        Timber.d(" %s and %s are the same ? %s \n question: %s", fragmentPositionInViewPager, position, doFragmentIdMatch.toString(), question);
-
-        if (fragmentPositionInViewPager == position) {
-            getAnswer(position);
+        if (fragmentPositionInViewPager - 1 == questionAnswer.getOrder()) {
+            getAnswer(questionAnswer.getOrder());
         }
     }
 
@@ -219,5 +201,11 @@ public class AutoCompleteTextFragment extends Fragment implements fragmentStateL
     public void fragmentIsVisible() {
 
         allowViewPagerSwipeListener.stopViewpagerScroll(shouldStopWipe);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
     }
 }

@@ -6,6 +6,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,34 +20,34 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import np.com.naxa.simpledynamicforms.Dump;
 import np.com.naxa.simpledynamicforms.R;
 import np.com.naxa.simpledynamicforms.form.listeners.fragmentStateListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onAnswerSelectedListener;
 import np.com.naxa.simpledynamicforms.form.listeners.onPageVisibleListener;
 import np.com.naxa.simpledynamicforms.form.listeners.shouldAllowViewPagerSwipeListener;
 import np.com.naxa.simpledynamicforms.form.utils.StringFormatter;
+import np.com.naxa.simpledynamicforms.savedform.QuestionAnswer;
+import np.com.naxa.simpledynamicforms.uitils.SpinnerHelper;
 import timber.log.Timber;
 
 
 public class SpinnerWithOtherFragment extends Fragment implements fragmentStateListener, AdapterView.OnItemSelectedListener, onPageVisibleListener {
 
-
     @BindView(R.id.tv_question_edit_text)
     TextView tvQuestion;
 
-    @BindView(R.id.spinner_answer_options)
-    Spinner optionsSpinner;
+    SpinnerHelper spinner;
 
     @BindView(R.id.wrapper_spinner_answer_other)
     TextInputLayout textInputLayout;
 
     private String userSelectedAnswer = "";
-    private String question;
-    private ArrayList<String> options;
-    private int position;
     private onAnswerSelectedListener listener;
     private boolean shouldGetValueFromOther;
     private shouldAllowViewPagerSwipeListener allowViewPagerSwipeListener;
+    private QuestionAnswer spinnerOtherQuestion;
+    private ArrayAdapter<String> dataAdapter;
 
 
     public SpinnerWithOtherFragment() {
@@ -56,19 +58,19 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_spinner, container, false);
+        spinner = new SpinnerHelper(rootView.findViewById(R.id.spinner_answer_options));
         ButterKnife.bind(this, rootView);
         setQuestionAndAnswers();
-        optionsSpinner.setOnItemSelectedListener(this);
+
 
         return rootView;
     }
 
-    public void prepareQuestionAndAnswer(String question, ArrayList<String> options, int position) {
-        this.question = question;
-        this.options = options;
-        this.position = position;
 
-        Timber.i("Preparing question with question \' %s \' at postion %s", question, position);
+    public void prepareQuestionAndAnswer(QuestionAnswer spinnerOtherQuestion) {
+        this.spinnerOtherQuestion = spinnerOtherQuestion;
+
+        Timber.i("Preparing question with question \' %s \' at postion %s", spinnerOtherQuestion.getQuestion(), spinnerOtherQuestion.getOrder());
     }
 
 
@@ -83,12 +85,40 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     }
 
     public void setQuestionAndAnswers() {
-        tvQuestion.setText(question);
-        optionsSpinner.setPrompt(question);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, options);
+        tvQuestion.setText(spinnerOtherQuestion.getQuestion());
+        // spinner.getSpinner().setPrompt(spinnerOtherQuestion.getQuestion());
+
+        setOptionsSpinner();
+        setAnswerIfPresent();
+
+    }
+
+
+    private void setOptionsSpinner() {
+        dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, spinnerOtherQuestion.getDropOptions());
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        options.add("Other");
-        optionsSpinner.setAdapter(dataAdapter);
+        spinnerOtherQuestion.getDropOptions().add("Other");
+        spinner.setAdapter(dataAdapter);
+    }
+
+    private void setAnswerIfPresent() {
+        boolean hasAnswer = !TextUtils.isEmpty(spinnerOtherQuestion.getAnswer());
+
+
+        if (hasAnswer) {
+            int positionOfAnswer = dataAdapter.getPosition(spinnerOtherQuestion.getAnswer());
+
+            spinner.setSelection(positionOfAnswer);
+
+            boolean otherWasSelected = positionOfAnswer == -1;
+
+
+            if (otherWasSelected) {
+                showTextInputLayout();
+                textInputLayout.getEditText().setText(spinnerOtherQuestion.getAnswer());
+            }
+        }
+
     }
 
     private void getAnswer(final int pos) {
@@ -96,7 +126,7 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
         if (shouldGetValueFromOther) {
             userSelectedAnswer = textInputLayout.getEditText().getText().toString();
         } else {
-            userSelectedAnswer = optionsSpinner.getSelectedItem().toString();
+            userSelectedAnswer = spinner.getSelectedItem().toString();
         }
         sendAnswerToActivity(pos);
     }
@@ -104,14 +134,19 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     private void sendAnswerToActivity(int pos) {
 
         try {
-            listener.onAnswerSelected(StringFormatter.replaceStringWithUnderScore(question), userSelectedAnswer);
+
+            spinnerOtherQuestion.setAnswer(userSelectedAnswer);
+
+            listener.onAnswerSelected(spinnerOtherQuestion);
+
+
         } catch (ClassCastException cce) {
 
             Timber.e(cce.toString());
 
         }
 
-        Timber.i("Question: %s QuestionAnswer: %s", question, userSelectedAnswer);
+        Timber.i("Question: %s QuestionAnswer: %s", spinnerOtherQuestion.getQuestion(), spinnerOtherQuestion.getAnswer());
     }
 
     public void onAttach(Context context) {
@@ -153,30 +188,25 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
     @Override
     public void fragmentStateChange(int state, int fragmentPositionInViewPager) {
 
-        Timber.d("Asking Fragment At Postion %s for answer for the question ", fragmentPositionInViewPager);
 
-        Boolean doFragmentIdMatch = fragmentPositionInViewPager == position;
-
-        Timber.d(" %s and %s are the same ? %s \n question: %s", fragmentPositionInViewPager, position, doFragmentIdMatch.toString(), question);
-
-        if (fragmentPositionInViewPager == position) {
-            getAnswer(position);
+        if (fragmentPositionInViewPager - 1 == spinnerOtherQuestion.getOrder()) {
+            getAnswer(spinnerOtherQuestion.getOrder());
         }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        Timber.d("position %s size %s", position, options.size());
-        if (position == options.size() - 1) {
+
+        Log.d("NIRVANA", position + " ");
+
+        if (position == spinnerOtherQuestion.getDropOptions().size() - 1) {
             setGetValueFromOther();
             showTextInputLayout();
         } else {
             hideTextInputLayout();
             setGetValueFromSpinner();
         }
-
-
     }
 
     private void setGetValueFromOther() {
@@ -192,9 +222,31 @@ public class SpinnerWithOtherFragment extends Fragment implements fragmentStateL
 
     }
 
-
     @Override
     public void fragmentIsVisible() {
         allowViewPagerSwipeListener.stopViewpagerScroll(false);
     }
+
+
+    /**
+     * https://stackoverflow.com/a/13528576/4179914
+     * stops spinner at automatially selecting to index 0
+     * at listner set up
+     */
+    private void setSpinnerSelectionWithoutCallingListener(final Spinner spinner) {
+        spinner.setOnItemSelectedListener(null);
+        spinner.post(new Runnable() {
+            @Override
+            public void run() {
+
+                spinner.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        spinner.setOnItemSelectedListener(SpinnerWithOtherFragment.this);
+                    }
+                });
+            }
+        });
+    }
+
 }
