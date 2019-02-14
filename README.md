@@ -1,4 +1,55 @@
 # SimpleDynamicForms
 
 
-I liked ODKCollect so much that I decided to create a (bad) clone of it - Nishon
+#### I liked ODKCollect so much that I decided to create a (bad) clone of it - Nishon
+
+It takes a json file, that looks something like this and generate's a form
+```
+[
+  {
+    "question": "What is the status of electric light ?",
+    "question_type": "DROP_DOWN",
+    "drop_options": "[Functional,Non-Functional]",
+    "is_required": true
+  },
+  {
+    "question": "Location",
+    "question_type": "LOCATION",
+    "is_required": true
+  },
+  {
+    "question": "Photo of the street light",
+    "question_type": "PHOTO",
+    "is_required": true
+  },
+  {
+    "question": "Type of street light",
+    "question_type": "DROP_DOWN",
+    "drop_options": "[Solar,Electric]",
+    "is_required": true
+  },
+  {
+    "question": "Type of Street Light Poles",
+    "question_type": "DROPDOWN_WITH_OTHER",
+    "drop_options": "[Wooden,Concrete,Galvanized_steel]",
+    "is_required": true
+  },
+  {
+    "question": "Where is it located ?",
+    "question_type": "DROPDOWN_WITH_OTHER",
+    "drop_options": "[Highway,Regular]",
+    "is_required": true
+  },
+  {
+    "question": "Pole No.",
+    "question_type": "TEXT",
+    "answer_text_type": "InputText",
+    "is_required": true
+  },
+  {
+    "question": "Message/Text Body",
+    "question_type": "TEXT",
+    "is_required": true
+  }
+]
+```
